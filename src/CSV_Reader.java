@@ -12,7 +12,12 @@ public class CSV_Reader {
     }
 
     //TODO
-    public LinkedList<String[]> getDataAsList(){
+    public ArrayList<String[]> getDataAsList(){
+        if(getLines()!=null){
+            ArrayList<String[]> data = new ArrayList<>();
+            getLines().forEach(line -> {data.add(getDataFromLine(line));});
+            return data;
+        }
         return null;
     }
 
@@ -26,9 +31,8 @@ public class CSV_Reader {
         }
     }
 
-    //TODO if null
     private String[] getDataFromLine(String line){
-        return null;
+        return line.split(",");
     }
 
     public String getPath(){
