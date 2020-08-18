@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class StudentData {
-    private final String path = "StudentGroupData";
+    private final String path = "StudentData.csv";
 
     //TODO
     public ArrayList<Student> getStudentData(){
