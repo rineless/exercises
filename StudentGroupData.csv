@@ -1,0 +1,4 @@
+﻿ID,Group name,Abbreviation,Language,Online access,Attendees online,Attendees,max_Attendees(Present),Responsible for Group,Contact information
+1,Discrete structures,DS,germany,yes,2,3,30,Adam Becker,adam.becker@myuni.de
+2,Algorithms,Alg,english,yes,2,2,20,Shon Braun,shon.braun@myuni.de
+3,Analysis,Anl,english,no,0,3,15,Karol Maier,karol.maier@myuni.de
