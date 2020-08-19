@@ -5,6 +5,7 @@ import util.SeparatedValuesParser;
 import java.time.LocalDate;
 
 public class Student {
+
     private final int id;
     private final String name;
     private final String surname;
@@ -33,6 +34,50 @@ public class Student {
       this.groupId = groupId;
       this.typeOfStudying = typeOfStudying;
       this.contractInformation = contractInformation;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public String getCitizenship() {
+        return citizenship;
+    }
+
+    public String getPlaceOfBirth() {
+        return placeOfBirth;
+    }
+
+    public String getTypeOfContract() {
+        return typeOfContract;
+    }
+
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public String getTypeOfStudying() {
+        return typeOfStudying;
+    }
+
+    public String getContractInformation() {
+        return contractInformation;
     }
 
 }
