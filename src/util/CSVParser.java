@@ -1,10 +1,8 @@
 package util;
 
-public class CSVParser implements ILineParser {
+public class CSVParser extends SeparatedValuesParser {
 
-    public String[] parseLineToArray(String line){
-    if(line!=null)
-        return line.split(",");
-    return null;
+    public CSVParser(){
+        super(",");
     }
 }
