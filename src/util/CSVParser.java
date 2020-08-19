@@ -1,4 +1,6 @@
-public class CSVParser implements LineParser{
+package util;
+
+public class CSVParser implements LineParser {
 
     public String[] parseLineToArray(String line){
     if(line!=null)

@@ -1,10 +1,14 @@
+package util;
+
+import util.Reader;
+
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class FileReader extends Reader{
+public class FileReader extends Reader {
     private final String path;
 
     public FileReader(String path){
