@@ -27,10 +27,6 @@ public class FileReader extends Reader{
         }
     }
 
-    /*private String[] receiveDataFromLine(String line){
-        return line.split(",");
-    }*/
-
     public String getPath(){
         return path;
     }
