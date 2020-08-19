@@ -21,9 +21,9 @@ public class Group {
         this.name = name;
         this.abbreviation = abbreviation;
         this.language = language;
-        if(onlineAccess.contentEquals("yes"))
+        if (onlineAccess.contentEquals("yes"))
             this.onlineAccess = true;
-        else if(onlineAccess.contentEquals("no"))
+        else if (onlineAccess.contentEquals("no"))
             this.onlineAccess = false;
         else throw new IllegalArgumentException("Illegal argument: online access");
         this.attendeesOnline = attendeesOnline;
@@ -66,7 +66,7 @@ public class Group {
     }
 
     public String[] getResponsibleForGroup() {
-        return new String[]{responsibleForGroup[0],responsibleForGroup[1]};
+        return new String[]{responsibleForGroup[0], responsibleForGroup[1]};
     }
 
     public String getContactInformation() {

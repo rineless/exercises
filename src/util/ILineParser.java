@@ -5,7 +5,6 @@ import model.*;
 public interface ILineParser {
     String[] parseLineToArray(String line);
 
-    //TODO if no contact information?
     default Student parseLineToStudent(String line) {
         String[] dataForStudent = parseLineToArray(line);
         if (dataForStudent.length == 11)
@@ -19,7 +18,6 @@ public interface ILineParser {
     }
 
 
-    //TODO
     default Group parseLineToGroup(String line) {
         String[] dataForGroup = parseLineToArray(line);
         if (dataForGroup.length == 10)
@@ -30,7 +28,6 @@ public interface ILineParser {
             throw new IllegalArgumentException("Line cannot be resolved into Group. Not enough data");
         }
     }
-
 
 
 }
