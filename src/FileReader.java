@@ -3,11 +3,11 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Stream;
 
-public class CSV_Reader {
-    private final String path;
+public class FileReader {
+    private final String PATH;
 
-    public CSV_Reader(String path){
-        this.path = path;
+    public FileReader(String path){
+        this.PATH = path;
     }
 
     public ArrayList<String[]> getDataAsList(){
@@ -21,7 +21,7 @@ public class CSV_Reader {
 
     private Stream<String> getLines(){
         try {
-            return Files.lines(Path.of(path));
+            return Files.lines(Path.of(PATH));
         } catch (IOException e) {
             System.out.println("Path given incorrect");
             return null;
@@ -33,7 +33,7 @@ public class CSV_Reader {
     }
 
     public String getPath(){
-        return path;
+        return PATH;
     }
 
 }
