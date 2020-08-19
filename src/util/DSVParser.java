@@ -1,6 +1,6 @@
 package util;
 
-public class DSVParser implements LineParser {
+public class DSVParser implements ILineParser {
     //Dot Separated Value
     public String[] parseLineToArray(String line) {
         if (line != null)

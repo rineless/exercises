@@ -2,7 +2,7 @@ package util;
 
 import model.*;
 
-public interface LineParser {
+public interface ILineParser {
     String[] parseLineToArray(String line);
 
     //TODO if no contact information?
