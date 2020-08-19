@@ -1,6 +1,6 @@
 package model;
 
-import util.DSVParser;
+import util.SeparatedValuesParser;
 
 import java.time.LocalDate;
 
@@ -25,7 +25,7 @@ public class Student {
       this.name = name;
       this.surname = surname;
       this.gender = gender;
-      String[] date = new DSVParser().parseLineToArray(birthDate);
+      String[] date = new SeparatedValuesParser(".").parseLineToArray(birthDate);
       this.birthDate = LocalDate.of(Integer.parseInt(date[2]),Integer.parseInt(date[1]),Integer.parseInt(date[0]));
       this.citizenship = citizenship;
       this.placeOfBirth = placeOfBirth;
