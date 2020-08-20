@@ -18,24 +18,6 @@ public class Student {
     private TypeOfStudying typeOfStudying;
     private String contractInformation;
 
-    //TODO check if arguments valid
-    public Student(int id, String name, String surname, String gender, String birthDate
-            , String citizenship, String placeOfBirth, String typeOfContract
-            , int groupId, String typeOfStudying, String contractInformation) {
-        this.id = id;
-        this.name = name;
-        this.surname = surname;
-        this.gender = gender;
-        String[] date = new SeparatedValuesParser(".").parseLineToArray(birthDate);
-        this.birthDate = LocalDate.of(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]));
-        this.citizenship = citizenship;
-        this.placeOfBirth = placeOfBirth;
-        this.typeOfContract = typeOfContract;
-        this.groupId = groupId;
-        this.typeOfStudying = typeOfStudying;
-        this.contractInformation = contractInformation;
-    }
-
     public Student setId(int id) {
         this.id = id;
         return this;
@@ -52,7 +34,7 @@ public class Student {
     }
 
     public Student setGender(String gender) {
-        if(gender.contentEquals("f"))
+        if (gender.contentEquals("f"))
             this.gender = Gender.valueOf("female");
         else
             this.gender = Gender.valueOf("male");
