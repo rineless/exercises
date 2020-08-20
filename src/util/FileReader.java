@@ -13,19 +13,13 @@ public class FileReader extends Reader {
         this.path = path;
     }
 
+    //TODO check exception, maybe make a bit different
     public List<String> receiveLinesAsList() {
-        if (receiveLinesFromFileAsStream() != null) {
-            return receiveLinesFromFileAsStream().collect(Collectors.toList());
-        }
-        return null;
-    }
-
-    private Stream<String> receiveLinesFromFileAsStream() {
         try {
-            return Files.lines(Path.of(path));
+            return Files.lines(Path.of(path)).collect(Collectors.toList());
         } catch (IOException e) {
-            System.out.println("Path given incorrect");
-            return null;
+            System.out.println("Path given incorrect. Created empty list");
+            return new ArrayList<String>();
         }
     }
 
