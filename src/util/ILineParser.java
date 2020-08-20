@@ -1,6 +1,7 @@
 package util;
 
-import model.*;
+import model.group.Group;
+import model.student.Student;
 
 public interface ILineParser {
     String[] parseLineToArray(String line);
@@ -8,10 +9,11 @@ public interface ILineParser {
     default Student parseLineToStudent(String line) {
         String[] dataForStudent = parseLineToArray(line);
         if (dataForStudent.length == 11)
-            return new Student(Integer.parseInt(dataForStudent[0]), dataForStudent[1]
-                    , dataForStudent[2], dataForStudent[3], dataForStudent[4], dataForStudent[5]
-                    , dataForStudent[6], dataForStudent[7], Integer.parseInt(dataForStudent[8])
-                    , dataForStudent[9], dataForStudent[10]);
+            return new Student().setId(Integer.parseInt(dataForStudent[0])).setName(dataForStudent[1])
+                    .setSurname(dataForStudent[2]).setGender(dataForStudent[3]).setBirthDate(dataForStudent[4])
+                    .setCitizenship(dataForStudent[5]).setPlaceOfBirth(dataForStudent[6])
+                    .setTypeOfContract(dataForStudent[7]).setGroupId(Integer.parseInt(dataForStudent[8]))
+                    .setTypeOfStudying(dataForStudent[9]).setContractInformation(dataForStudent[10]);
         else {
             throw new IllegalArgumentException("Line cannot be resolved into Student. Not enough data");
         }
@@ -21,9 +23,10 @@ public interface ILineParser {
     default Group parseLineToGroup(String line) {
         String[] dataForGroup = parseLineToArray(line);
         if (dataForGroup.length == 10)
-            return new Group(Integer.parseInt(dataForGroup[0]), dataForGroup[1], dataForGroup[2], dataForGroup[3]
-                    , dataForGroup[4], Integer.parseInt(dataForGroup[5]), Integer.parseInt(dataForGroup[6])
-                    , Integer.parseInt(dataForGroup[7]), dataForGroup[8], dataForGroup[9]);
+            return new Group().setId(Integer.parseInt(dataForGroup[0])).setName(dataForGroup[1])
+                    .setAbbreviation(dataForGroup[2]).setLanguage(dataForGroup[3]).setOnlineAccess(dataForGroup[4])
+                    .setMaxAttendeesPresent(Integer.parseInt(dataForGroup[7])).setResponsibleForGroup(dataForGroup[8])
+                    .setContactInformation(dataForGroup[9]);
         else {
             throw new IllegalArgumentException("Line cannot be resolved into Group. Not enough data");
         }
