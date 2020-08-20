@@ -7,11 +7,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FileReader extends Reader {
-    private final String path;
-
-    public FileReader(String path) {
-        this.path = path;
-    }
 
     //TODO check exception, maybe make a bit different
     public static List<String> receiveLinesAsList(String path) {
@@ -21,10 +16,6 @@ public class FileReader extends Reader {
             System.out.println("Path given incorrect. Created empty list");
             return new ArrayList<String>();
         }
-    }
-
-    public String getPath() {
-        return path;
     }
 
 }
