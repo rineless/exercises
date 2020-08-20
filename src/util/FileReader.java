@@ -14,7 +14,7 @@ public class FileReader extends Reader {
     }
 
     //TODO check exception, maybe make a bit different
-    public List<String> receiveLinesAsList() {
+    public static List<String> receiveLinesAsList(String path) {
         try {
             return Files.lines(Path.of(path)).collect(Collectors.toList());
         } catch (IOException e) {
