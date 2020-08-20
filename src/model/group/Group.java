@@ -2,15 +2,15 @@ package model.group;
 
 import util.SeparatedValuesParser;
 
+import java.util.Locale;
+
 public class Group {
 
     private int id;
     private String name;
-    private String abbreviation;
-    private String language;
+    private Abbreviation abbreviation;
+    private Locale language;
     private boolean onlineAccess;
-    private int attendeesOnline;
-    private int attendeesPresent;
     private int maxAttendeesPresent;
     private String[] responsibleForGroup;
     private String contactInformation;
@@ -35,7 +35,7 @@ public class Group {
         this.contactInformation = contactInformation;
     }*/
 
-    /*public Group setId(int id) {
+    public Group setId(int id) {
         this.id = id;
         return this;
     }
@@ -45,36 +45,37 @@ public class Group {
         return this;
     }
 
-    public Group setAbbreviation() {
-        return abbreviation;
+    public Group setAbbreviation(String abbreviation) {
+        this.abbreviation = Abbreviation.valueOf(abbreviation);
+        return this;
     }
 
-    public String getLanguage() {
-        return language;
+    public Group setLanguage(String language) {
+        this.language = new Locale(language);
+        return this;
     }
 
-    public boolean isOnlineAccess() {
-        return onlineAccess;
+    public Group setOnlineAccess(String onlineAccess) {
+        if (onlineAccess.contentEquals("yes"))
+            this.onlineAccess = true;
+        else
+            this.onlineAccess = false;
+        return this;
     }
 
-    public int getAttendeesOnline() {
-        return attendeesOnline;
+    public Group setMaxAttendeesPresent(int maxAttendeesPresent) {
+        this.maxAttendeesPresent = maxAttendeesPresent;
+        return this;
     }
 
-    public int getAttendeesPresent() {
-        return attendeesPresent;
+    public Group setResponsibleForGroup(String responsibleForGroup) {
+        this.responsibleForGroup = new SeparatedValuesParser(responsibleForGroup).parseLineToArray("");
+        return this;
     }
 
-    public int getMaxAttendeesPresent() {
-        return maxAttendeesPresent;
-    }
-
-    public String[] getResponsibleForGroup() {
-        return new String[]{responsibleForGroup[0], responsibleForGroup[1]};
-    }
-
-    public String getContactInformation() {
-        return contactInformation;
+    public Group setContactInformation(String contactInformation) {
+        this.contactInformation = contactInformation;
+        return this;
     }
 
     public int getId() {
@@ -85,24 +86,16 @@ public class Group {
         return name;
     }
 
-    public String getAbbreviation() {
+    public Abbreviation getAbbreviation() {
         return abbreviation;
     }
 
-    public String getLanguage() {
+    public Locale getLanguage() {
         return language;
     }
 
     public boolean isOnlineAccess() {
         return onlineAccess;
-    }
-
-    public int getAttendeesOnline() {
-        return attendeesOnline;
-    }
-
-    public int getAttendeesPresent() {
-        return attendeesPresent;
     }
 
     public int getMaxAttendeesPresent() {
@@ -115,7 +108,7 @@ public class Group {
 
     public String getContactInformation() {
         return contactInformation;
-    }*/
+    }
 
 
 }
