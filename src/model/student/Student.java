@@ -1,4 +1,4 @@
-package model;
+package model.student;
 
 import util.SeparatedValuesParser;
 

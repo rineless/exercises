@@ -1,20 +1,22 @@
-package model;
+package model.group;
+
+import util.SeparatedValuesParser;
 
 public class Group {
 
-    private final int id;
-    private final String name;
-    private final String abbreviation;
-    private final String language;
-    private final boolean onlineAccess;
-    private final int attendeesOnline;
-    private final int attendeesPresent;
-    private final int maxAttendeesPresent;
-    private final String[] responsibleForGroup;
-    private final String contactInformation;
+    private int id;
+    private String name;
+    private String abbreviation;
+    private String language;
+    private boolean onlineAccess;
+    private int attendeesOnline;
+    private int attendeesPresent;
+    private int maxAttendeesPresent;
+    private String[] responsibleForGroup;
+    private String contactInformation;
 
     //TODO check if attributes are valid
-    public Group(int id, String name, String abbreviation, String language
+    /*public Group(int id, String name, String abbreviation, String language
             , String onlineAccess, int attendeesOnline, int attendeesPresent
             , int maxAttendeesPresent, String responsibleForGroup, String contactInformation) {
         this.id = id;
@@ -29,8 +31,50 @@ public class Group {
         this.attendeesOnline = attendeesOnline;
         this.attendeesPresent = attendeesPresent;
         this.maxAttendeesPresent = maxAttendeesPresent;
-        this.responsibleForGroup = responsibleForGroup.split(" ");//TODO check, maybe create separator
+        this.responsibleForGroup = new SeparatedValuesParser(responsibleForGroup).parseLineToArray("");
         this.contactInformation = contactInformation;
+    }*/
+
+    /*public Group setId(int id) {
+        this.id = id;
+        return this;
+    }
+
+    public Group setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public Group setAbbreviation() {
+        return abbreviation;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public boolean isOnlineAccess() {
+        return onlineAccess;
+    }
+
+    public int getAttendeesOnline() {
+        return attendeesOnline;
+    }
+
+    public int getAttendeesPresent() {
+        return attendeesPresent;
+    }
+
+    public int getMaxAttendeesPresent() {
+        return maxAttendeesPresent;
+    }
+
+    public String[] getResponsibleForGroup() {
+        return new String[]{responsibleForGroup[0], responsibleForGroup[1]};
+    }
+
+    public String getContactInformation() {
+        return contactInformation;
     }
 
     public int getId() {
@@ -71,7 +115,7 @@ public class Group {
 
     public String getContactInformation() {
         return contactInformation;
-    }
+    }*/
 
 
 }
