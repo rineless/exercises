@@ -34,8 +34,8 @@ public interface ILineParser {
             throw new IllegalArgumentException("Line cannot be resolved into Group. Not enough data");
         }
     }
-    //TODO
-    /*default String parseStudentToLine(Student student){
+
+    default String parseStudentToLine(Student student){
         String[] studentData = new String[11];
         studentData[0] = String.valueOf(student.getId());
         studentData[1] = student.getName();
@@ -51,7 +51,7 @@ public interface ILineParser {
         studentData[9] = student.getTypeOfStudying().toString();
         studentData[10] = student.getContractInformation();
         return parseArrayToLine(studentData);
-    }*/
+    }
 
 
 }
