@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 public class SeparatedValuesParser implements ILineParser {
     private final String separator;
 
-    public SeparatedValuesParser(String separator) {
-        this.separator = separator;
+    public SeparatedValuesParser(String separator_regex) {
+        this.separator = separator_regex;
     }
 
     public String[] parseLineToArray(String line) {
