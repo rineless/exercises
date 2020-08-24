@@ -36,10 +36,7 @@ public class Group {
     }
     //TODO check if exceptions
     public Group setOnlineAccess(String onlineAccess) {
-        if (onlineAccess.contentEquals("yes"))
-            this.onlineAccess = true;
-        else
-            this.onlineAccess = false;
+        this.onlineAccess = onlineAccess.contentEquals("yes");
         return this;
     }
 
