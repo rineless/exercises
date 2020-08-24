@@ -59,7 +59,7 @@ public class Student {
     }
 
     public Student setTypeOfContract(String typeOfContract) {
-        this.typeOfContract = TypeOfContract.valueOf(typeOfContract);
+        this.typeOfContract = TypeOfContract.valueOf(typeOfContract.toUpperCase());
         return this;
     }
 
@@ -69,7 +69,7 @@ public class Student {
     }
 
     public Student setTypeOfStudying(String typeOfStudying) {
-        this.typeOfStudying = TypeOfStudying.valueOf(typeOfStudying);
+        this.typeOfStudying = TypeOfStudying.valueOf(typeOfStudying.toUpperCase());
         return this;
     }
 
@@ -78,6 +78,7 @@ public class Student {
         return this;
     }
 
+    //TODO if attribut is empty
     public int getId() {
         return id;
     }
@@ -120,6 +121,11 @@ public class Student {
 
     public String getContractInformation() {
         return contractInformation;
+    }
+
+    @Override
+    public String toString(){
+        return new SeparatedValuesParser(", ").parseStudentToLine(this);
     }
 
 }
