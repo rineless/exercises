@@ -74,7 +74,7 @@ public class Group {
         return language;
     }
 
-    public boolean isOnlineAccess() {
+    public boolean getOnlineAccess() {
         return onlineAccess;
     }
 
