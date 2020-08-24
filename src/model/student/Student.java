@@ -35,9 +35,9 @@ public class Student {
 
     public Student setGender(String gender) {
         if (gender.contentEquals("f"))
-            this.gender = Gender.valueOf("female");
+            this.gender = Gender.valueOf("FEMALE");
         else
-            this.gender = Gender.valueOf("male");
+            this.gender = Gender.valueOf("MALE");
         return this;
     }
 
