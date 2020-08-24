@@ -4,11 +4,14 @@ import model.group.Group;
 import model.student.Student;
 
 import java.time.LocalDate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public interface ILineParser {
     String[] parseLineToArray(String line);
     String parseArrayToLine(String[] array);
 
+    //TODO add exceptions
     default Student parseLineToStudent(String line) {
         String[] dataForStudent = parseLineToArray(line);
         if (dataForStudent.length == 11)
@@ -22,7 +25,7 @@ public interface ILineParser {
         }
     }
 
-
+    //TODO add exceptions
     default Group parseLineToGroup(String line) {
         String[] dataForGroup = parseLineToArray(line);
         if (dataForGroup.length == 10)
@@ -51,6 +54,21 @@ public interface ILineParser {
         studentData[9] = student.getTypeOfStudying().toString();
         studentData[10] = student.getContractInformation();
         return parseArrayToLine(studentData);
+    }
+
+    default String parseGroupToLine(Group group) {
+        String[] groupData = new String[8];
+        groupData[0] = String.valueOf(group.getId());
+        groupData[1] = group.getName();
+        groupData[2] = group.getAbbreviation().toString();
+        groupData[3] = group.getLanguage().toString();
+        groupData[4] = String.valueOf(group.getOnlineAccess()); //TODO check
+        groupData[5] = String.valueOf(group.getMaxAttendeesPresent());
+        String responsibleForGroup = Stream.of(group.getResponsibleForGroup())
+                .map(name -> name + " ").collect(Collectors.joining());
+        groupData[6] = responsibleForGroup.substring(0, responsibleForGroup.length() - 1);//TODO check
+        groupData[7] = group.getContactInformation();
+        return parseArrayToLine(groupData);
     }
 
 
