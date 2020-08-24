@@ -49,7 +49,7 @@ public class Group {
     }
 
     public Group setResponsibleForGroup(String responsibleForGroup) {
-        this.responsibleForGroup = new SeparatedValuesParser(responsibleForGroup).parseLineToArray("");
+        this.responsibleForGroup = new SeparatedValuesParser(responsibleForGroup).parseLineToArray(" ");
         return this;
     }
 
