@@ -90,5 +90,9 @@ public class Group {
         return contactInformation;
     }
 
+    public String toString(){
+        return new SeparatedValuesParser(", ").parseGroupToLine(this);
+    }
+
 
 }
