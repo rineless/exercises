@@ -26,7 +26,7 @@ public class Group {
     }
 
     public Group setAbbreviation(String abbreviation) {
-        this.abbreviation = Abbreviation.valueOf(abbreviation);
+        this.abbreviation = Abbreviation.valueOf(abbreviation.toUpperCase());
         return this;
     }
 
@@ -34,7 +34,7 @@ public class Group {
         this.language = new Locale(language);
         return this;
     }
-
+    //TODO check if exceptions
     public Group setOnlineAccess(String onlineAccess) {
         if (onlineAccess.contentEquals("yes"))
             this.onlineAccess = true;
