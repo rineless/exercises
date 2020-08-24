@@ -3,8 +3,11 @@ package util;
 import model.group.Group;
 import model.student.Student;
 
+import java.time.LocalDate;
+
 public interface ILineParser {
     String[] parseLineToArray(String line);
+    String parseArrayToLine(String[] array);
 
     default Student parseLineToStudent(String line) {
         String[] dataForStudent = parseLineToArray(line);
@@ -31,6 +34,24 @@ public interface ILineParser {
             throw new IllegalArgumentException("Line cannot be resolved into Group. Not enough data");
         }
     }
+    //TODO
+    /*default String parseStudentToLine(Student student){
+        String[] studentData = new String[11];
+        studentData[0] = String.valueOf(student.getId());
+        studentData[1] = student.getName();
+        studentData[2] = student.getSurname();
+        studentData[3] = student.getGender().toString();
+        LocalDate date = student.getBirthDate();
+        studentData[4] = String.valueOf(date.getDayOfMonth())+"."+String.valueOf(date.getMonthValue())
+                +"."+String.valueOf(date.getYear());
+        studentData[5] = student.getCitizenship();
+        studentData[6] = student.getPlaceOfBirth();
+        studentData[7] = student.getTypeOfContract().toString();
+        studentData[8] = String.valueOf(student.getGroupId());
+        studentData[9] = student.getTypeOfStudying().toString();
+        studentData[10] = student.getContractInformation();
+        return parseArrayToLine(studentData);
+    }*/
 
 
 }
