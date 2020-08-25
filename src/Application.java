@@ -1,3 +1,4 @@
+import model.group.Group;
 import model.student.Student;
 import util.CSVParser;
 import util.FileReader;
@@ -17,6 +18,7 @@ public class Application {
     public static void main(String[] args){
         List<Student> studentList = receiveListOfStudents("src/data/StudentData.csv");
         studentList.stream().forEach(student -> System.out.println(student.toString()));
+        List<Group> groupList = receiveListOfGroups("");
         list.add("12,Ruby,Roth,f,29.12.1998,Netherlands,Amsterdam,payable,1,present,ruby.roth@gmail.com");
         Files.write();
         /*Student student = new Student();
@@ -34,5 +36,13 @@ public class Application {
         CSVParser parser = new CSVParser();
         lineList.remove(0);
         return lineList.stream().map(line -> parser.parseLineToStudent(line)).collect(Collectors.toList());
+    }
+
+    public static List<Group> receiveListOfGroups(String path){
+        FileReader groupReader = new FileReader();
+        List<String> lineList = groupReader.receiveLinesAsList(path);
+        CSVParser parser = new CSVParser();
+        lineList.remove(0);
+        return lineList.stream().map(line -> parser.parseLineToGroup(line)).collect(Collectors.toList());
     }
 }
