@@ -42,7 +42,7 @@ public class Student {
     }
 
     public Student setBirthDate(String birthDate) {
-        String[] date = new SeparatedValuesParser(".").parseLineToArray(birthDate);
+        String[] date = new SeparatedValuesParser("\\.").parseLineToArray(birthDate);
         this.birthDate = LocalDate.of(Integer.parseInt(date[2]), Integer.parseInt(date[1])
                 , Integer.parseInt(date[0]));
         return this;
@@ -78,7 +78,7 @@ public class Student {
         return this;
     }
 
-    //TODO if attribut is empty
+    //TODO if attribute is empty
     public int getId() {
         return id;
     }
