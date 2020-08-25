@@ -1,7 +1,7 @@
 package model.group;
 
 public enum Abbreviation {
-    DS("Discrete structures"), Alg("Algorithms"), Anl("Analysis");
+    DS("Discrete structures"), ALG("Algorithms"), ANL("Analysis");
 
      private final String fullName;
 
