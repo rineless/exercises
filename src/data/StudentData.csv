@@ -2,7 +2,7 @@ ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Gr
 1,Anna,Allen,f,07.11.1998,German,Hamburg,stipend,1,present,anna.allen98@gmail.com
 2,Peter,Tailor,m,25.06.1999,German,Bremen,payable,2,present,petter99tailor@gmail.com
 3,Alice,Cook,f,14.04.1999,Ungarn,Paks,payable,1,online,alicook@gmail.com
-4,Della,Fox,f,05.12.1998,German,Bochum,payable ,3,present,della.fox@gmail.com
+4,Della,Fox,f,05.12.1998,German,Bochum,payable,3,present,della.fox@gmail.com
 5,Alphonse,Mason,m,17.03.2000,Switzerland,Brig,stipend,3,present,alph05mason@gmail.com
 6,Kenneth,Meier,m,24.09.1999,German,Hamburg,stipend,2,online,kenneth_meier@gmail.com
 7,Lexi,Carter,f,19.10.1998,German,Erfurt,payable,1,online,lexii98carter@gmail.com
