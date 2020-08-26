@@ -20,8 +20,7 @@ import java.util.stream.Collectors;
 public class Application {
 
     public static void main(String[] args){
-        /*Student student = receiveListOfStudents("src/data/StudentData.csv");
-        System.out.println(student.toString());*/
+
         System.out.println("Students:");
         List<Student> studentList = receiveListOfStudents("src/data/StudentData.csv");
         studentList.stream().forEach(student -> System.out.println(student.toString()));
@@ -34,15 +33,10 @@ public class Application {
         studentsToAdd.add("13,Rubel,Bare,m,15.02.1998,German,Bremen,payable,0,present,rubel.bare@gmail.com");
         addStudent(studentsToAdd,studentList,"src/data/StudentData.csv");
 
-
-        /*list.add("12,Ruby,Roth,f,29.12.1998,Netherlands,Amsterdam,payable,1,present,ruby.roth@gmail.com");
-        Files.write();*/
-        /*Student student = new Student();
-        String a = "4 06 2098";
-        String[] b = a.split(" ");
-        for(String x:b){
-            System.out.println(x);
-        }*/
+        //TODO find what to do with new abbreviations
+        /*List<String> groupsToAdd = new ArrayList<>();
+        groupsToAdd.add("4,Analysis,Anl,english,no,0,3,15,Karol Maier,karol.maier@myuni.de");
+        addGroup(groupsToAdd,groupList,"src/data/StudentGroupData.csv");*/
 
     }
 
@@ -65,6 +59,17 @@ public class Application {
     public static void addStudent(List<String> lines, List<Student> studentList, String path){
         lines.stream().map(line -> new CSVParser().parseLineToStudent(line))
                 .forEach(student -> studentList.add(student));
+        try {
+            Files.write(Path.of(path),lines, StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    //TODO check, finalize
+    public static void addGroup(List<String> lines, List<Group> groupList, String path){
+        lines.stream().map(line -> new CSVParser().parseLineToGroup(line))
+                .forEach(group -> groupList.add(group));
         try {
             Files.write(Path.of(path),lines, StandardOpenOption.APPEND);
         } catch (IOException e) {
