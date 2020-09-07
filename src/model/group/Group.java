@@ -1,6 +1,6 @@
 package model.group;
 
-import util.SeparatedValuesParser;
+import util.parser.SeparatedValuesParser;
 
 import java.util.Locale;
 

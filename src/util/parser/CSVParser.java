@@ -1,4 +1,4 @@
-package util;
+package util.parser;
 
 public class CSVParser extends SeparatedValuesParser {
 

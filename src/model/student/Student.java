@@ -1,6 +1,6 @@
 package model.student;
 
-import util.SeparatedValuesParser;
+import util.parser.SeparatedValuesParser;
 
 import java.time.LocalDate;
 
