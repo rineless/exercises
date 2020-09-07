@@ -11,8 +11,10 @@ public class SeparatedValuesParserTest {
     @DisplayName("Ordinary line with _ separator should be parsed to array")
     void shouldParseOrdinaryLineWithUnderscoreSeparatorToArray(){
         SeparatedValuesParser parser = new SeparatedValuesParser("_");
-        String[] actual = parser.parseLineToArray("just_check_ordinary_statement");
         String[] expected = new String[]{"just","check", "ordinary", "statement"};
+
+        String[] actual = parser.parseLineToArray("just_check_ordinary_statement");
+
         Assertions.assertArrayEquals(expected, actual, "Expected parsed line into array");
     }
 
@@ -20,8 +22,10 @@ public class SeparatedValuesParserTest {
     @DisplayName("Ordinary line with | separator should be parsed to array")
     void shouldParseOrdinaryLineWithVerticalLineSeparatorToArray(){
         SeparatedValuesParser parser = new SeparatedValuesParser("\\|");
-        String[] actual = parser.parseLineToArray("just|check|ordinary|statement");
         String[] expected = new String[]{"just","check", "ordinary", "statement"};
+
+        String[] actual = parser.parseLineToArray("just|check|ordinary|statement");
+
         Assertions.assertArrayEquals(expected, actual, "Expected parsed line into array");
     }
 
@@ -29,8 +33,10 @@ public class SeparatedValuesParserTest {
     @DisplayName("Ordinary line with - separator should be parsed to array")
     void shouldParseOrdinaryLineWithHorizontalLineSeparatorToArray(){
         SeparatedValuesParser parser = new SeparatedValuesParser("-");
-        String[] actual = parser.parseLineToArray("just-check-ordinary-statement");
         String[] expected = new String[]{"just","check", "ordinary", "statement"};
+
+        String[] actual = parser.parseLineToArray("just-check-ordinary-statement");
+
         Assertions.assertArrayEquals(expected, actual, "Expected parsed line into array");
     }
 
@@ -38,8 +44,10 @@ public class SeparatedValuesParserTest {
     @DisplayName("Ordinary line with -||tr* separator should be parsed to array")
     void shouldParseOrdinaryLineWithBunchOfSymbolsSeparatorToArray(){
         SeparatedValuesParser parser = new SeparatedValuesParser("-\\|\\|tr\\*");
-        String[] actual = parser.parseLineToArray("just-||tr*check-||tr*ordinary-||tr*statement");
         String[] expected = new String[]{"just","check", "ordinary", "statement"};
+
+        String[] actual = parser.parseLineToArray("just-||tr*check-||tr*ordinary-||tr*statement");
+
         Assertions.assertArrayEquals(expected, actual, "Expected parsed line into array");
     }
 
