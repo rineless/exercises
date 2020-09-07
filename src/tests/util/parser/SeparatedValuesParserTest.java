@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 public class SeparatedValuesParserTest {
 
+    //test parseLineToArray(separator)
     @Test
     @DisplayName("Ordinary line with _ separator should be parsed to array")
     void shouldParseOrdinaryLineWithUnderscoreSeparatorToArray(){
@@ -52,4 +53,52 @@ public class SeparatedValuesParserTest {
     }
 
 
+    //TODO make negative tests for lineToArray
+
+    // test parseArrayToLine(separator)
+    @Test
+    @DisplayName("Array should be parsed to line with _ separator")
+    void shouldParseArrayToLineWithUnderscoreSeparator(){
+        SeparatedValuesParser parser = new SeparatedValuesParser("_");
+        String expected = "just_check_ordinary_statement";
+
+        String actual = parser.parseArrayToLine(new String[]{"just","check", "ordinary", "statement"});
+
+        Assertions.assertEquals(expected, actual, "Expected parsed array into line");
+    }
+
+    @Test
+    @DisplayName("Array should be parsed to line with | separator")
+    void shouldParseArrayToLineWithVerticalLineSeparator(){
+        SeparatedValuesParser parser = new SeparatedValuesParser("\\|");
+        String expected = "just|check|ordinary|statement";
+
+        String actual = parser.parseArrayToLine(new String[]{"just","check", "ordinary", "statement"});
+
+        Assertions.assertEquals(expected, actual, "Expected parsed array into line");
+    }
+
+    @Test
+    @DisplayName("Array should be parsed to line with - separator")
+    void shouldParseArrayToLineWithHorizontalLineSeparator(){
+        SeparatedValuesParser parser = new SeparatedValuesParser("-");
+        String expected = "just-check-ordinary-statement";
+
+        String actual = parser.parseArrayToLine(new String[]{"just","check", "ordinary", "statement"});
+
+        Assertions.assertEquals(expected, actual, "Expected parsed array into line");
+    }
+
+    @Test
+    @DisplayName("Array should be parsed to line with -||tr* separator")
+    void shouldParseArrayToLineWithBunchOfSymbolsSeparator(){
+        SeparatedValuesParser parser = new SeparatedValuesParser("-\\|\\|tr\\*");
+        String expected = "just-||tr*check-||tr*ordinary-||tr*statement";
+
+        String actual = parser.parseArrayToLine(new String[]{"just","check", "ordinary", "statement"});
+
+        Assertions.assertEquals(expected, actual, "Expected parsed array into line");
+    }
+
+    //TODO make negative tests for arrayToLine
 }
