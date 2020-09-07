@@ -1,14 +1,13 @@
-package util;
+package util.reader;
 
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class FileReader extends Reader {
 
-    //TODO check exception, maybe make a bit different
+    //TODO check exceptions, maybe make a bit different
     public List<String> receiveLinesAsList(String path) {
         try {
             if (Files.exists(Path.of(path)) && Files.isReadable(Path.of(path)))
@@ -17,7 +16,7 @@ public class FileReader extends Reader {
                 throw new IllegalArgumentException("Readable file not found.");
             }
         } catch (IOException | IllegalArgumentException exp) {
-            System.out.println("Path given incorrect. Created empty list");
+            System.out.println("Path given incorrect. Created empty list"); //TODO check excp
             return new ArrayList<String>();
         }
     }
