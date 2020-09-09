@@ -11,7 +11,7 @@ public class SeparatedValuesParser implements ILineParser {
     }
 
     public String[] parseLineToArray(String line) {
-        if (line != null) {
+        if (line != null && !line.contentEquals("")) {
             return line.split(separator_regex);
         }
         return new String[]{};
