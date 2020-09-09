@@ -11,8 +11,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 public class SeparatedValuesParserTest {
     @Nested
-    @DisplayName("Test parseToLine method")
-    class ParseLineToArray {
+    @DisplayName("Test parseLineToArray method")
+    class ParseLineToArrayTests {
 
         @ParameterizedTest
         @CsvSource({"_,just_check_ordinary_statement", "-,just-check-ordinary-statement"
@@ -65,45 +65,47 @@ public class SeparatedValuesParserTest {
 
         //TODO make negative tests for lineToArray
     }
-    /** test parseArrayToLine(separator)*/
 
+    @Nested
+    @DisplayName("Test parseArrayToLine method")
+    class ParseArrayToLineTests {
 
-    @ParameterizedTest
-    @CsvSource({"_,just_check_ordinary_statement", "-,just-check-ordinary-statement"
-            , "\\|,just|check|ordinary|statement"
-            , "-\\|\\|tr\\*,just-||tr*check-||tr*ordinary-||tr*statement"})
-    @DisplayName("Array should be parsed to line with some separator")
-    void shouldParseArrayToLine(String separator_regex, String expectedLine){
-        SeparatedValuesParser parser = new SeparatedValuesParser(separator_regex);
-        String expected = expectedLine;
+        @ParameterizedTest
+        @CsvSource({"_,just_check_ordinary_statement", "-,just-check-ordinary-statement"
+                , "\\|,just|check|ordinary|statement"
+                , "-\\|\\|tr\\*,just-||tr*check-||tr*ordinary-||tr*statement"})
+        @DisplayName("Array should be parsed to line with some separator")
+        void shouldParseArrayToLine(String separator_regex, String expectedLine) {
+            SeparatedValuesParser parser = new SeparatedValuesParser(separator_regex);
+            String expected = expectedLine;
 
-        String actual = parser.parseArrayToLine(new String[]{"just","check", "ordinary", "statement"});
+            String actual = parser.parseArrayToLine(new String[]{"just", "check", "ordinary", "statement"});
 
-        Assertions.assertEquals(expected, actual, "Expected parsed array into line");
+            Assertions.assertEquals(expected, actual, "Expected parsed array into line");
+        }
+
+        @Test
+        @DisplayName("Empty array should be parsed to empty line")
+        void parseArrayToLine_WithSpaceSeparatorParser_ShouldParseEmptyArrayToEmptyLine() {
+            SeparatedValuesParser parser = new SeparatedValuesParser(" ");
+            String expected = "";
+
+            String actual = parser.parseArrayToLine(new String[]{});
+
+            Assertions.assertEquals(expected, actual, "Expected parsed empty array into empty line");
+        }
+
+        @Test
+        @DisplayName("Null should be parsed to empty line")
+        void parseArrayToLine_WithSpaceSeparatorParser_ShouldParseNullToEmptyArray() {
+            SeparatedValuesParser parser = new SeparatedValuesParser(" ");
+            String expected = "";
+
+            String actual = parser.parseArrayToLine(null);
+
+            Assertions.assertEquals(expected, actual, "Expected parsed null into empty line");
+        }
     }
-
-    @Test
-    @DisplayName("Empty array should be parsed to empty line")
-    void parseArrayToLine_WithSpaceSeparatorParser_ShouldParseEmptyArrayToEmptyLine(){
-        SeparatedValuesParser parser = new SeparatedValuesParser(" ");
-        String expected = "";
-
-        String actual = parser.parseArrayToLine(new String[]{});
-
-        Assertions.assertEquals(expected, actual, "Expected parsed empty array into empty line");
-    }
-
-    @Test
-    @DisplayName("Null should be parsed to empty line")
-    void parseArrayToLine_WithSpaceSeparatorParser_ShouldParseNullToEmptyArray(){
-        SeparatedValuesParser parser = new SeparatedValuesParser(" ");
-        String expected = "";
-
-        String actual = parser.parseArrayToLine(null);
-
-        Assertions.assertEquals(expected, actual, "Expected parsed null into empty line");
-    }
-
     //TODO make negative tests for arrayToLine
 
 
