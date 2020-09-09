@@ -18,8 +18,14 @@ public class SeparatedValuesParser implements ILineParser {
     }
 
     public String parseArrayToLine(String[] array){
-        String separator = separator_regex.replace("\\","");
-        String line = Arrays.stream(array).map(word -> word+ separator).collect(Collectors.joining());
-        return line.substring(0, line.length() - separator.length());
+        if(array != null) {
+            if(array.length!=0) {
+                String separator = separator_regex.replace("\\", "");
+                String line = Arrays.stream(array).map(word -> word + separator).collect(Collectors.joining());
+                return line.substring(0, line.length() - separator.length());
+            }
+        }
+
+        return "";
     }
 }
