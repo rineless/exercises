@@ -64,11 +64,10 @@ public class SeparatedValuesParserTest {
         @DisplayName("Array should be parsed to line with some separator")
         void shouldParseArrayToLine(String separator_regex, String expectedLine) {
             SeparatedValuesParser parser = new SeparatedValuesParser(separator_regex);
-            String expected = expectedLine;
 
             String actual = parser.parseArrayToLine(new String[]{"just", "check", "ordinary", "statement"});
 
-            Assertions.assertEquals(expected, actual, "Expected parsed array into line");
+            Assertions.assertEquals(expectedLine, actual, "Expected parsed array into line");
         }
 
         @ParameterizedTest
