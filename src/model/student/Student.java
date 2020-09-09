@@ -41,10 +41,20 @@ public class Student {
         return this;
     }
 
+    public Student setGender(Gender gender){
+        this.gender = gender;
+        return this;
+    }
+
     public Student setBirthDate(String birthDate) {
         String[] date = new SeparatedValuesParser("\\.").parseLineToArray(birthDate);
         this.birthDate = LocalDate.of(Integer.parseInt(date[2]), Integer.parseInt(date[1])
                 , Integer.parseInt(date[0]));
+        return this;
+    }
+
+    public Student setBirthDate(LocalDate birthDate){
+        this.birthDate = birthDate;
         return this;
     }
 
@@ -63,6 +73,11 @@ public class Student {
         return this;
     }
 
+    public Student setTypeOfContract(TypeOfContract typeOfContract){
+        this.typeOfContract = typeOfContract;
+        return this;
+    }
+
     public Student setGroupId(int groupId) {
         this.groupId = groupId;
         return this;
@@ -73,10 +88,16 @@ public class Student {
         return this;
     }
 
+    public Student setTypeOfStudying(TypeOfStudying typeOfStudying){
+        this.typeOfStudying = typeOfStudying;
+        return this;
+    }
+
     public Student setContractInformation(String contractInformation) {
         this.contractInformation = contractInformation;
         return this;
     }
+
 
     //TODO if attribute is empty
     public int getId() {
