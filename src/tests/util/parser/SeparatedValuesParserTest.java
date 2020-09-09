@@ -71,10 +71,11 @@ public class SeparatedValuesParserTest {
             Assertions.assertEquals(expected, actual, "Expected parsed array into line");
         }
 
-        @Test
+        @ParameterizedTest
+        @ValueSource(strings = {",", " ", "\\.\\.", "_", "--"})
         @DisplayName("Empty array should be parsed to empty line")
-        void parseArrayToLine_WithSpaceSeparatorParser_ShouldParseEmptyArrayToEmptyLine() {
-            SeparatedValuesParser parser = new SeparatedValuesParser(" ");
+        void parseArrayToLine_ShouldParseEmptyArrayToEmptyLine(String separator_regex) {
+            SeparatedValuesParser parser = new SeparatedValuesParser(separator_regex);
             String expected = "";
 
             String actual = parser.parseArrayToLine(new String[]{});
@@ -82,10 +83,11 @@ public class SeparatedValuesParserTest {
             Assertions.assertEquals(expected, actual, "Expected parsed empty array into empty line");
         }
 
-        @Test
+        @ParameterizedTest
+        @ValueSource(strings = {",", " ", "\\.\\.", "_", "--"})
         @DisplayName("Null should be parsed to empty line")
-        void parseArrayToLine_WithSpaceSeparatorParser_ShouldParseNullToEmptyArray() {
-            SeparatedValuesParser parser = new SeparatedValuesParser(" ");
+        void parseArrayToLine_ShouldParseNullToEmptyArray(String separator_regex) {
+            SeparatedValuesParser parser = new SeparatedValuesParser(separator_regex);
             String expected = "";
 
             String actual = parser.parseArrayToLine(null);
