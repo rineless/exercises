@@ -149,4 +149,34 @@ public class Student {
         return new SeparatedValuesParser(", ").parseStudentToLine(this);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null)
+            return false;
+
+        if(obj instanceof Student){
+            return equals((Student) obj);
+        }
+
+        return false;
+    }
+
+    public boolean equals(Student student){
+        if(student == null)
+            return false;
+        try {
+            if (this.id == student.id && this.name.contentEquals(student.name)
+                    && this.surname.contentEquals(student.surname) && this.gender == student.getGender()
+                    && this.birthDate.equals(student.getBirthDate()) && this.citizenship.contentEquals(student.getCitizenship())
+                    && this.placeOfBirth.contentEquals(student.getPlaceOfBirth())
+                    && this.typeOfContract == student.getTypeOfContract() && this.groupId == student.getGroupId()
+                    && this.typeOfStudying == student.getTypeOfStudying() && this.contractInformation.contentEquals(student.getContractInformation()))
+                return true;
+        }
+        catch(NullPointerException ex){
+            return false;
+        }
+        return false;
+    }
+
 }
