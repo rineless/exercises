@@ -1,5 +1,9 @@
 package util.parser;
 
+import model.student.Gender;
+import model.student.Student;
+import model.student.TypeOfContract;
+import model.student.TypeOfStudying;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -7,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.time.LocalDate;
 
 
 public class SeparatedValuesParserTest {
@@ -99,6 +105,21 @@ public class SeparatedValuesParserTest {
     @DisplayName("Test parseLineToStudent method")
     class ParseLineToStudentTests{
 
+        @ParameterizedTest
+        @CsvSource({"_,3_Alice_Cook_f_14.04.1999_Ungarn_Paks_payable_1_online_alicook@gmail.com"})
+        @DisplayName("Line should be parsed into student")
+        void shouldParseLineToStudent(String separator_regex, String line) {
+            SeparatedValuesParser parser = new SeparatedValuesParser(separator_regex);
+            Student expectedStudent = new Student().setId(3).setName("Alice").setSurname("Cook")
+                    .setGender(Gender.FEMALE).setBirthDate(LocalDate.of(1999, 4, 14))
+                    .setCitizenship("Ungarn").setPlaceOfBirth("Paks").setTypeOfContract(TypeOfContract.PAYABLE)
+                    .setGroupId(1).setTypeOfStudying(TypeOfStudying.ONLINE)
+                    .setContractInformation("alicook@gmail.com");
+
+            Student actualStudent = parser.parseLineToStudent(line);
+
+            Assertions.assertEquals(expectedStudent, actualStudent, "Should parse line into student");
+        }
     }
 
 
