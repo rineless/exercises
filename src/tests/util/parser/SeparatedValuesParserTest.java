@@ -73,7 +73,7 @@ public class SeparatedValuesParserTest {
             , "\\|,just|check|ordinary|statement"
             , "-\\|\\|tr\\*,just-||tr*check-||tr*ordinary-||tr*statement"})
     @DisplayName("Array should be parsed to line with some separator")
-    void shouldParseArrayToLineWithUnderscoreSeparator(String separator_regex, String expectedLine){
+    void shouldParseArrayToLine(String separator_regex, String expectedLine){
         SeparatedValuesParser parser = new SeparatedValuesParser(separator_regex);
         String expected = expectedLine;
 
