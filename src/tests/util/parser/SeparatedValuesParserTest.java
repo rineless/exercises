@@ -28,18 +28,6 @@ public class SeparatedValuesParserTest {
             Assertions.assertArrayEquals(expected, actual, "Expected parsed line into array");
         }
 
-
-        // TODO check, tried new names
-        @Test
-        void parseLineToArray_WithSpaceSeparatorParser_ShouldParseLineToArray() {
-            SeparatedValuesParser parser = new SeparatedValuesParser(" ");
-            String[] expected = new String[]{"just", "check", "ordinary", "statement"};
-
-            String[] actual = parser.parseLineToArray("just check ordinary statement ");
-
-            Assertions.assertArrayEquals(expected, actual, "Expected parsed line to array");
-        }
-
         @ParameterizedTest
         @ValueSource(strings = {",", " ", "\\.\\.", "_", "--"})
         @DisplayName("Empty line should be parsed to empty array")
@@ -52,18 +40,17 @@ public class SeparatedValuesParserTest {
             Assertions.assertArrayEquals(expected, actual, "Expected parsed empty line into empty array");
         }
 
-        @Test
+        @ParameterizedTest
+        @ValueSource(strings = {",", " ", "\\.\\.", "_", "--"})
         @DisplayName("Null should be parsed to empty array")
-        void parseLineToArray_WithSpaceSeparatorParser_ShouldParseNullToEmptyArray() {
-            SeparatedValuesParser parser = new SeparatedValuesParser(" ");
+        void parseLineToArray_ShouldParseNullToEmptyArray(String separator_regex) {
+            SeparatedValuesParser parser = new SeparatedValuesParser(separator_regex);
             String[] expected = new String[]{};
 
             String[] actual = parser.parseLineToArray(null);
 
             Assertions.assertArrayEquals(expected, actual, "Expected parsed null into empty array");
         }
-
-        //TODO make negative tests for lineToArray
     }
 
     @Nested
@@ -106,7 +93,6 @@ public class SeparatedValuesParserTest {
             Assertions.assertEquals(expected, actual, "Expected parsed null into empty line");
         }
     }
-    //TODO make negative tests for arrayToLine
 
 
 }
