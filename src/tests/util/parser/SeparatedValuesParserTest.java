@@ -96,5 +96,11 @@ public class SeparatedValuesParserTest {
         }
     }
 
+    @Nested
+    @DisplayName("Test parseLineToStudent method")
+    class ParseLineToStudentTests{
+
+    }
+
 
 }
