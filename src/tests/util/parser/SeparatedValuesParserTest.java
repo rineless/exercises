@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDate;
-
 
 public class SeparatedValuesParserTest {
     @Nested
@@ -106,7 +106,10 @@ public class SeparatedValuesParserTest {
     class ParseLineToStudentTests{
 
         @ParameterizedTest
-        @CsvSource({"_,3_Alice_Cook_f_14.04.1999_Ungarn_Paks_payable_1_online_alicook@gmail.com"})
+        @CsvSource({"_,3_Alice_Cook_f_14.04.1999_Ungarn_Paks_payable_1_online_alicook@gmail.com"
+                    , "\\|>\\*>\\|,3|>*>|Alice|>*>|Cook|>*>|f|>*>|14.04.1999" +
+                "|>*>|Ungarn|>*>|Paks|>*>|payable|>*>|1|>*>|online|>*>|alicook@gmail.com"
+                , ";,3;Alice;Cook;f;14.04.1999;Ungarn;Paks;payable;1;online;alicook@gmail.com"})
         @DisplayName("Line should be parsed into student")
         void shouldParseLineToStudent(String separator_regex, String line) {
             SeparatedValuesParser parser = new SeparatedValuesParser(separator_regex);
