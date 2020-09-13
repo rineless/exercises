@@ -11,18 +11,22 @@ public interface ILineParser {
     String[] parseLineToArray(String line);
     String parseArrayToLine(String[] array);
 
-    //TODO add exceptions
+
     default Student parseLineToStudent(String line) {
-        String[] dataForStudent = parseLineToArray(line);
-        if (dataForStudent.length == 11)
-            return new Student().setId(Integer.parseInt(dataForStudent[0])).setName(dataForStudent[1])
-                    .setSurname(dataForStudent[2]).setGender(dataForStudent[3]).setBirthDate(dataForStudent[4])
-                    .setCitizenship(dataForStudent[5]).setPlaceOfBirth(dataForStudent[6])
-                    .setTypeOfContract(dataForStudent[7]).setGroupId(Integer.parseInt(dataForStudent[8]))
-                    .setTypeOfStudying(dataForStudent[9]).setContractInformation(dataForStudent[10]);
-        else {
-            throw new IllegalArgumentException("Line cannot be resolved into Student. Not enough data");
-        }
+        if (line != null) {
+            String[] dataForStudent = parseLineToArray(line);
+            if (dataForStudent.length == 11)
+                return new Student().setId(Integer.parseInt(dataForStudent[0])).setName(dataForStudent[1])
+                        .setSurname(dataForStudent[2]).setGender(dataForStudent[3]).setBirthDate(dataForStudent[4])
+                        .setCitizenship(dataForStudent[5]).setPlaceOfBirth(dataForStudent[6])
+                        .setTypeOfContract(dataForStudent[7]).setGroupId(Integer.parseInt(dataForStudent[8]))
+                        .setTypeOfStudying(dataForStudent[9]).setContractInformation(dataForStudent[10]);
+            else {
+                throw new IllegalArgumentException("Line cannot be resolved into Student. Not enough data");
+            }
+        } else
+            throw new IllegalArgumentException("Null cannot be resolved into Student.");
+
     }
 
     //TODO add exceptions
