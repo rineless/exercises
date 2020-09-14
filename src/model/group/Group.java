@@ -46,9 +46,15 @@ public class Group {
         throw new IllegalArgumentException("Null as abbreviation is prohibited");
     }
 
-    public Group setLanguage(String language) throws NullPointerException{
-        this.language = new Locale(language);
-        return this;
+    public Group setLanguage(String language) throws IllegalArgumentException{
+        if(language!=null) {
+            if(!language.contentEquals("")) {
+                this.language = new Locale(language);
+                return this;
+            }
+        }
+
+        throw new IllegalArgumentException("Empty language or null is prohibited");
     }
 
     public Group setLanguage(Locale language) throws IllegalArgumentException{
