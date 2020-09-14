@@ -16,11 +16,16 @@ public interface ILineParser {
         if (line != null) {
             String[] dataForStudent = parseLineToArray(line);
             if (dataForStudent.length == 11)
-                return new Student().setId(Integer.parseInt(dataForStudent[0])).setName(dataForStudent[1])
-                        .setSurname(dataForStudent[2]).setGender(dataForStudent[3]).setBirthDate(dataForStudent[4])
-                        .setCitizenship(dataForStudent[5]).setPlaceOfBirth(dataForStudent[6])
-                        .setTypeOfContract(dataForStudent[7]).setGroupId(Integer.parseInt(dataForStudent[8]))
-                        .setTypeOfStudying(dataForStudent[9]).setContractInformation(dataForStudent[10]);
+                try {
+                    return new Student().setId(Integer.parseInt(dataForStudent[0])).setName(dataForStudent[1])
+                            .setSurname(dataForStudent[2]).setGender(dataForStudent[3]).setBirthDate(dataForStudent[4])
+                            .setCitizenship(dataForStudent[5]).setPlaceOfBirth(dataForStudent[6])
+                            .setTypeOfContract(dataForStudent[7]).setGroupId(Integer.parseInt(dataForStudent[8]))
+                            .setTypeOfStudying(dataForStudent[9]).setContactInformation(dataForStudent[10]);
+                }
+                catch(ArrayIndexOutOfBoundsException ex){
+                    throw new IllegalArgumentException("Line cannot be resolved into Student. Incorrect input of student birth date");
+                }
             else {
                 throw new IllegalArgumentException("Line cannot be resolved into Student. Not enough data");
             }
@@ -56,7 +61,7 @@ public interface ILineParser {
         studentData[7] = student.getTypeOfContract().toString();
         studentData[8] = String.valueOf(student.getGroupId());
         studentData[9] = student.getTypeOfStudying().toString();
-        studentData[10] = student.getContractInformation();
+        studentData[10] = student.getContactInformation();
         return parseArrayToLine(studentData);
     }
 
