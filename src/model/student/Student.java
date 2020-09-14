@@ -24,11 +24,21 @@ public class Student {
     }
 
     public Student setName(String name) {
+        if(name==null)
+            throw new IllegalArgumentException("Null cannot be resolved into student name");
+        if(name.contentEquals(""))
+            throw new IllegalArgumentException("Empty student name is prohibited");
+
         this.name = name;
         return this;
     }
 
     public Student setSurname(String surname) {
+        if(surname==null)
+            throw new IllegalArgumentException("Null cannot be resolved into student surname");
+        if(surname.contentEquals(""))
+            throw new IllegalArgumentException("Empty student surname is prohibited");
+
         this.surname = surname;
         return this;
     }
