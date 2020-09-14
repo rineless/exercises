@@ -23,7 +23,7 @@ public class Student {
         return this;
     }
 
-    public Student setName(String name) {
+    public Student setName(String name) throws IllegalArgumentException{
         if (name == null)
             throw new IllegalArgumentException("Null cannot be resolved into student name");
         if (name.contentEquals(""))
@@ -33,7 +33,7 @@ public class Student {
         return this;
     }
 
-    public Student setSurname(String surname) {
+    public Student setSurname(String surname) throws IllegalArgumentException{
         if (surname == null)
             throw new IllegalArgumentException("Null cannot be resolved to student surname");
         if (surname.contentEquals(""))
@@ -43,7 +43,7 @@ public class Student {
         return this;
     }
 
-    public Student setGender(String gender) {
+    public Student setGender(String gender) throws IllegalArgumentException{
         if (gender.toLowerCase().contentEquals("f"))
             this.gender = Gender.valueOf("FEMALE");
         else if (gender.toLowerCase().contentEquals("m"))
@@ -53,7 +53,7 @@ public class Student {
         return this;
     }
 
-    public Student setGender(Gender gender){
+    public Student setGender(Gender gender) throws IllegalArgumentException{
         if(gender == null)
             throw new IllegalArgumentException("Null cannot be resolved to student gender");
 
@@ -68,7 +68,7 @@ public class Student {
         return this;
     }
 
-    public Student setBirthDate(LocalDate birthDate){
+    public Student setBirthDate(LocalDate birthDate) throws IllegalArgumentException{
         if(birthDate == null)
             throw new IllegalArgumentException("Null cannot be resolved to student birth date");
 
@@ -76,7 +76,7 @@ public class Student {
         return this;
     }
 
-    public Student setCitizenship(String citizenship) {
+    public Student setCitizenship(String citizenship) throws IllegalArgumentException{
         if (citizenship == null)
             throw new IllegalArgumentException("Null cannot be resolved to student citizenship");
         if (citizenship.contentEquals(""))
@@ -86,7 +86,7 @@ public class Student {
         return this;
     }
 
-    public Student setPlaceOfBirth(String placeOfBirth) {
+    public Student setPlaceOfBirth(String placeOfBirth) throws IllegalArgumentException{
         if (placeOfBirth == null)
             throw new IllegalArgumentException("Null cannot be resolved to student placeOfBirth");
         if (placeOfBirth.contentEquals(""))
@@ -96,12 +96,12 @@ public class Student {
         return this;
     }
 
-    public Student setTypeOfContract(String typeOfContract) {
+    public Student setTypeOfContract(String typeOfContract) throws IllegalArgumentException{
         this.typeOfContract = TypeOfContract.valueOf(typeOfContract.toUpperCase());
         return this;
     }
 
-    public Student setTypeOfContract(TypeOfContract typeOfContract){
+    public Student setTypeOfContract(TypeOfContract typeOfContract) throws IllegalArgumentException{
         if(typeOfContract == null)
             throw new IllegalArgumentException("Null cannot be resolved to student type of contract");
 
@@ -114,12 +114,12 @@ public class Student {
         return this;
     }
 
-    public Student setTypeOfStudying(String typeOfStudying) {
+    public Student setTypeOfStudying(String typeOfStudying) throws IllegalArgumentException{
         this.typeOfStudying = TypeOfStudying.valueOf(typeOfStudying.toUpperCase());
         return this;
     }
 
-    public Student setTypeOfStudying(TypeOfStudying typeOfStudying){
+    public Student setTypeOfStudying(TypeOfStudying typeOfStudying) throws IllegalArgumentException{
         if(typeOfStudying == null)
             throw new IllegalArgumentException("Null cannot be resolved to student type of studying");
 
@@ -127,7 +127,7 @@ public class Student {
         return this;
     }
 
-    public Student setContactInformation(String contactInformation) {
+    public Student setContactInformation(String contactInformation) throws IllegalArgumentException{
         if (contactInformation == null)
             throw new IllegalArgumentException("Null cannot be resolved to student contract information");
 
