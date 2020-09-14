@@ -77,6 +77,11 @@ public class Student {
     }
 
     public Student setCitizenship(String citizenship) {
+        if (citizenship == null)
+            throw new IllegalArgumentException("Null cannot be resolved to student citizenship");
+        if (citizenship.contentEquals(""))
+            throw new IllegalArgumentException("Empty student citizenship is prohibited");
+
         this.citizenship = citizenship;
         return this;
     }
