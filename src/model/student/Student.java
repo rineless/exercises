@@ -102,6 +102,9 @@ public class Student {
     }
 
     public Student setTypeOfContract(TypeOfContract typeOfContract){
+        if(typeOfContract == null)
+            throw new IllegalArgumentException("Null cannot be resolved to student type of contract");
+
         this.typeOfContract = typeOfContract;
         return this;
     }
