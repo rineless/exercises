@@ -69,8 +69,8 @@ public interface ILineParser {
         String[] groupData = new String[8];
         groupData[0] = String.valueOf(group.getId());
         groupData[1] = group.getName();
-        groupData[2] = group.getAbbreviation().toString();
-        groupData[3] = group.getLanguage().toString();
+        groupData[2] = group.getAbbreviation() == null ? null : group.getAbbreviation().toString();
+        groupData[3] = group.getLanguage() == null ? null : group.getLanguage().toString();
         groupData[4] = String.valueOf(group.getOnlineAccess()); //TODO check
         groupData[5] = String.valueOf(group.getMaxAttendeesPresent());
         String responsibleForGroup = Stream.of(group.getResponsibleForGroup())
