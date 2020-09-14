@@ -34,10 +34,12 @@ public class Student {
     }
 
     public Student setGender(String gender) {
-        if (gender.contentEquals("f"))
+        if (gender.toLowerCase().contentEquals("f"))
             this.gender = Gender.valueOf("FEMALE");
-        else
+        else if (gender.toLowerCase().contentEquals("m"))
             this.gender = Gender.valueOf("MALE");
+        else
+            throw new IllegalArgumentException("Incorrect input of gender for student (should be one of m|M|f|F)");
         return this;
     }
 
