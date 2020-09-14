@@ -66,6 +66,11 @@ public class Group {
         return this;
     }
 
+    public Group setResponsibleForGroup(String[] responsibleForGroup){
+        this.responsibleForGroup = responsibleForGroup;
+        return this;
+    }
+
     public Group setContactInformation(String contactInformation) {
         this.contactInformation = contactInformation;
         return this;
