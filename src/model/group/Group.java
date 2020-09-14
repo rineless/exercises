@@ -30,6 +30,11 @@ public class Group {
         return this;
     }
 
+    public Group setAbbreviation(Abbreviation abbreviation){
+        this.abbreviation = abbreviation;
+        return this;
+    }
+
     public Group setLanguage(String language) {
         this.language = new Locale(language);
         return this;
