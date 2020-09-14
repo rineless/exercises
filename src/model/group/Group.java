@@ -68,8 +68,14 @@ public class Group {
     }
 
     public Group setResponsibleForGroup(String[] responsibleForGroup){
-        this.responsibleForGroup = responsibleForGroup;
-        return this;
+        if(responsibleForGroup != null){
+            if(responsibleForGroup.length == 2){
+                this.responsibleForGroup = new String[]{responsibleForGroup[0], responsibleForGroup[1]};
+                return this;
+            }
+        }
+
+        throw new IllegalArgumentException("Input cannot be resolved into responsible for group");
     }
 
     public Group setContactInformation(String contactInformation) {
