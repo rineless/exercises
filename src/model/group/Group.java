@@ -21,7 +21,7 @@ public class Group {
         return this;
     }
 
-    public Group setName(String name) {
+    public Group setName(String name) throws IllegalArgumentException{
         if(name != null) {
             if(name != "") {
                 this.name = name;
@@ -32,12 +32,12 @@ public class Group {
         throw new IllegalArgumentException("Empty name or null is prohibited");
     }
 
-    public Group setAbbreviation (String abbreviation) {
+    public Group setAbbreviation (String abbreviation) throws IllegalArgumentException{
         this.abbreviation = Abbreviation.valueOf(abbreviation.toUpperCase());
         return this;
     }
 
-    public Group setAbbreviation(Abbreviation abbreviation){
+    public Group setAbbreviation(Abbreviation abbreviation) throws IllegalArgumentException{
         if(abbreviation != null) {
             this.abbreviation = abbreviation;
             return this;
@@ -46,12 +46,12 @@ public class Group {
         throw new IllegalArgumentException("Null as abbreviation is prohibited");
     }
 
-    public Group setLanguage(String language) {
+    public Group setLanguage(String language) throws NullPointerException{
         this.language = new Locale(language);
         return this;
     }
 
-    public Group setLanguage(Locale language){
+    public Group setLanguage(Locale language) throws IllegalArgumentException{
         if(language != null) {
             this.language = language;
             return this;
@@ -60,8 +60,7 @@ public class Group {
         throw new IllegalArgumentException("Null as language is prohibited");
     }
 
-    //TODO check if exceptions
-    public Group setOnlineAccess(String onlineAccess) {
+    public Group setOnlineAccess(String onlineAccess) throws IllegalArgumentException{
         if(onlineAccess != null) {
             if (onlineAccess.toLowerCase().contentEquals("yes")) {
                 this.onlineAccess = true;
@@ -86,7 +85,7 @@ public class Group {
         return this;
     }
 
-    public Group setResponsibleForGroup(String responsibleForGroup) {
+    public Group setResponsibleForGroup(String responsibleForGroup) throws IllegalArgumentException{
         if(responsibleForGroup != null) {
             String[] array = new SeparatedValuesParser(" ").parseLineToArray(responsibleForGroup);
             if(array.length == 2) {
@@ -98,7 +97,7 @@ public class Group {
         throw new IllegalArgumentException("Input cannot be resolved into responsible for group");
     }
 
-    public Group setResponsibleForGroup(String[] responsibleForGroup){
+    public Group setResponsibleForGroup(String[] responsibleForGroup) throws IllegalArgumentException{
         if(responsibleForGroup != null){
             if(responsibleForGroup.length == 2){
                 this.responsibleForGroup = new String[]{responsibleForGroup[0], responsibleForGroup[1]};
@@ -109,7 +108,7 @@ public class Group {
         throw new IllegalArgumentException("Input cannot be resolved into responsible for group");
     }
 
-    public Group setContactInformation(String contactInformation) {
+    public Group setContactInformation(String contactInformation) throws IllegalArgumentException{
         if(contactInformation != null) {
             this.contactInformation = contactInformation;
             return this;
