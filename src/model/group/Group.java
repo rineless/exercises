@@ -39,6 +39,12 @@ public class Group {
         this.language = new Locale(language);
         return this;
     }
+
+    public Group setLanguage(Locale laguage){
+        this.language = language;
+        return this;
+    }
+
     //TODO check if exceptions
     public Group setOnlineAccess(String onlineAccess) {
         this.onlineAccess = onlineAccess.contentEquals("yes");
