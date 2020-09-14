@@ -21,7 +21,7 @@ public class SeparatedValuesParser implements ILineParser {
         if(array != null) {
             if(array.length!=0) {
                 String separator = separator_regex.replace("\\", "");
-                String line = Arrays.stream(array).map(word -> word + separator).collect(Collectors.joining());
+                String line = Arrays.stream(array).map(word -> word == null ? "" : word).map(word -> word + separator).collect(Collectors.joining());
                 return line.substring(0, line.length() - separator.length());
             }
         }
