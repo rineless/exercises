@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDate;
@@ -107,7 +106,7 @@ public class SeparatedValuesParserTest {
 
         @ParameterizedTest
         @CsvSource({"_,3_Alice_Cook_f_14.04.1999_Ungarn_Paks_payable_1_online_alicook@gmail.com"
-                    , "\\|>\\*>\\|,3|>*>|Alice|>*>|Cook|>*>|f|>*>|14.04.1999" +
+                , "\\|>\\*>\\|,3|>*>|Alice|>*>|Cook|>*>|f|>*>|14.04.1999" +
                 "|>*>|Ungarn|>*>|Paks|>*>|payable|>*>|1|>*>|online|>*>|alicook@gmail.com"
                 , ";,3;Alice;Cook;f;14.04.1999;Ungarn;Paks;payable;1;online;alicook@gmail.com"})
         @DisplayName("Line should be parsed into student")
@@ -117,12 +116,130 @@ public class SeparatedValuesParserTest {
                     .setGender(Gender.FEMALE).setBirthDate(LocalDate.of(1999, 4, 14))
                     .setCitizenship("Ungarn").setPlaceOfBirth("Paks").setTypeOfContract(TypeOfContract.PAYABLE)
                     .setGroupId(1).setTypeOfStudying(TypeOfStudying.ONLINE)
-                    .setContractInformation("alicook@gmail.com");
+                    .setContactInformation("alicook@gmail.com");
 
             Student actualStudent = parser.parseLineToStudent(line);
 
             Assertions.assertEquals(expectedStudent, actualStudent, "Should parse line into student");
         }
+
+        @Test
+        @DisplayName("Null should throw IllegalArgumentException")
+        void parseLineToStudent_WithNullInput_ShouldThrowException(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            Assertions.assertThrows(IllegalArgumentException.class
+                    , ()->parser.parseLineToStudent(null), "Expected by null input IllegalArgumentException");
+        }
+
+        @Test
+        @DisplayName("Input with not enough data should throw IllegalArgumentException")
+        void parseLineToStudent_WithNotEnoughDataInput_ShouldThrowException(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            Assertions.assertThrows(IllegalArgumentException.class
+                    , ()->parser.parseLineToStudent("3,Alice,14.04.1999,Ungarn,Paks,payable,1,alicook@gmail.com")
+                    , "Expected by input with not enough data IllegalArgumentException");
+        }
+
+        @Test
+        @DisplayName("Input with missing id should throw IllegalArgumentException")
+        void parseLineToStudent_WithMissingIdInput_ShouldThrowException(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            Assertions.assertThrows(IllegalArgumentException.class
+                    , ()->parser.parseLineToStudent(",Alice,Cook,f,14.04.1999,Ungarn,Paks,payable,1,online,alicook@gmail.com")
+                    , "Expected by input with missing id IllegalArgumentException");
+        }
+
+        @Test
+        @DisplayName("Input with missing name should throw IllegalArgumentException")
+        void parseLineToStudent_WithMissingNameInput_ShouldThrowException(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            Assertions.assertThrows(IllegalArgumentException.class
+                    , ()->parser.parseLineToStudent("3,,Cook,f,14.04.1999,Ungarn,Paks,payable,1,online,alicook@gmail.com")
+                    , "Expected by input with missing name IllegalArgumentException");
+        }
+
+        @Test
+        @DisplayName("Input with missing surname should throw IllegalArgumentException")
+        void parseLineToStudent_WithMissingSurnameInput_ShouldThrowException(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            Assertions.assertThrows(IllegalArgumentException.class
+                    , ()->parser.parseLineToStudent("3,Alice,,f,14.04.1999,Ungarn,Paks,payable,1,online,alicook@gmail.com")
+                    , "Expected by input with missing surname IllegalArgumentException");
+        }
+
+        @Test
+        @DisplayName("Input with missing gender should throw IllegalArgumentException")
+        void parseLineToStudent_WithMissingGenderInput_ShouldThrowException(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            Assertions.assertThrows(IllegalArgumentException.class
+                    , ()->parser.parseLineToStudent("3,Alice,Cook,,14.04.1999,Ungarn,Paks,payable,1,online,alicook@gmail.com")
+                    , "Expected by input with missing gender IllegalArgumentException");
+        }
+
+        @Test
+        @DisplayName("Input with missing birth date should throw IllegalArgumentException")
+        void parseLineToStudent_WithMissingBirthDateInput_ShouldThrowException(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            Assertions.assertThrows(IllegalArgumentException.class
+                    , ()->parser.parseLineToStudent("3,Alice,Cook,f,,Ungarn,Paks,payable,1,online,alicook@gmail.com")
+                    , "Expected by input with missing birth date IllegalArgumentException");
+        }
+
+        @Test
+        @DisplayName("Input with missing citizenship should throw IllegalArgumentException")
+        void parseLineToStudent_WithMissingCitizenshipInput_ShouldThrowException(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            Assertions.assertThrows(IllegalArgumentException.class
+                    , ()->parser.parseLineToStudent("3,Alice,Cook,f,14.04.1999,,Paks,payable,1,online,alicook@gmail.com")
+                    , "Expected by input with missing citizenship IllegalArgumentException");
+        }
+
+        @Test
+        @DisplayName("Input with missing place of birth should throw IllegalArgumentException")
+        void parseLineToStudent_WithMissingPlaceOfBirthInput_ShouldThrowException(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            Assertions.assertThrows(IllegalArgumentException.class
+                    , ()->parser.parseLineToStudent("3,Alice,Cook,f,14.04.1999,Ungarn,,payable,1,online,alicook@gmail.com")
+                    , "Expected by input with missing place of birth IllegalArgumentException");
+        }
+
+        @Test
+        @DisplayName("Input with missing type of contract should throw IllegalArgumentException")
+        void parseLineToStudent_WithMissingTypeOfContractInput_ShouldThrowException(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            Assertions.assertThrows(IllegalArgumentException.class
+                    , ()->parser.parseLineToStudent("3,Alice,Cook,f,14.04.1999,Ungarn,Paks,,1,online,alicook@gmail.com")
+                    , "Expected by input with missing type of contract IllegalArgumentException");
+        }
+
+        @Test
+        @DisplayName("Input with missing group id should throw IllegalArgumentException")
+        void parseLineToStudent_WithMissingGroupIdInput_ShouldThrowException(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            Assertions.assertThrows(IllegalArgumentException.class
+                    , ()->parser.parseLineToStudent("3,Alice,Cook,f,14.04.1999,Ungarn,Paks,payable,,online,alicook@gmail.com")
+                    , "Expected by input with missing group id IllegalArgumentException");
+        }
+
+        @Test
+        @DisplayName("Input with missing type of studying should throw IllegalArgumentException")
+        void parseLineToStudent_WithMissingTypeOfStudyingInput_ShouldThrowException(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            Assertions.assertThrows(IllegalArgumentException.class
+                    , ()->parser.parseLineToStudent("3,Alice,Cook,f,14.04.1999,Ungarn,Paks,payable,1,,alicook@gmail.com")
+                    , "Expected by input with missing type of studying IllegalArgumentException");
+        }
+
+        @Test
+        @DisplayName("Input with missing contact information should throw IllegalArgumentException")
+        void parseLineToStudent_WithMissingContactInformationInput_ShouldThrowException(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            Assertions.assertThrows(IllegalArgumentException.class
+                    , ()->parser.parseLineToStudent("3,Alice,Cook,f,14.04.1999,Ungarn,Paks,payable,1,online,")
+                    , "Expected by input with missing contact information IllegalArgumentException");
+        }
+
+
     }
 
 
