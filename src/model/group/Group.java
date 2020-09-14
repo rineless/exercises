@@ -21,9 +21,9 @@ public class Group {
         return this;
     }
 
-    public Group setName(String name) throws IllegalArgumentException{
-        if(name != null) {
-            if(name != "") {
+    public Group setName(String name) throws IllegalArgumentException {
+        if (name != null) {
+            if (!name.contentEquals("")) {
                 this.name = name;
                 return this;
             }
