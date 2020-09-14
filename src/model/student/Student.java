@@ -87,6 +87,11 @@ public class Student {
     }
 
     public Student setPlaceOfBirth(String placeOfBirth) {
+        if (placeOfBirth == null)
+            throw new IllegalArgumentException("Null cannot be resolved to student placeOfBirth");
+        if (placeOfBirth.contentEquals(""))
+            throw new IllegalArgumentException("Empty student placeOfBirth is prohibited");
+
         this.placeOfBirth = placeOfBirth;
         return this;
     }
