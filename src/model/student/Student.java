@@ -69,6 +69,9 @@ public class Student {
     }
 
     public Student setBirthDate(LocalDate birthDate){
+        if(birthDate == null)
+            throw new IllegalArgumentException("Null cannot be resolved to student birth date");
+
         this.birthDate = birthDate;
         return this;
     }
