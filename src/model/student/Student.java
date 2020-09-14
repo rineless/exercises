@@ -16,7 +16,7 @@ public class Student {
     private TypeOfContract typeOfContract;
     private int groupId;
     private TypeOfStudying typeOfStudying;
-    private String contractInformation;
+    private String contactInformation;
 
     public Student setId(int id) {
         this.id = id;
@@ -127,13 +127,11 @@ public class Student {
         return this;
     }
 
-    public Student setContractInformation(String contractInformation) {
-        if (contractInformation == null)
+    public Student setContactInformation(String contactInformation) {
+        if (contactInformation == null)
             throw new IllegalArgumentException("Null cannot be resolved to student contract information");
-        if (contractInformation.contentEquals(""))
-            throw new IllegalArgumentException("Empty student contract information is prohibited");
 
-        this.contractInformation = contractInformation;
+        this.contactInformation = contactInformation;
         return this;
     }
 
@@ -178,8 +176,8 @@ public class Student {
         return typeOfStudying;
     }
 
-    public String getContractInformation() {
-        return contractInformation;
+    public String getContactInformation() {
+        return contactInformation;
     }
 
     @Override
@@ -208,7 +206,7 @@ public class Student {
                     && this.birthDate.equals(student.getBirthDate()) && this.citizenship.contentEquals(student.getCitizenship())
                     && this.placeOfBirth.contentEquals(student.getPlaceOfBirth())
                     && this.typeOfContract == student.getTypeOfContract() && this.groupId == student.getGroupId()
-                    && this.typeOfStudying == student.getTypeOfStudying() && this.contractInformation.contentEquals(student.getContractInformation()))
+                    && this.typeOfStudying == student.getTypeOfStudying() && this.contactInformation.contentEquals(student.getContactInformation()))
                 return true;
         }
         catch(NullPointerException ex){
