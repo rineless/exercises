@@ -22,18 +22,28 @@ public class Group {
     }
 
     public Group setName(String name) {
-        this.name = name;
-        return this;
+        if(name != null) {
+            if(name != "") {
+                this.name = name;
+                return this;
+            }
+        }
+
+        throw new IllegalArgumentException("Empty name or null is prohibited");
     }
 
-    public Group setAbbreviation(String abbreviation) {
+    public Group setAbbreviation (String abbreviation) {
         this.abbreviation = Abbreviation.valueOf(abbreviation.toUpperCase());
         return this;
     }
 
     public Group setAbbreviation(Abbreviation abbreviation){
-        this.abbreviation = abbreviation;
-        return this;
+        if(abbreviation != null) {
+            this.abbreviation = abbreviation;
+            return this;
+        }
+
+        throw new IllegalArgumentException("Null as abbreviation is prohibited");
     }
 
     public Group setLanguage(String language) {
@@ -42,14 +52,28 @@ public class Group {
     }
 
     public Group setLanguage(Locale language){
-        this.language = language;
-        return this;
+        if(language != null) {
+            this.language = language;
+            return this;
+        }
+
+        throw new IllegalArgumentException("Null as language is prohibited");
     }
 
     //TODO check if exceptions
     public Group setOnlineAccess(String onlineAccess) {
-        this.onlineAccess = onlineAccess.contentEquals("yes");
-        return this;
+        if(onlineAccess != null) {
+            if (onlineAccess.toLowerCase().contentEquals("yes")) {
+                this.onlineAccess = true;
+                return this;
+            }
+            else if (onlineAccess.toLowerCase().contentEquals("no")){
+                this.onlineAccess = false;
+                return this;
+            }
+        }
+
+        throw new IllegalArgumentException("Online access input is incorrect. Should be one of yes|YES|Yes|no|NO|No");
     }
 
     public Group setOnlineAccess(boolean onlineAccess){
@@ -63,8 +87,15 @@ public class Group {
     }
 
     public Group setResponsibleForGroup(String responsibleForGroup) {
-        this.responsibleForGroup = new SeparatedValuesParser(" ").parseLineToArray(responsibleForGroup);
-        return this;
+        if(responsibleForGroup != null) {
+            String[] array = new SeparatedValuesParser(" ").parseLineToArray(responsibleForGroup);
+            if(array.length == 2) {
+                this.responsibleForGroup = new String[]{array[0], array[1]};
+                return this;
+            }
+        }
+
+        throw new IllegalArgumentException("Input cannot be resolved into responsible for group");
     }
 
     public Group setResponsibleForGroup(String[] responsibleForGroup){
@@ -79,8 +110,12 @@ public class Group {
     }
 
     public Group setContactInformation(String contactInformation) {
-        this.contactInformation = contactInformation;
-        return this;
+        if(contactInformation != null) {
+            this.contactInformation = contactInformation;
+            return this;
+        }
+
+        throw new IllegalArgumentException("Null cannot be resolved into contact information");
     }
 
     public int getId() {
