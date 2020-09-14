@@ -51,6 +51,11 @@ public class Group {
         return this;
     }
 
+    public Group setOnlineAccess(boolean onlineAccess){
+        this.onlineAccess = onlineAccess;
+        return this;
+    }
+
     public Group setMaxAttendeesPresent(int maxAttendeesPresent) {
         this.maxAttendeesPresent = maxAttendeesPresent;
         return this;
