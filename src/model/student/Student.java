@@ -120,7 +120,7 @@ public class Student {
     }
 
     public Student setTypeOfStudying(TypeOfStudying typeOfStudying){
-        if(typeOfContract == null)
+        if(typeOfStudying == null)
             throw new IllegalArgumentException("Null cannot be resolved to student type of studying");
 
         this.typeOfStudying = typeOfStudying;
@@ -128,12 +128,16 @@ public class Student {
     }
 
     public Student setContractInformation(String contractInformation) {
+        if (contractInformation == null)
+            throw new IllegalArgumentException("Null cannot be resolved to student contract information");
+        if (contractInformation.contentEquals(""))
+            throw new IllegalArgumentException("Empty student contract information is prohibited");
+
         this.contractInformation = contractInformation;
         return this;
     }
 
 
-    //TODO if attribute is empty
     public int getId() {
         return id;
     }
