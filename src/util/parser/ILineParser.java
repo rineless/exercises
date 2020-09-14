@@ -34,17 +34,19 @@ public interface ILineParser {
 
     }
 
-    //TODO add exceptions
     default Group parseLineToGroup(String line) {
-        String[] dataForGroup = parseLineToArray(line);
-        if (dataForGroup.length == 8)
-            return new Group().setId(Integer.parseInt(dataForGroup[0])).setName(dataForGroup[1])
-                    .setAbbreviation(dataForGroup[2]).setLanguage(dataForGroup[3]).setOnlineAccess(dataForGroup[4])
-                    .setMaxAttendeesPresent(Integer.parseInt(dataForGroup[5])).setResponsibleForGroup(dataForGroup[6])
-                    .setContactInformation(dataForGroup[7]);
-        else {
-            throw new IllegalArgumentException("Line cannot be resolved into Group. Not enough data");
+        if(line != null) {
+            String[] dataForGroup = parseLineToArray(line);
+            if (dataForGroup.length == 8)
+                return new Group().setId(Integer.parseInt(dataForGroup[0])).setName(dataForGroup[1])
+                        .setAbbreviation(dataForGroup[2]).setLanguage(dataForGroup[3]).setOnlineAccess(dataForGroup[4])
+                        .setMaxAttendeesPresent(Integer.parseInt(dataForGroup[5])).setResponsibleForGroup(dataForGroup[6])
+                        .setContactInformation(dataForGroup[7]);
+            else {
+                throw new IllegalArgumentException("Line cannot be resolved into Group. Not enough data");
+            }
         }
+        throw new IllegalArgumentException("Null cannot be resolved into group");
     }
 
     default String parseStudentToLine(Student student){
