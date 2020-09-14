@@ -165,6 +165,15 @@ public class SeparatedValuesParserTest {
         }
 
         @Test
+        @DisplayName("Input with prohibited id should throw IllegalArgumentException")
+        void parseLineToStudent_WithProhibitedIdInput_ShouldThrowException(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            Assertions.assertThrows(IllegalArgumentException.class
+                    , ()->parser.parseLineToStudent("three,Alice,Cook,f,14.04.1999,Ungarn,Paks,payable,1,online,alicook@gmail.com")
+                    , "Expected by input with prohibited id IllegalArgumentException");
+        }
+
+        @Test
         @DisplayName("Input with missing name should throw IllegalArgumentException")
         void parseLineToStudent_WithMissingNameInput_ShouldThrowException(){
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
@@ -192,12 +201,30 @@ public class SeparatedValuesParserTest {
         }
 
         @Test
+        @DisplayName("Input with prohibited gender should throw IllegalArgumentException")
+        void parseLineToStudent_WithProhibitedGenderInput_ShouldThrowException(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            Assertions.assertThrows(IllegalArgumentException.class
+                    , ()->parser.parseLineToStudent("3,Alice,Cook,sdf4,14.04.1999,Ungarn,Paks,payable,1,online,alicook@gmail.com")
+                    , "Expected by input with prohibited gender IllegalArgumentException");
+        }
+
+        @Test
         @DisplayName("Input with missing birth date should throw IllegalArgumentException")
         void parseLineToStudent_WithMissingBirthDateInput_ShouldThrowException(){
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
             Assertions.assertThrows(IllegalArgumentException.class
                     , ()->parser.parseLineToStudent("3,Alice,Cook,f,,Ungarn,Paks,payable,1,online,alicook@gmail.com")
                     , "Expected by input with missing birth date IllegalArgumentException");
+        }
+
+        @Test
+        @DisplayName("Input with prohibited birth date should throw IllegalArgumentException")
+        void parseLineToStudent_WithProhibitedBirthDateInput_ShouldThrowException(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            Assertions.assertThrows(IllegalArgumentException.class
+                    , ()->parser.parseLineToStudent("3,Alice,Cook,f,23.rt.ds,Ungarn,Paks,payable,1,online,alicook@gmail.com")
+                    , "Expected by input with prohibited birth date IllegalArgumentException");
         }
 
         @Test
@@ -228,6 +255,15 @@ public class SeparatedValuesParserTest {
         }
 
         @Test
+        @DisplayName("Input with prohibited type of contract should throw IllegalArgumentException")
+        void parseLineToStudent_WithProhibitedTypeOfContractInput_ShouldThrowException(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            Assertions.assertThrows(IllegalArgumentException.class
+                    , ()->parser.parseLineToStudent("3,Alice,Cook,f,14.04.1999,Ungarn,Paks,someContract1,1,online,alicook@gmail.com")
+                    , "Expected by input with prohibited type of contract IllegalArgumentException");
+        }
+
+        @Test
         @DisplayName("Input with missing group id should throw IllegalArgumentException")
         void parseLineToStudent_WithMissingGroupIdInput_ShouldThrowException(){
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
@@ -237,12 +273,30 @@ public class SeparatedValuesParserTest {
         }
 
         @Test
+        @DisplayName("Input with prohibited group id should throw IllegalArgumentException")
+        void parseLineToStudent_WithProhibitedGroupIdInput_ShouldThrowException(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            Assertions.assertThrows(IllegalArgumentException.class
+                    , ()->parser.parseLineToStudent("3,Alice,Cook,f,14.04.1999,Ungarn,Paks,payable,someId,online,alicook@gmail.com")
+                    , "Expected by input with prohibited group id IllegalArgumentException");
+        }
+
+        @Test
         @DisplayName("Input with missing type of studying should throw IllegalArgumentException")
         void parseLineToStudent_WithMissingTypeOfStudyingInput_ShouldThrowException(){
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
             Assertions.assertThrows(IllegalArgumentException.class
                     , ()->parser.parseLineToStudent("3,Alice,Cook,f,14.04.1999,Ungarn,Paks,payable,1,,alicook@gmail.com")
                     , "Expected by input with missing type of studying IllegalArgumentException");
+        }
+
+        @Test
+        @DisplayName("Input with prohibited type of studying should throw IllegalArgumentException")
+        void parseLineToStudent_WithProhibitedTypeOfStudyingInput_ShouldThrowException(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            Assertions.assertThrows(IllegalArgumentException.class
+                    , ()->parser.parseLineToStudent("3,Alice,Cook,f,14.04.1999,Ungarn,Paks,payable,1,studying44,alicook@gmail.com")
+                    , "Expected by input with prohibited type of studying IllegalArgumentException");
         }
 
         @Test
@@ -351,16 +405,6 @@ public class SeparatedValuesParserTest {
             Assertions.assertThrows(IllegalArgumentException.class
                     , () -> parser.parseLineToGroup("3,Analysis,Anl,,no,15,Karol Maier,karol.maier@myuni.de")
                     , "Expected IllegalArgumentException by missing language input");
-        }
-
-        @Test
-        @DisplayName("By input with prohibited language should throw IllegalArgumentException")
-        void parseLineToGroup_WithProhibitedLanguageInput_ShouldThrowException(){
-            SeparatedValuesParser parser = new SeparatedValuesParser(",");
-
-            Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("3,Analysis,Anl,fdsefr123,no,15,Karol Maier,karol.maier@myuni.de")
-                    , "Expected IllegalArgumentException by prohibited language input");
         }
 
         @Test
