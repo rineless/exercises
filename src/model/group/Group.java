@@ -41,7 +41,7 @@ public class Group {
         return this;
     }
 
-    public Group setLanguage(Locale laguage){
+    public Group setLanguage(Locale language){
         this.language = language;
         return this;
     }
