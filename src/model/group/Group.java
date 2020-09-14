@@ -2,6 +2,7 @@ package model.group;
 
 import util.parser.SeparatedValuesParser;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 public class Group {
@@ -112,5 +113,30 @@ public class Group {
         return new SeparatedValuesParser(", ").parseGroupToLine(this);
     }
 
+    @Override
+    public boolean equals(Object obj){
+        if(obj != null){
+            if(obj instanceof Group)
+                return equals((Group) obj);
+        }
+
+        return false;
+    }
+
+    public boolean equals(Group group){
+        try {
+            if (id == group.getId() && name.contentEquals(group.getName()) && abbreviation == group.getAbbreviation()
+                    && language.equals(group.getLanguage()) && onlineAccess == group.getOnlineAccess()
+                    && maxAttendeesPresent == group.getMaxAttendeesPresent()
+                    && Arrays.compare(responsibleForGroup, group.getResponsibleForGroup()) == 0
+                    && contactInformation.contentEquals(group.getContactInformation()))
+                return true;
+        }
+        catch(NullPointerException exp){
+            return false;
+        }
+
+        return false;
+    }
 
 }
