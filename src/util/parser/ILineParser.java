@@ -75,15 +75,16 @@ public interface ILineParser {
             return "";
 
         String[] groupData = new String[8];
-        groupData[0] = String.valueOf(group.getId());
+        groupData[0] = group.getId() == 0 ? "" : String.valueOf(group.getId());
         groupData[1] = group.getName();
         groupData[2] = group.getAbbreviation() == null ? null : group.getAbbreviation().toString();
         groupData[3] = group.getLanguage() == null ? null : group.getLanguage().toString();
-        groupData[4] = String.valueOf(group.getOnlineAccess()); //TODO check
-        groupData[5] = String.valueOf(group.getMaxAttendeesPresent());
-        String responsibleForGroup = Stream.of(group.getResponsibleForGroup())
+        groupData[4] = String.valueOf(group.getOnlineAccess());
+        groupData[5] = group.getMaxAttendeesPresent() == 0 ? "" : String.valueOf(group.getMaxAttendeesPresent());
+        String responsibleForGroup = (group.getResponsibleForGroup() == null | group.getResponsibleForGroup().length < 1) ? " "
+                : Stream.of(group.getResponsibleForGroup())
                 .map(name -> name + " ").collect(Collectors.joining());
-        groupData[6] = responsibleForGroup.substring(0, responsibleForGroup.length() - 1);//TODO check
+        groupData[6] = responsibleForGroup.substring(0, responsibleForGroup.length() - 1);
         groupData[7] = group.getContactInformation();
         return parseArrayToLine(groupData);
     }
