@@ -50,6 +50,9 @@ public interface ILineParser {
     }
 
     default String parseStudentToLine(Student student){
+        if(student == null)
+            return "";
+
         String[] studentData = new String[11];
         studentData[0] = String.valueOf(student.getId());
         studentData[1] = student.getName();
