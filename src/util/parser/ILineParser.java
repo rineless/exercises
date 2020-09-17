@@ -54,18 +54,18 @@ public interface ILineParser {
             return "";
 
         String[] studentData = new String[11];
-        studentData[0] = String.valueOf(student.getId());
+        studentData[0] = student.getId() == 0 ? "" : String.valueOf(student.getId());
         studentData[1] = student.getName();
         studentData[2] = student.getSurname();
-        studentData[3] = student.getGender().toString();
+        studentData[3] = student.getGender() == null ? null : student.getGender().toString();
         LocalDate date = student.getBirthDate();
-        studentData[4] = String.valueOf(date.getDayOfMonth())+"."+String.valueOf(date.getMonthValue())
+        studentData[4] = date == null ? null : String.valueOf(date.getDayOfMonth())+"."+String.valueOf(date.getMonthValue())
                 +"."+String.valueOf(date.getYear());
         studentData[5] = student.getCitizenship();
         studentData[6] = student.getPlaceOfBirth();
-        studentData[7] = student.getTypeOfContract().toString();
-        studentData[8] = String.valueOf(student.getGroupId());
-        studentData[9] = student.getTypeOfStudying().toString();
+        studentData[7] = student.getTypeOfContract() == null ? null : student.getTypeOfContract().toString();
+        studentData[8] = student.getGroupId() == 0 ? "" : String.valueOf(student.getGroupId());
+        studentData[9] = student.getTypeOfStudying() == null ? null : student.getTypeOfStudying().toString();
         studentData[10] = student.getContactInformation();
         return parseArrayToLine(studentData);
     }
