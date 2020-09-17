@@ -94,7 +94,7 @@ public class Group {
 
     public Group setResponsibleForGroup(String responsibleForGroup) throws IllegalArgumentException{
         if(responsibleForGroup != null) {
-            if(responsibleForGroup.contentEquals("")) {
+            if(!responsibleForGroup.contentEquals("")) {
                 String[] array = new SeparatedValuesParser(" ").parseLineToArray(responsibleForGroup);
                 this.responsibleForGroup = Arrays.copyOf(array, array.length);
                 return this;
