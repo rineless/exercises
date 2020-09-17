@@ -479,7 +479,7 @@ public class SeparatedValuesParserTest {
             String expected = "4,Name,Surname,FEMALE,19.5.1999,Citizenship,PlaceOfBirth,STIPEND,1,ONLINE,name.surname@gmail.com";
 
             String actual = parser.parseStudentToLine(new Student().setId(4).setName("Name").setSurname("Surname")
-                    .setGender(Gender.FEMALE).setBirthDate(LocalDate.of(1999,05,19))
+                    .setGender(Gender.FEMALE).setBirthDate(LocalDate.of(1999,5,19))
                     .setCitizenship("Citizenship").setPlaceOfBirth("PlaceOfBirth").setTypeOfContract(TypeOfContract.STIPEND)
                     .setTypeOfStudying(TypeOfStudying.ONLINE).setGroupId(1).setContactInformation("name.surname@gmail.com"));
 
@@ -509,7 +509,46 @@ public class SeparatedValuesParserTest {
             Assertions.assertEquals(expected, actual, "Expected parsed student with no data to line with separators");
         }
 
+    }
 
+    @Nested
+    @DisplayName("Test parseGroupToLine method")
+    class ParseGroupToLineTests{
+
+        @Test
+        @DisplayName("Group should be parsed to line")
+        void shouldParseGroupToLine(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            String expected = "2,Discrete structures,DS,germany,true,50,Name Surname,name.surname@gmail.com";
+
+            String actual = parser.parseGroupToLine(new Group().setId(2).setName("Discrete structures")
+                    .setAbbreviation(Abbreviation.DS).setLanguage(new Locale("germany")).setOnlineAccess(true).setMaxAttendeesPresent(50)
+                    .setResponsibleForGroup(new String[]{"Name","Surname"}).setContactInformation("name.surname@gmail.com"));
+
+            Assertions.assertEquals(expected, actual, "Expected parsed group to line");
+        }
+
+        @Test
+        @DisplayName("Null should be parsed to empty line")
+        void parseGroupToLine_WithNullInput_ShouldReturnEmptyLine(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            String expected = "";
+
+            String actual = parser.parseGroupToLine(null);
+
+            Assertions.assertEquals(expected, actual, "Expected parsed null to empty line");
+        }
+
+        @Test
+        @DisplayName("Group with no data should be parsed to line with separators")
+        void parseGroupToLine_WithGroupWithNoDataInput_ShouldReturnLineWithSeparators(){
+            SeparatedValuesParser parser = new SeparatedValuesParser("");
+            String expected = ",,,,,,,";
+
+            String actual = parser.parseGroupToLine(new Group());
+
+            Assertions.assertEquals(expected, actual, "Expected parsed group with no data to line with separators");
+        }
     }
 
 }
