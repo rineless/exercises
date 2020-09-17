@@ -4,6 +4,7 @@ import util.parser.SeparatedValuesParser;
 
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class Group {
 
@@ -105,10 +106,8 @@ public class Group {
 
     public Group setResponsibleForGroup(String[] responsibleForGroup) throws IllegalArgumentException{
         if(responsibleForGroup != null){
-            if(responsibleForGroup.length == 2){
-                this.responsibleForGroup = new String[]{responsibleForGroup[0], responsibleForGroup[1]};
-                return this;
-            }
+            this.responsibleForGroup = Arrays.copyOf(responsibleForGroup,responsibleForGroup.length);
+            return this;
         }
 
         throw new IllegalArgumentException("Input cannot be resolved into responsible for group");
@@ -148,7 +147,10 @@ public class Group {
     }
 
     public String[] getResponsibleForGroup() {
-        return new String[]{responsibleForGroup[0], responsibleForGroup[1]};
+        if(responsibleForGroup != null) {
+            return Arrays.copyOf(responsibleForGroup,responsibleForGroup.length);
+        }
+        return new String[]{};
     }
 
     public String getContactInformation() {
