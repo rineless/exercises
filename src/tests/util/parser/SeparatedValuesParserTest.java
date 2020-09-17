@@ -468,4 +468,48 @@ public class SeparatedValuesParserTest {
         }
     }
 
+    @Nested
+    @DisplayName("Test parseStudentToLine method")
+    class ParseStudentToLineTests{
+
+        @Test
+        @DisplayName("Student should be parsed to line")
+        void shouldParseStudentToLine(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            String expected = "4,Name,Surname,FEMALE,19.5.1999,Citizenship,PlaceOfBirth,STIPEND,1,ONLINE,name.surname@gmail.com";
+
+            String actual = parser.parseStudentToLine(new Student().setId(4).setName("Name").setSurname("Surname")
+                    .setGender(Gender.FEMALE).setBirthDate(LocalDate.of(1999,05,19))
+                    .setCitizenship("Citizenship").setPlaceOfBirth("PlaceOfBirth").setTypeOfContract(TypeOfContract.STIPEND)
+                    .setTypeOfStudying(TypeOfStudying.ONLINE).setGroupId(1).setContactInformation("name.surname@gmail.com"));
+
+
+            Assertions.assertEquals(expected, actual, "Expected parsed student to line");
+        }
+
+        @Test
+        @DisplayName("By null input should return empty line")
+        void parseStudentToLine_WithNullInput_ShouldReturnEmptyString(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            String expected = "";
+
+            String actual = parser.parseStudentToLine(null);
+
+            Assertions.assertEquals(expected, actual, "Expected parsed null to empty line");
+        }
+
+        @Test
+        @DisplayName("Student with no data should be parsed to line with separators")
+        void parseStudentToLine_WithStudentWithNoDataInput_ShouldReturnLine(){
+            SeparatedValuesParser parser = new SeparatedValuesParser(",");
+            String expected = ",,,,,,,,,,";
+
+            String actual = parser.parseStudentToLine(new Student());
+
+            Assertions.assertEquals(expected, actual, "Expected parsed student with no data to line with separators");
+        }
+
+
+    }
+
 }
