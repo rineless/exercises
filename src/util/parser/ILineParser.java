@@ -71,6 +71,9 @@ public interface ILineParser {
     }
 
     default String parseGroupToLine(Group group) {
+        if(group == null)
+            return "";
+
         String[] groupData = new String[8];
         groupData[0] = String.valueOf(group.getId());
         groupData[1] = group.getName();
