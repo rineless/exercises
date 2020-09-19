@@ -1,11 +1,11 @@
 package model.group;
 
-public enum Abbreviation {
+public enum GroupNames {
     DS("Discrete structures"), ALG("Algorithms"), ANL("Analysis");
 
      private final String fullName;
 
-    Abbreviation(String fullName){
+    GroupNames(String fullName){
         this.fullName = fullName;
     }
 
