@@ -1,5 +1,8 @@
 import model.group.Group;
+import model.student.Gender;
 import model.student.Student;
+import model.student.TypeOfContract;
+import model.student.TypeOfStudying;
 import util.parser.CSVParser;
 import util.reader.FileReader;
 
@@ -7,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,9 +28,11 @@ public class Application {
         List<Group> groupList = receiveListOfGroups(current.toString() + "/src/data/StudentGroupData.csv");
         groupList.stream().forEach(group -> System.out.println(group.toString()));
 
-        List<String> studentsToAdd = new ArrayList<>();
-        studentsToAdd.add("13,Rubel,Bare,m,15.02.1998,German,Bremen,payable,0,present,rubel.bare@gmail.com");
-        addStudent(studentsToAdd,studentList,"src/data/StudentData.csv");
+        List<Student> studentsToAdd = new ArrayList<>();
+        studentsToAdd.add(new Student().setId(13).setName("Rubel").setSurname("Bare").setGender(Gender.MALE)
+                .setBirthDate(LocalDate.of(1998,2,15)).setCitizenship("German").setPlaceOfBirth("Bremen")
+                .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(0).setTypeOfStudying(TypeOfStudying.PRESENT).setContactInformation("rubel.bare@gmail.com"));
+        addStudents(studentsToAdd,studentList,current.toString() + "/src/data/StudentData.csv");
 
         //TODO find what to do with new abbreviations
         /*List<String> groupsToAdd = new ArrayList<>();
@@ -37,25 +43,24 @@ public class Application {
 
     public static List<Student> receiveListOfStudents(String path){
         FileReader studentReader = new FileReader();
-        List<String> lineList = studentReader.receiveLinesAsList(path);
-        CSVParser parser = new CSVParser();
-        lineList.remove(0);
-        return lineList.stream().map(line -> parser.parseLineToStudent(line)).collect(Collectors.toList());
+
+        return studentReader.receiveLinesAsList(path).stream().skip(1)
+                .map(line -> new CSVParser().parseLineToStudent(line)).collect(Collectors.toList());
     }
 
     public static List<Group> receiveListOfGroups(String path){
         FileReader groupReader = new FileReader();
-        List<String> lineList = groupReader.receiveLinesAsList(path);
-        CSVParser parser = new CSVParser();
-        lineList.remove(0);
-        return lineList.stream().map(line -> parser.parseLineToGroup(line)).collect(Collectors.toList());
+
+        return groupReader.receiveLinesAsList(path).stream().skip(1)
+                .map(line -> new CSVParser().parseLineToGroup(line)).collect(Collectors.toList());
     }
 
-    public static void addStudent(List<String> lines, List<Student> studentList, String path){
-        lines.stream().map(line -> new CSVParser().parseLineToStudent(line))
-                .forEach(student -> studentList.add(student));
+    public static void addStudents(List<Student> studentsToAdd, List<Student> studentList, String path){
+        studentsToAdd.stream().forEach(student -> studentList.add(student));
         try {
-            Files.write(Path.of(path),lines, StandardOpenOption.APPEND);
+            Files.write(Path.of(path), studentsToAdd.stream()
+                            .map(student -> new CSVParser().parseStudentToLine(student)).collect(Collectors.toList())
+                    , StandardOpenOption.APPEND);
         } catch (IOException e) {
             e.printStackTrace();
         }
