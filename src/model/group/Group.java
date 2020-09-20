@@ -4,15 +4,13 @@ import util.parser.SeparatedValuesParser;
 
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 public class Group {
 
     private int id;
-    private String name;
-    private Abbreviation abbreviation;
+    private GroupNames groupName;
     private Locale language;
-    private boolean onlineAccess;
+    private boolean isOnlineAccessible;
     private int maxAttendeesPresent;
     private String[] responsibleForGroup;
     private String contactInformation;
@@ -22,29 +20,22 @@ public class Group {
         return this;
     }
 
-    public Group setName(String name) throws IllegalArgumentException {
-        if (name != null) {
-            if (!name.contentEquals("")) {
-                this.name = name;
-                return this;
-            }
-        }
-
-        throw new IllegalArgumentException("Empty name or null is prohibited");
-    }
-
-    public Group setAbbreviation (String abbreviation) throws IllegalArgumentException{
-        this.abbreviation = Abbreviation.valueOf(abbreviation.toUpperCase());
-        return this;
-    }
-
-    public Group setAbbreviation(Abbreviation abbreviation) throws IllegalArgumentException{
-        if(abbreviation != null) {
-            this.abbreviation = abbreviation;
+    public Group setGroupName(String groupName) throws IllegalArgumentException{
+        if(groupName != null) {
+            this.groupName = GroupNames.valueOf(groupName.toUpperCase());
             return this;
         }
 
-        throw new IllegalArgumentException("Null as abbreviation is prohibited");
+        throw new IllegalArgumentException("Null as group name is prohibited");
+    }
+
+    public Group setGroupName(GroupNames groupName) throws IllegalArgumentException{
+        if(groupName != null) {
+            this.groupName = groupName;
+            return this;
+        }
+
+        throw new IllegalArgumentException("Null as group name is prohibited");
     }
 
     public Group setLanguage(String language) throws IllegalArgumentException{
@@ -67,14 +58,14 @@ public class Group {
         throw new IllegalArgumentException("Null as language is prohibited");
     }
 
-    public Group setOnlineAccess(String onlineAccess) throws IllegalArgumentException{
-        if(onlineAccess != null) {
-            if (onlineAccess.toLowerCase().contentEquals("yes")) {
-                this.onlineAccess = true;
+    public Group isOnlineAccessible(String isOnlineAccessible) throws IllegalArgumentException{
+        if(isOnlineAccessible != null) {
+            if (isOnlineAccessible.toLowerCase().contentEquals("yes")) {
+                this.isOnlineAccessible = true;
                 return this;
             }
-            else if (onlineAccess.toLowerCase().contentEquals("no")){
-                this.onlineAccess = false;
+            else if (isOnlineAccessible.toLowerCase().contentEquals("no")){
+                this.isOnlineAccessible = false;
                 return this;
             }
         }
@@ -82,8 +73,8 @@ public class Group {
         throw new IllegalArgumentException("Online access input is incorrect. Should be one of yes|YES|Yes|no|NO|No");
     }
 
-    public Group setOnlineAccess(boolean onlineAccess){
-        this.onlineAccess = onlineAccess;
+    public Group isOnlineAccessible(boolean isOnlineAccessible){
+        this.isOnlineAccessible = isOnlineAccessible;
         return this;
     }
 
@@ -126,20 +117,23 @@ public class Group {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getFullName() {
+        if(groupName != null)
+            return groupName.getFullName();
+
+        return "";
     }
 
-    public Abbreviation getAbbreviation() {
-        return abbreviation;
+    public GroupNames getGroupName() {
+        return groupName;
     }
 
     public Locale getLanguage() {
         return language;
     }
 
-    public boolean getOnlineAccess() {
-        return onlineAccess;
+    public boolean isOnlineAccessible() {
+        return isOnlineAccessible;
     }
 
     public int getMaxAttendeesPresent() {
@@ -173,8 +167,8 @@ public class Group {
 
     public boolean equals(Group group){
         try {
-            if (id == group.getId() && name.contentEquals(group.getName()) && abbreviation == group.getAbbreviation()
-                    && language.equals(group.getLanguage()) && onlineAccess == group.getOnlineAccess()
+            if (id == group.getId() && groupName == group.getGroupName()
+                    && language.equals(group.getLanguage()) && isOnlineAccessible == group.isOnlineAccessible()
                     && maxAttendeesPresent == group.getMaxAttendeesPresent()
                     && Arrays.compare(responsibleForGroup, group.getResponsibleForGroup()) == 0
                     && contactInformation.contentEquals(group.getContactInformation()))

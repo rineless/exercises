@@ -37,11 +37,11 @@ public interface ILineParser {
     default Group parseLineToGroup(String line) {
         if(line != null) {
             String[] dataForGroup = parseLineToArray(line);
-            if (dataForGroup.length == 8)
-                return new Group().setId(Integer.parseInt(dataForGroup[0])).setName(dataForGroup[1])
-                        .setAbbreviation(dataForGroup[2]).setLanguage(dataForGroup[3]).setOnlineAccess(dataForGroup[4])
-                        .setMaxAttendeesPresent(Integer.parseInt(dataForGroup[5])).setResponsibleForGroup(dataForGroup[6])
-                        .setContactInformation(dataForGroup[7]);
+            if (dataForGroup.length == 7)
+                return new Group().setId(Integer.parseInt(dataForGroup[0]))
+                        .setGroupName(dataForGroup[1]).setLanguage(dataForGroup[2]).isOnlineAccessible(dataForGroup[3])
+                        .setMaxAttendeesPresent(Integer.parseInt(dataForGroup[4])).setResponsibleForGroup(dataForGroup[5])
+                        .setContactInformation(dataForGroup[6]);
             else {
                 throw new IllegalArgumentException("Line cannot be resolved into Group. Not enough data");
             }
@@ -74,18 +74,17 @@ public interface ILineParser {
         if(group == null)
             return "";
 
-        String[] groupData = new String[8];
+        String[] groupData = new String[7];
         groupData[0] = group.getId() == 0 ? "" : String.valueOf(group.getId());
-        groupData[1] = group.getName();
-        groupData[2] = group.getAbbreviation() == null ? null : group.getAbbreviation().toString();
-        groupData[3] = group.getLanguage() == null ? null : group.getLanguage().toString();
-        groupData[4] = String.valueOf(group.getOnlineAccess());
-        groupData[5] = group.getMaxAttendeesPresent() == 0 ? "" : String.valueOf(group.getMaxAttendeesPresent());
+        groupData[1] = group.getGroupName() == null ? null : group.getGroupName().toString();
+        groupData[2] = group.getLanguage() == null ? null : group.getLanguage().toString();
+        groupData[3] = String.valueOf(group.isOnlineAccessible());
+        groupData[4] = group.getMaxAttendeesPresent() == 0 ? "" : String.valueOf(group.getMaxAttendeesPresent());
         String responsibleForGroup = (group.getResponsibleForGroup() == null | group.getResponsibleForGroup().length < 1) ? " "
                 : Stream.of(group.getResponsibleForGroup())
                 .map(name -> name + " ").collect(Collectors.joining());
-        groupData[6] = responsibleForGroup.substring(0, responsibleForGroup.length() - 1);
-        groupData[7] = group.getContactInformation();
+        groupData[5] = responsibleForGroup.substring(0, responsibleForGroup.length() - 1);
+        groupData[6] = group.getContactInformation();
         return parseArrayToLine(groupData);
     }
 

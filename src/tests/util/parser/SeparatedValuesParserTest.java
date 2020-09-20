@@ -1,6 +1,6 @@
 package util.parser;
 
-import model.group.Abbreviation;
+import model.group.GroupNames;
 import model.group.Group;
 import model.student.Gender;
 import model.student.Student;
@@ -319,11 +319,11 @@ public class SeparatedValuesParserTest {
         @DisplayName("Line should be parsed to group")
         void shouldParseLineToGroup() {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
-            Group expected = new Group().setId(3).setName("Analysis").setAbbreviation(Abbreviation.ANL)
-                    .setLanguage(new Locale("english")).setOnlineAccess(false).setMaxAttendeesPresent(15)
+            Group expected = new Group().setId(3).setGroupName(GroupNames.ANL)
+                    .setLanguage(new Locale("english")).isOnlineAccessible(false).setMaxAttendeesPresent(15)
                     .setResponsibleForGroup(new String[]{"Karol", "Maier"}).setContactInformation("karol.maier@myuni.de");
 
-            Group actual = parser.parseLineToGroup("3,Analysis,Anl,english,no,15,Karol Maier,karol.maier@myuni.de");
+            Group actual = parser.parseLineToGroup("3,Anl,english,no,15,Karol Maier,karol.maier@myuni.de");
 
             Assertions.assertEquals(expected, actual, "Expected parsed line to group");
         }
@@ -343,7 +343,7 @@ public class SeparatedValuesParserTest {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("3,Analysis,Anl,no,Karol Maier,karol.maier@myuni.de")
+                    , () -> parser.parseLineToGroup("3,Anl,no,Karol Maier,karol.maier@myuni.de")
                     , "Expected IllegalArgumentException by not enough data input");
         }
 
@@ -353,7 +353,7 @@ public class SeparatedValuesParserTest {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup(",Analysis,Anl,english,no,15,Karol Maier,karol.maier@myuni.de")
+                    , () -> parser.parseLineToGroup(",Anl,english,no,15,Karol Maier,karol.maier@myuni.de")
                     , "Expected IllegalArgumentException by missing id input");
         }
 
@@ -363,38 +363,29 @@ public class SeparatedValuesParserTest {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("three,Analysis,Anl,english,no,15,Karol Maier,karol.maier@myuni.de")
+                    , () -> parser.parseLineToGroup("three,Anl,english,no,15,Karol Maier,karol.maier@myuni.de")
                     , "Expected IllegalArgumentException by prohibited id input");
         }
 
-        @Test
-        @DisplayName("By input with missing name should throw IllegalArgumentException")
-        void parseLineToGroup_WithMissingNameInput_ShouldThrowException() {
-            SeparatedValuesParser parser = new SeparatedValuesParser(",");
-
-            Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("3,,Anl,english,no,15,Karol Maier,karol.maier@myuni.de")
-                    , "Expected IllegalArgumentException by missing name input");
-        }
 
         @Test
         @DisplayName("By input with missing abbreviation should throw IllegalArgumentException")
-        void parseLineToGroup_WithMissingAbbreviationInput_ShouldThrowException() {
+        void parseLineToGroup_WithMissingGroupNameInput_ShouldThrowException() {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("3,Analysis,,english,no,15,Karol Maier,karol.maier@myuni.de")
-                    , "Expected IllegalArgumentException by missing abbreviation input");
+                    , () -> parser.parseLineToGroup("3,,english,no,15,Karol Maier,karol.maier@myuni.de")
+                    , "Expected IllegalArgumentException by missing group name input");
         }
 
         @Test
         @DisplayName("By input with prohibited abbreviation should throw IllegalArgumentException")
-        void parseLineToGroup_WithProhibitedAbbreviationInput_ShouldThrowException() {
+        void parseLineToGroup_WithProhibitedGroupNameInput_ShouldThrowException() {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("3,Analysis,emdfe,english,no,15,Karol Maier,karol.maier@myuni.de")
-                    , "Expected IllegalArgumentException by prohibited abbreviation input");
+                    , () -> parser.parseLineToGroup("3,emdfe,english,no,15,Karol Maier,karol.maier@myuni.de")
+                    , "Expected IllegalArgumentException by prohibited group name input");
         }
 
         @Test
@@ -403,7 +394,7 @@ public class SeparatedValuesParserTest {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("3,Analysis,Anl,,no,15,Karol Maier,karol.maier@myuni.de")
+                    , () -> parser.parseLineToGroup("3,Anl,,no,15,Karol Maier,karol.maier@myuni.de")
                     , "Expected IllegalArgumentException by missing language input");
         }
 
@@ -413,7 +404,7 @@ public class SeparatedValuesParserTest {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("3,Analysis,Anl,english,,15,Karol Maier,karol.maier@myuni.de")
+                    , () -> parser.parseLineToGroup("3,Anl,english,,15,Karol Maier,karol.maier@myuni.de")
                     , "Expected IllegalArgumentException by missing online access input");
         }
 
@@ -423,7 +414,7 @@ public class SeparatedValuesParserTest {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("3,Analysis,Anl,english,maybe,15,Karol Maier,karol.maier@myuni.de")
+                    , () -> parser.parseLineToGroup("3,Anl,english,maybe,15,Karol Maier,karol.maier@myuni.de")
                     , "Expected IllegalArgumentException by prohibited online access input");
         }
 
@@ -433,7 +424,7 @@ public class SeparatedValuesParserTest {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("3,Analysis,Anl,english,no,,Karol Maier,karol.maier@myuni.de")
+                    , () -> parser.parseLineToGroup("3,Anl,english,no,,Karol Maier,karol.maier@myuni.de")
                     , "Expected IllegalArgumentException by missing max attendees present input");
         }
 
@@ -443,7 +434,7 @@ public class SeparatedValuesParserTest {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("3,Analysis,Anl,english,no,15,,karol.maier@myuni.de")
+                    , () -> parser.parseLineToGroup("3,Anl,english,no,15,,karol.maier@myuni.de")
                     , "Expected IllegalArgumentException by missing responsible for group access input");
         }
 
@@ -454,7 +445,7 @@ public class SeparatedValuesParserTest {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("3,Analysis,Anl,english,no,15,Karol Maier,")
+                    , () -> parser.parseLineToGroup("3,Anl,english,no,15,Karol Maier,")
                     , "Expected IllegalArgumentException by missing contact information input");
         }
     }
@@ -510,10 +501,10 @@ public class SeparatedValuesParserTest {
         @DisplayName("Group should be parsed to line")
         void shouldParseGroupToLine() {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
-            String expected = "2,Discrete structures,DS,germany,true,50,Name Surname,name.surname@gmail.com";
+            String expected = "2,DS,germany,true,50,Name Surname,name.surname@gmail.com";
 
-            String actual = parser.parseGroupToLine(new Group().setId(2).setName("Discrete structures")
-                    .setAbbreviation(Abbreviation.DS).setLanguage(new Locale("germany")).setOnlineAccess(true).setMaxAttendeesPresent(50)
+            String actual = parser.parseGroupToLine(new Group().setId(2)
+                    .setGroupName(GroupNames.DS).setLanguage(new Locale("germany")).isOnlineAccessible(true).setMaxAttendeesPresent(50)
                     .setResponsibleForGroup(new String[]{"Name", "Surname"}).setContactInformation("name.surname@gmail.com"));
 
             Assertions.assertEquals(expected, actual, "Expected parsed group to line");
@@ -534,7 +525,7 @@ public class SeparatedValuesParserTest {
         @DisplayName("Group with no data should be parsed to line with separators")
         void parseGroupToLine_WithGroupWithNoDataInput_ShouldReturnLineWithSeparators() {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
-            String expected = ",,,,false,,,";
+            String expected = ",,,false,,,";
 
             String actual = parser.parseGroupToLine(new Group());
 
