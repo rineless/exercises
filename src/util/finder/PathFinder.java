@@ -5,7 +5,8 @@ import java.util.List;
 
 public class PathFinder {
 
-    public static void findByName(String name, File rootDirectory, List<String> paths){
+    public static void findByName(String name, File rootDirectory, List<String> paths)
+            throws IllegalArgumentException{
         if(name != null | rootDirectory != null | paths != null) {
             if(rootDirectory.isDirectory()) {
 
