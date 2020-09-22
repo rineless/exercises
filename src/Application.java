@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class Application {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
         List<String> studentDataPaths = new LinkedList<>();
         PathFinder.findByName("StudentData.csv"
@@ -42,9 +42,9 @@ public class Application {
 
         List<Student> studentsToAdd = new ArrayList<>();
         studentsToAdd.add(new Student().setId(13).setName("Rubel").setSurname("Bare").setGender(Gender.MALE)
-                .setBirthDate(LocalDate.of(1998,2,15)).setCitizenship("German").setPlaceOfBirth("Bremen")
+                .setBirthDate(LocalDate.of(1998, 2, 15)).setCitizenship("German").setPlaceOfBirth("Bremen")
                 .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(0).setTypeOfStudying(TypeOfStudying.PRESENT).setContactInformation("rubel.bare@gmail.com"));
-        addStudents(studentsToAdd,studentList,studentDataPath);
+        addStudents(studentsToAdd, studentList, studentDataPath);
 
         //TODO find what to do with new abbreviations
         /*List<String> groupsToAdd = new ArrayList<>();
@@ -53,21 +53,21 @@ public class Application {
 
     }
 
-    public static List<Student> receiveListOfStudents(String path){
+    public static List<Student> receiveListOfStudents(String path) {
         FileReader studentReader = new FileReader();
 
         return studentReader.receiveLinesAsList(path).stream().skip(1)
                 .map(line -> new CSVParser().parseLineToStudent(line)).collect(Collectors.toList());
     }
 
-    public static List<Group> receiveListOfGroups(String path){
+    public static List<Group> receiveListOfGroups(String path) {
         FileReader groupReader = new FileReader();
 
         return groupReader.receiveLinesAsList(path).stream().skip(1)
                 .map(line -> new CSVParser().parseLineToGroup(line)).collect(Collectors.toList());
     }
 
-    public static void addStudents(List<Student> studentsToAdd, List<Student> studentList, String path){
+    public static void addStudents(List<Student> studentsToAdd, List<Student> studentList, String path) {
         studentsToAdd.stream().forEach(student -> studentList.add(student));
         try {
             Files.write(Path.of(path), studentsToAdd.stream()
@@ -78,12 +78,13 @@ public class Application {
         }
 
     }
+
     //TODO check, finalize
-    public static void addGroup(List<String> lines, List<Group> groupList, String path){
+    public static void addGroup(List<String> lines, List<Group> groupList, String path) {
         lines.stream().map(line -> new CSVParser().parseLineToGroup(line))
                 .forEach(group -> groupList.add(group));
         try {
-            Files.write(Path.of(path),lines, StandardOpenOption.APPEND);
+            Files.write(Path.of(path), lines, StandardOpenOption.APPEND);
         } catch (IOException e) {
             e.printStackTrace();
         }
