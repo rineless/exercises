@@ -44,9 +44,9 @@ public class Student {
     }
 
     public Student setGender(String gender) throws IllegalArgumentException{
-        if (gender.toLowerCase().contentEquals("f"))
+        if (gender.toLowerCase().contentEquals("f") | gender.toUpperCase().contentEquals("FEMALE"))
             this.gender = Gender.valueOf("FEMALE");
-        else if (gender.toLowerCase().contentEquals("m"))
+        else if (gender.toLowerCase().contentEquals("m") | gender.toUpperCase().contentEquals("MALE"))
             this.gender = Gender.valueOf("MALE");
         else
             throw new IllegalArgumentException("Incorrect input of gender for student (should be one of m|M|f|F)");
