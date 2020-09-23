@@ -3,18 +3,17 @@ import model.student.Gender;
 import model.student.Student;
 import model.student.TypeOfContract;
 import model.student.TypeOfStudying;
-import util.finder.PathFinder;
 import util.parser.CSVParser;
 import util.reader.FileReader;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,15 +21,8 @@ public class Application {
 
     public static void main(String[] args) {
 
-        List<String> studentDataPaths = new LinkedList<>();
-        PathFinder.findByName("StudentData.csv"
-                , new File("src"), studentDataPaths);
-        String studentDataPath = studentDataPaths.get(0);
-
-        List<String> groupDataPaths = new LinkedList<>();
-        PathFinder.findByName("StudentGroupData.csv"
-                , new File("src"), groupDataPaths);
-        String groupDataPath = groupDataPaths.get(0);
+        String studentDataPath = receiveFilePath("data/StudentData.csv");
+        String groupDataPath = receiveFilePath("data/StudentGroupData.csv");
 
         System.out.println("Students:");
         List<Student> studentList = receiveListOfStudents(studentDataPath);
@@ -43,14 +35,22 @@ public class Application {
         List<Student> studentsToAdd = new ArrayList<>();
         studentsToAdd.add(new Student().setId(13).setName("Rubel").setSurname("Bare").setGender(Gender.MALE)
                 .setBirthDate(LocalDate.of(1998, 2, 15)).setCitizenship("German").setPlaceOfBirth("Bremen")
-                .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(0).setTypeOfStudying(TypeOfStudying.PRESENT).setContactInformation("rubel.bare@gmail.com"));
+                .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(5).setTypeOfStudying(TypeOfStudying.PRESENT).setContactInformation("rubel.bare@gmail.com"));
         addStudents(studentsToAdd, studentList, studentDataPath);
+
 
         //TODO find what to do with new abbreviations
         /*List<String> groupsToAdd = new ArrayList<>();
         groupsToAdd.add("4,Analysis,Anl,english,no,0,3,15,Karol Maier,karol.maier@myuni.de");
         addGroup(groupsToAdd,groupList,"src/data/StudentGroupData.csv");*/
 
+
+
+    }
+
+    public static String receiveFilePath(String name){
+        URL url = new Application().getClass().getClassLoader().getResource(name);
+        return new File(url.getPath()).toString();
     }
 
     public static List<Student> receiveListOfStudents(String path) {
