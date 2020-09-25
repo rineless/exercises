@@ -1,4 +1,4 @@
 package repository;
 
-public class GroupsRepository {
+public interface GroupsRepository {
 }
