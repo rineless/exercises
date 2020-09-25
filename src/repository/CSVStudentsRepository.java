@@ -86,21 +86,24 @@ public class CSVStudentsRepository implements StudentsRepository{
 
     }
 
-    public void delete(Student student){
+    public void delete(Student student) {
 
         if (studentData == null) {
             throw new IllegalArgumentException("Student repository is not created yet. Cannot delete Student from null list.");
         }
 
         try {
-            int id = student.getId();
-            //TODO
 
             Student foundStudent = studentData.stream().filter(studentFromDatabase -> studentFromDatabase.equals(student))
                     .findFirst().get();
             studentData.remove(foundStudent);
-        }
-        catch (NoSuchElementException | NullPointerException exception){
+
+            Files.write(Path.of(studentDataPath), studentData.stream()
+                    .map(eachStudent -> new CSVParser().parseStudentToLine(eachStudent)).collect(Collectors.toList()));
+        } catch (NoSuchElementException | NullPointerException exception) {
+            System.out.println("Student not found. Cannot delete");
+        } catch (IOException exception) {
+            System.out.println("Path not found");
         }
     }
 }
