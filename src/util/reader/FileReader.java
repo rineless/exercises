@@ -10,9 +10,8 @@ import java.util.stream.Collectors;
 public class FileReader extends Reader {
 
 
-    public List<String> receiveLinesAsList(String pathInResources) {
+    public List<String> receiveLinesAsList(Path path) {
         try {
-            Path path = Path.of(findAbsolutePathFromRelativeToResourceFolder(pathInResources));
             if (Files.exists(path) && Files.isRegularFile(path)
                     && Files.isReadable(path))
                 return Files.lines(path).collect(Collectors.toList());
@@ -27,12 +26,22 @@ public class FileReader extends Reader {
         }
     }
 
-    private String findAbsolutePathFromRelativeToResourceFolder(String pathInResources)
+    public List<String> receiveLinesAsList(String path){
+        try {
+            return receiveLinesAsList(Path.of(null));
+        }
+        catch(NullPointerException exp){
+            System.out.println("Null cannot be resolved to path. Created empty list");
+            return new ArrayList<>();
+        }
+    }
+
+    public Path findAbsolutePathFromRelativeToResourceFolder(String pathInResources)
             throws IllegalArgumentException {
         URL url = getClass().getClassLoader().getResource(pathInResources);
         if (url == null)
             throw new IllegalArgumentException("Cannot find " + pathInResources + " file");
-        return new File(url.getPath()).toString();
+        return Path.of(new File(url.getPath()).toString());
     }
 
 }
