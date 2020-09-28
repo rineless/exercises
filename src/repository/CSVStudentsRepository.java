@@ -1,8 +1,11 @@
 package repository;
 
+import exceptions.ObjectsOverflowException;
 import model.student.Student;
 import util.parser.CSVParser;
+import util.parser.ILineParser;
 import util.reader.FileReader;
+import util.reader.Reader;
 
 import java.io.File;
 
@@ -16,19 +19,30 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class CSVStudentsRepository implements StudentsRepository{
-    List<Student> studentData;
-    String studentDataPath;
+    private static int count;
+
+    private List<Student> studentData;
+    private final FileReader reader;
+    private final ILineParser parser;
+    private final Path studentDataPath;
+
+    public CSVStudentsRepository() throws ObjectsOverflowException{
+        if(count>0)
+            throw new ObjectsOverflowException("Student repository can be created only once");
+
+        reader = new FileReader();
+        parser = new CSVParser();
+        studentDataPath = reader.findAbsolutePathFromRelativeToResourceFolder("data/StudentData.csv");
+        ++count;
+
+    }
 
     public List<Student> getAll() {
 
         if (studentData == null) {
-            URL url = getClass().getClassLoader().getResource("data/StudentData.csv");
-            if(url == null)
-                throw new IllegalArgumentException("Cannot find StudentData.csv file");
-            studentDataPath = new File(url.getPath()).toString();
 
-            studentData = new FileReader().receiveLinesAsList(studentDataPath).stream().skip(1)
-                    .map(line -> new CSVParser().parseLineToStudent(line)).collect(Collectors.toList());
+            studentData = reader.receiveLinesAsList(studentDataPath).stream().skip(1)
+                    .map(line -> parser.parseLineToStudent(line)).collect(Collectors.toList());
         }
 
         return studentData.stream().collect(Collectors.toList());
@@ -56,7 +70,7 @@ public class CSVStudentsRepository implements StudentsRepository{
                     & student.getTypeOfContract() != null & student.getTypeOfStudying() != null & student.getContactInformation() != null) {
 
                 try {
-                    Files.write(Path.of(studentDataPath), (new CSVParser().parseStudentToLine(student) + "\n").getBytes()
+                    Files.write(studentDataPath, (parser.parseStudentToLine(student) + "\n").getBytes()
                             , StandardOpenOption.APPEND);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -73,8 +87,8 @@ public class CSVStudentsRepository implements StudentsRepository{
             throw new IllegalArgumentException("Student repository is not created yet. Cannot update null list");
         }
 
-        new FileReader().receiveLinesAsList(studentDataPath).stream().skip(1)
-                .map(line -> new CSVParser().parseLineToStudent(line))
+        reader.receiveLinesAsList(studentDataPath).stream().skip(1)
+                .map(line -> parser.parseLineToStudent(line))
                 .filter(student -> {
                     for(Student studentFromCSVFile: studentData){
                         if(studentFromCSVFile.equals(student))
@@ -98,8 +112,8 @@ public class CSVStudentsRepository implements StudentsRepository{
                     .findFirst().get();
             studentData.remove(foundStudent);
 
-            Files.write(Path.of(studentDataPath), studentData.stream()
-                    .map(eachStudent -> new CSVParser().parseStudentToLine(eachStudent)).collect(Collectors.toList()));
+            Files.write(studentDataPath, studentData.stream()
+                    .map(eachStudent -> parser.parseStudentToLine(eachStudent)).collect(Collectors.toList()));
         } catch (NoSuchElementException | NullPointerException exception) {
             System.out.println("Student not found. Cannot delete");
         } catch (IOException exception) {
