@@ -27,13 +27,8 @@ public class FileReader extends Reader {
     }
 
     public List<String> receiveLinesAsList(String path){
-        try {
-            return receiveLinesAsList(Path.of(null));
-        }
-        catch(NullPointerException exp){
-            System.out.println("Null cannot be resolved to path. Created empty list");
-            return new ArrayList<>();
-        }
+        Path absPath = this.findAbsolutePathFromRelativeToResourceFolder(path);
+        return  receiveLinesAsList(absPath);
     }
 
     public Path findAbsolutePathFromRelativeToResourceFolder(String pathInResources)
