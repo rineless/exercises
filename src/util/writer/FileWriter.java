@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
@@ -33,6 +34,21 @@ public class FileWriter {
             return false;
         } catch (IOException exception) {
             System.out.println("Path not found");
+            return false;
+        }
+    }
+
+    public boolean rewriteLine(String line, int lineNumber, Path path){
+        try {
+            List<String> text = Files.readAllLines(path);
+            text.set(lineNumber, line);
+            Files.write(path, text);
+            return true;
+        } catch (IOException e) {
+            System.out.println("File not found");
+            return false;
+        } catch (IndexOutOfBoundsException e)  {
+            System.out.println("Line number is incorrect");
             return false;
         }
     }
