@@ -14,7 +14,7 @@ public class StudentValidation implements Validation{
         return false;
     }
 
-    public boolean isValid(Student student) {
+    public static boolean isValid(Student student) {
         if (student != null) {
             if (student.getName() != null & student.getSurname() != null & student.getGender() != null
                     & student.getBirthDate() != null & student.getCitizenship() != null & student.getPlaceOfBirth() != null
