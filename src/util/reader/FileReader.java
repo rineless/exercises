@@ -26,17 +26,5 @@ public class FileReader extends Reader {
         }
     }
 
-    public List<String> receiveLinesAsList(String path){
-        Path absPath = this.findAbsolutePathFromRelativeToResourceFolder(path);
-        return  receiveLinesAsList(absPath);
-    }
-
-    public Path findAbsolutePathFromRelativeToResourceFolder(String pathInResources)
-            throws IllegalArgumentException {
-        URL url = getClass().getClassLoader().getResource(pathInResources);
-        if (url == null)
-            throw new IllegalArgumentException("Cannot find " + pathInResources + " file");
-        return Path.of(new File(url.getPath()).toString());
-    }
 
 }
