@@ -26,5 +26,15 @@ public class FileReader extends Reader {
         }
     }
 
+    public List<String> receiveLinesAsList(String path) {
+        if (path == null){
+            System.out.println("Path cannot be null. Created empty list");
+            return new ArrayList<String>();
+        }
+
+        return receiveLinesAsList(Path.of(path));
+    }
+
+
 
 }
