@@ -60,22 +60,16 @@ public class CSVStudentsRepository implements StudentsRepository {
         }
     }
 
-    public void update() {
-        if (studentData == null) {
-            throw new IllegalArgumentException("Student repository is not created yet. Cannot update null list");
+    public void update(Student student) {
+        if(StudentValidation.isValid(student)){
+            List<Student> studentList = getAll();
+            Optional<Student> studentToUpdate = studentList.stream().filter(studentFromList -> studentFromList.getId() == student.getId()).findFirst();
+            if(studentToUpdate.isPresent()) {
+                int lineNumber = studentList.indexOf(studentToUpdate);
+                writer.rewriteLine(parser.parseStudentToLine(student), lineNumber, PathFinder.findFromResources(studentDataPath));
+            }
+
         }
-
-        reader.receiveLinesAsList(studentDataPath).stream().skip(1)
-                .map(line -> parser.parseLineToStudent(line))
-                .filter(student -> {
-                    for (Student studentFromCSVFile : studentData) {
-                        if (studentFromCSVFile.equals(student))
-                            return false;
-                    }
-                    return true;
-                }).forEach(student -> studentData.add(student));
-
-
     }
 
     public void delete(Student student) {

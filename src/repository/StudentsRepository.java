@@ -12,7 +12,7 @@ public interface StudentsRepository {
 
     void add(Student student);
 
-    void update();
+    void update(Student student);
 
     void delete(Student student);
 }
