@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -50,7 +51,7 @@ public class CSVStudentsRepository implements StudentsRepository {
     }
 
     public void add(Student student) throws IllegalArgumentException {
-        if (student != null) {
+        if (Objects.nonNull(student)) {
 
             if (StudentValidation.isValid(student)) {//DONE please follow the Single Responsibility principle and move the validation to an appropriate class
 
@@ -73,6 +74,8 @@ public class CSVStudentsRepository implements StudentsRepository {
     }
 
     public void delete(Student student) {
-        writer.deleteLine(parser.parseStudentToLine(student), PathFinder.findFromResources(studentDataPath));
+        if(Objects.nonNull(student)) {
+            writer.deleteLine(parser.parseStudentToLine(student), PathFinder.findFromResources(studentDataPath));
+        }
     }
 }
