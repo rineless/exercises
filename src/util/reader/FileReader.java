@@ -1,8 +1,6 @@
 package util.reader;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,7 +27,7 @@ public class FileReader extends Reader {
     public List<String> receiveLinesAsList(String path) {
         if (path == null){
             System.out.println("Path cannot be null. Created empty list");
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
 
         return receiveLinesAsList(Path.of(path));
