@@ -19,21 +19,21 @@ public class CSVGroupsRepository implements GroupsRepository {
     private final ILineParser parser;
     private final String groupsDataPath = "data/StudentGroupData.csv";
 
-    public CSVGroupsRepository(){
+    public CSVGroupsRepository() {
         reader = new FileReader();
         writer = new FileWriter();
         parser = new CSVParser();
     }
 
-    public List<Group> getAll(){
+    public List<Group> getAll() {
         return reader.receiveLinesAsList(PathFinder.findFromResources(groupsDataPath))
                 .stream().map(line -> parser.parseLineToGroup(line)).collect(Collectors.toList());
     }
 
-    public Group getById(int id){
+    public Group getById(int id) {
         Group group = null;
         Optional<Group> optional = getAll().stream().filter(groupFromList -> groupFromList.getId() == id).findFirst();
-        if(optional.isPresent())
+        if (optional.isPresent())
             group = optional.get();
         else
             System.out.println("Group not found");
@@ -64,7 +64,9 @@ public class CSVGroupsRepository implements GroupsRepository {
     }
 
 
-    public void delete(Group group){
-
+    public void delete(Group group) {
+        if (Objects.nonNull(group)) {
+            writer.deleteLine(parser.parseGroupToLine(group), PathFinder.findFromResources(groupsDataPath));
+        }
     }
 }
