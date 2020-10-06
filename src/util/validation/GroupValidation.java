@@ -15,7 +15,7 @@ public class GroupValidation implements IValidation {
         return false;
     }
 
-    public boolean isValid(Group group) {
+    public static boolean isValid(Group group) {
         if (Objects.nonNull(group)) {
             if (Objects.nonNull(group.getGroupName()) & Objects.nonNull(group.getLanguage())
                     & Objects.nonNull(group.getResponsibleForGroup()) & Objects.nonNull(group.getContactInformation()))
