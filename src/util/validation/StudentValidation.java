@@ -4,7 +4,7 @@ import model.student.Student;
 
 import java.util.Objects;
 
-public class StudentValidation implements Validation{
+public class StudentValidation implements IValidation {
 
     @Override
     public boolean isValid(Object student) {

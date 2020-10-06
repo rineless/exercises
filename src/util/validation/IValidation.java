@@ -1,5 +1,5 @@
 package util.validation;
 
-public interface Validation {
+public interface IValidation {
     boolean isValid(Object obj);
 }

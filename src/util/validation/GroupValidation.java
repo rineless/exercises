@@ -4,7 +4,7 @@ import model.group.Group;
 
 import java.util.Objects;
 
-public class GroupValidation implements Validation {
+public class GroupValidation implements IValidation {
 
     @Override
     public boolean isValid(Object group) {
