@@ -59,10 +59,10 @@ public class CSVStudentsRepository implements StudentsRepository {
     }
 
     public void update(Student student) {
-        if(StudentValidation.isValid(student)){
+        if (StudentValidation.isValid(student)) {
             List<Student> studentList = getAll();
             Optional<Student> studentToUpdate = studentList.stream().filter(studentFromList -> studentFromList.getId() == student.getId()).findFirst();
-            if(studentToUpdate.isPresent()) {
+            if (studentToUpdate.isPresent()) {
                 int lineNumber = studentList.indexOf(studentToUpdate) + 1;
                 writer.rewriteLine(parser.parseStudentToLine(student), lineNumber, PathFinder.findFromResources(studentDataPath));
             }
@@ -71,7 +71,7 @@ public class CSVStudentsRepository implements StudentsRepository {
     }
 
     public void delete(Student student) {
-        if(Objects.nonNull(student)) {
+        if (Objects.nonNull(student)) {
             writer.deleteLine(parser.parseStudentToLine(student), PathFinder.findFromResources(studentDataPath));
         }
     }
