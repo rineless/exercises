@@ -28,7 +28,7 @@ public class CSVGroupsRepository implements GroupsRepository {
     public List<Group> getAll(){
         return reader.receiveLinesAsList(PathFinder.findFromResources(groupsDataPath))
                 .stream().map(line -> parser.parseLineToGroup(line)).collect(Collectors.toList());
-    };
+    }
 
     public Group getById(int id){
         Group group = null;
@@ -38,22 +38,33 @@ public class CSVGroupsRepository implements GroupsRepository {
         else
             System.out.println("Group not found");
         return group;
-    };
+    }
 
-    public void add(Group group){
+    public void add(Group group) {
         if (Objects.nonNull(group)) {
             if (GroupValidation.isValid(group)) {
                 writer.appendLine(parser.parseGroupToLine(group) + "\n", PathFinder.findFromResources(groupsDataPath));
             }
         }
 
-    };
+    }
 
-    public void update(Group group){
+    public void update(Group group) {
+        if (Objects.nonNull(group)) {
+            if (GroupValidation.isValid(group)) {
+                List<Group> groupList = getAll();
+                Optional<Group> optional = groupList.stream().filter(groupFromList -> groupFromList.getId() == group.getId())
+                        .findFirst();
+                if (optional.isPresent()) {
+                    int lineNumber = groupList.indexOf(optional.get()) + 1;
+                    writer.rewriteLine(parser.parseGroupToLine(group), lineNumber, PathFinder.findFromResources(groupsDataPath));
+                }
+            }
+        }
+    }
 
-    };
 
     public void delete(Group group){
 
-    };
+    }
 }
