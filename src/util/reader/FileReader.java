@@ -10,12 +10,15 @@ public class FileReader extends Reader {
 
     public List<String> receiveLinesAsList(Path path) {
         try {
-            if (Files.exists(path) && Files.isRegularFile(path)
-                    && Files.isReadable(path))
-                return Files.lines(path).collect(Collectors.toList());
-            else {
-                throw new IllegalArgumentException("Readable file not found.");
+            if (Objects.nonNull(path)) {
+                if (Files.exists(path) && Files.isRegularFile(path)
+                        && Files.isReadable(path))
+                    return Files.lines(path).collect(Collectors.toList());
+                else {
+                    throw new IllegalArgumentException("Readable file not found.");
+                }
             }
+            return new ArrayList<>();
         } catch (IOException | IllegalArgumentException exp) {
             if(exp instanceof IllegalArgumentException)
                 System.out.println(exp.getMessage());
@@ -25,7 +28,7 @@ public class FileReader extends Reader {
     }
 
     public List<String> receiveLinesAsList(String path) {
-        if (path == null){
+        if (Objects.nonNull(path)){
             System.out.println("Path cannot be null. Created empty list");
             return new ArrayList<>();
         }
