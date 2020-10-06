@@ -1,12 +1,15 @@
 package repository;
 
 import model.group.Group;
+import util.finder.PathFinder;
 import util.parser.CSVParser;
 import util.parser.ILineParser;
 import util.reader.FileReader;
 import util.writer.FileWriter;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class CSVGroupsRepository implements GroupsRepository {
     private final FileReader reader;
@@ -21,11 +24,18 @@ public class CSVGroupsRepository implements GroupsRepository {
     }
 
     public List<Group> getAll(){
-        return null;
+        return reader.receiveLinesAsList(PathFinder.findFromResources(groupsDataPath))
+                .stream().map(line -> parser.parseLineToGroup(line)).collect(Collectors.toList());
     };
 
     public Group getById(int id){
-        return null;
+        Group group = null;
+        Optional<Group> optional = getAll().stream().filter(groupFromList -> groupFromList.getId() == id).findFirst();
+        if(optional.isPresent())
+            group = optional.get();
+        else
+            System.out.println("Group not found");
+        return group;
     };
 
     public void add(Group group){
