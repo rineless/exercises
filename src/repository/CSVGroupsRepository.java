@@ -5,9 +5,11 @@ import util.finder.PathFinder;
 import util.parser.CSVParser;
 import util.parser.ILineParser;
 import util.reader.FileReader;
+import util.validation.GroupValidation;
 import util.writer.FileWriter;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -39,6 +41,11 @@ public class CSVGroupsRepository implements GroupsRepository {
     };
 
     public void add(Group group){
+        if (Objects.nonNull(group)) {
+            if (GroupValidation.isValid(group)) {
+                writer.appendLine(parser.parseGroupToLine(group) + "\n", PathFinder.findFromResources(groupsDataPath));
+            }
+        }
 
     };
 
