@@ -1,6 +1,8 @@
 package util.finder;
 
 import java.io.File;
+import java.net.URL;
+import java.nio.file.Path;
 import java.util.List;
 
 public class PathFinder {
@@ -22,5 +24,16 @@ public class PathFinder {
                 paths.add(file.getAbsolutePath());
         }
 
+    }
+
+    public static Path findFromResources(String path){
+        try {
+            URL url = new PathFinder().getClass().getClassLoader().getResource(path);
+            return Path.of(new File(url.getPath()).getPath());
+        } catch(NullPointerException exp){
+            System.out.println(exp.getMessage());
+            System.out.println("Return empty path");
+            return Path.of("");
+        }
     }
 }
