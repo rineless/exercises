@@ -8,7 +8,6 @@ import org.junit.jupiter.api.*;
 import util.finder.PathFinder;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -23,9 +22,9 @@ public class CSVStudentsRepositoryTest {
     public void fillTestRepository() throws IOException { //TODO exception
         List<String> lines = new LinkedList<>();
         lines.add("ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information");
-        lines.add("1,Anna,Allen,f,07.11.1998,German,Hamburg,stipend,1,present,anna.allen98@gmail.com");
-        lines.add("2,Peter,Tailor,m,25.06.1999,German,Bremen,payable,2,present,petter99tailor@gmail.com");
-        lines.add("3,Alice,Cook,f,14.04.1999,Ungarn,Paks,payable,1,online,alicook@gmail.com");
+        lines.add("1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com");
+        lines.add("2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com");
+        lines.add("3,Alice,Cook,FEMALE,14.4.1999,Ungarn,Paks,PAYABLE,1,ONLINE,alicook@gmail.com");
         Files.write(repository, lines);
     }
 
@@ -74,9 +73,9 @@ public class CSVStudentsRepositoryTest {
     public void addStudent_ShouldAddStudentToRepository() throws IOException { //TODO exception
         CSVStudentsRepository studentsRepository = new CSVStudentsRepository();
         String expected = "ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information\n" +
-                "1,Anna,Allen,f,07.11.1998,German,Hamburg,stipend,1,present,anna.allen98@gmail.com\n" +
-                "2,Peter,Tailor,m,25.06.1999,German,Bremen,payable,2,present,petter99tailor@gmail.com\n" +
-                "3,Alice,Cook,f,14.04.1999,Ungarn,Paks,payable,1,online,alicook@gmail.com\n"+
+                "1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com\n" +
+                "2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com\n" +
+                "3,Alice,Cook,FEMALE,14.4.1999,Ungarn,Paks,PAYABLE,1,ONLINE,alicook@gmail.com\n"+
                 "4,Gerald,Anond,MALE,13.6.1998,German,Dresden,STIPEND,3,ONLINE,gerald.anond@gmail.com\n";
 
         studentsRepository.add(new Student().setId(4).setName("Gerald").setSurname("Anond").setGender(Gender.MALE)
@@ -93,9 +92,9 @@ public class CSVStudentsRepositoryTest {
     public void updateStudent_ShouldUpdateStudentInformation() throws IOException { //TODO exception
         CSVStudentsRepository studentsRepository = new CSVStudentsRepository();
         String expected = "ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information\n" +
-                "1,Anna,Allen,f,07.11.1998,German,Hamburg,stipend,1,present,anna.allen98@gmail.com\n" +
+                "1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com\n" +
                 "2,Pettery,Trailor,MALE,25.6.1999,German,Bremen,PAYABLE,1,PRESENT,pettery99trailor@gmail.com\n" +
-                "3,Alice,Cook,f,14.04.1999,Ungarn,Paks,payable,1,online,alicook@gmail.com\n";
+                "3,Alice,Cook,FEMALE,14.4.1999,Ungarn,Paks,PAYABLE,1,ONLINE,alicook@gmail.com\n";
 
         studentsRepository.update(new Student().setId(2).setName("Pettery").setSurname("Trailor").setGender(Gender.MALE)
                 .setBirthDate(LocalDate.of(1999,6,25)).setCitizenship("German").setPlaceOfBirth("Bremen")
@@ -104,6 +103,23 @@ public class CSVStudentsRepositoryTest {
         String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
 
         Assertions.assertEquals(expected, actual, "Expected updating existing student");
+    }
+
+    @Test
+    @DisplayName("Student should be deleted from repository")
+    public void deleteStudent_ShouldDeleteStudentFromRepository() throws IOException { //TODO exception
+        CSVStudentsRepository studentsRepository = new CSVStudentsRepository();
+        String expected = "ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information\n" +
+                "1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com\n" +
+                "3,Alice,Cook,FEMALE,14.4.1999,Ungarn,Paks,PAYABLE,1,ONLINE,alicook@gmail.com\n";
+
+        studentsRepository.delete(new Student().setId(2).setName("Peter").setSurname("Tailor").setGender(Gender.MALE)
+                .setBirthDate(LocalDate.of(1999,6,25)).setCitizenship("German").setPlaceOfBirth("Bremen")
+                .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(2).setTypeOfStudying(TypeOfStudying.PRESENT)
+                .setContactInformation("petter99tailor@gmail.com"));
+        String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+
+        Assertions.assertEquals(expected, actual, "Expected adding student to repository");
     }
 
 }
