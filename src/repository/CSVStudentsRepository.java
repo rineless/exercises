@@ -48,14 +48,12 @@ public class CSVStudentsRepository implements StudentsRepository {
     }
 
     public void add(Student student) throws IllegalArgumentException {
-        if (Objects.nonNull(student)) {
 
             if (StudentValidation.isValid(student)) {//DONE please follow the Single Responsibility principle and move the validation to an appropriate class
 
                 writer.appendLine(parser.parseStudentToLine(student) + "\n", PathFinder.findFromResources(studentDataPath));//DONE move this code to FileReader and rename it to thr File ReaderWriter
 
             }
-        }
     }
 
     public void update(Student student) {
