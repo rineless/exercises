@@ -63,7 +63,7 @@ public class CSVStudentsRepository implements StudentsRepository {
             List<Student> studentList = getAll();
             Optional<Student> studentToUpdate = studentList.stream().filter(studentFromList -> studentFromList.getId() == student.getId()).findFirst();
             if (studentToUpdate.isPresent()) {
-                int lineNumber = studentList.indexOf(studentToUpdate) + 1;
+                int lineNumber = studentList.indexOf(studentToUpdate.get()) + 1;
                 writer.rewriteLine(parser.parseStudentToLine(student), lineNumber, PathFinder.findFromResources(studentDataPath));
             }
 
