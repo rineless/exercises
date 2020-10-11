@@ -330,7 +330,7 @@ public class SeparatedValuesParserTest {
 
         @Test
         @DisplayName("Null input should throw IllegalArgumentException")
-        void parseLineToStudent_WithNullInput_ShouldThrowException() {
+        void parseLineToGroup_WithNullInput_ShouldThrowException() {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class, () -> parser.parseLineToGroup(null)
