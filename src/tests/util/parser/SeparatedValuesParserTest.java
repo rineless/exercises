@@ -343,7 +343,7 @@ public class SeparatedValuesParserTest {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("3,Anl,no,Karol Maier,karol.maier@myuni.de")
+                    , () -> parser.parseLineToGroup("3,Anl,false,Karol Maier,karol.maier@myuni.de")
                     , "Expected IllegalArgumentException by not enough data input");
         }
 
@@ -353,7 +353,7 @@ public class SeparatedValuesParserTest {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup(",Anl,english,no,15,Karol Maier,karol.maier@myuni.de")
+                    , () -> parser.parseLineToGroup(",Anl,english,false,15,Karol Maier,karol.maier@myuni.de")
                     , "Expected IllegalArgumentException by missing id input");
         }
 
@@ -363,7 +363,7 @@ public class SeparatedValuesParserTest {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("three,Anl,english,no,15,Karol Maier,karol.maier@myuni.de")
+                    , () -> parser.parseLineToGroup("three,Anl,english,false,15,Karol Maier,karol.maier@myuni.de")
                     , "Expected IllegalArgumentException by prohibited id input");
         }
 
@@ -374,7 +374,7 @@ public class SeparatedValuesParserTest {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("3,,english,no,15,Karol Maier,karol.maier@myuni.de")
+                    , () -> parser.parseLineToGroup("3,,english,false,15,Karol Maier,karol.maier@myuni.de")
                     , "Expected IllegalArgumentException by missing group name input");
         }
 
@@ -384,7 +384,7 @@ public class SeparatedValuesParserTest {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("3,emdfe,english,no,15,Karol Maier,karol.maier@myuni.de")
+                    , () -> parser.parseLineToGroup("3,emdfe,english,false,15,Karol Maier,karol.maier@myuni.de")
                     , "Expected IllegalArgumentException by prohibited group name input");
         }
 
@@ -394,7 +394,7 @@ public class SeparatedValuesParserTest {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("3,Anl,,no,15,Karol Maier,karol.maier@myuni.de")
+                    , () -> parser.parseLineToGroup("3,Anl,,false,15,Karol Maier,karol.maier@myuni.de")
                     , "Expected IllegalArgumentException by missing language input");
         }
 
@@ -424,7 +424,7 @@ public class SeparatedValuesParserTest {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("3,Anl,english,no,,Karol Maier,karol.maier@myuni.de")
+                    , () -> parser.parseLineToGroup("3,Anl,english,false,,Karol Maier,karol.maier@myuni.de")
                     , "Expected IllegalArgumentException by missing max attendees present input");
         }
 
@@ -434,7 +434,7 @@ public class SeparatedValuesParserTest {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("3,Anl,english,no,15,,karol.maier@myuni.de")
+                    , () -> parser.parseLineToGroup("3,Anl,english,false,15,,karol.maier@myuni.de")
                     , "Expected IllegalArgumentException by missing responsible for group access input");
         }
 
@@ -445,7 +445,7 @@ public class SeparatedValuesParserTest {
             SeparatedValuesParser parser = new SeparatedValuesParser(",");
 
             Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("3,Anl,english,no,15,Karol Maier,")
+                    , () -> parser.parseLineToGroup("3,Anl,english,false,15,Karol Maier,")
                     , "Expected IllegalArgumentException by missing contact information input");
         }
     }
