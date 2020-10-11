@@ -60,11 +60,11 @@ public class Group {
 
     public Group isOnlineAccessible(String isOnlineAccessible) throws IllegalArgumentException{
         if(isOnlineAccessible != null) {
-            if (isOnlineAccessible.toLowerCase().contentEquals("yes")) {
+            if (isOnlineAccessible.toLowerCase().contentEquals("true")) {
                 this.isOnlineAccessible = true;
                 return this;
             }
-            else if (isOnlineAccessible.toLowerCase().contentEquals("no")){
+            else if (isOnlineAccessible.toLowerCase().contentEquals("false")){
                 this.isOnlineAccessible = false;
                 return this;
             }
