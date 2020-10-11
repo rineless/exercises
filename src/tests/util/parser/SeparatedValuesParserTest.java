@@ -323,7 +323,7 @@ public class SeparatedValuesParserTest {
                     .setLanguage(new Locale("english")).isOnlineAccessible(false).setMaxAttendeesPresent(15)
                     .setResponsibleForGroup(new String[]{"Karol", "Maier"}).setContactInformation("karol.maier@myuni.de");
 
-            Group actual = parser.parseLineToGroup("3,Anl,english,no,15,Karol Maier,karol.maier@myuni.de");
+            Group actual = parser.parseLineToGroup("3,Anl,english,false,15,Karol Maier,karol.maier@myuni.de");
 
             Assertions.assertEquals(expected, actual, "Expected parsed line to group");
         }
