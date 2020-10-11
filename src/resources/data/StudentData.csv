@@ -1,13 +1,13 @@
 ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information
-1,Anna,Allen,f,07.11.1998,German,Hamburg,stipend,1,present,anna.allen98@gmail.com
-2,Peter,Tailor,m,25.06.1999,German,Bremen,payable,2,present,petter99tailor@gmail.com
-3,Alice,Cook,f,14.04.1999,Ungarn,Paks,payable,1,online,alicook@gmail.com
-4,Della,Fox,f,05.12.1998,German,Bochum,payable,3,present,della.fox@gmail.com
-5,Alphonse,Mason,m,17.03.2000,Switzerland,Brig,stipend,3,present,alph05mason@gmail.com
-6,Kenneth,Meier,m,24.09.1999,German,Hamburg,stipend,2,online,kenneth_meier@gmail.com
-7,Lexi,Carter,f,19.10.1998,German,Erfurt,payable,1,online,lexii98carter@gmail.com
-8,Diana,Davidson,f,01.06.1999,German,Jena,stipend,2,online,diana.davidson@gmail.com
-9,Morgana,Walter,f,03.01.2000,Ungarn,Budapest,payable,3,present,morganawalter@gmail.com
-10,Victor,Ross,m,11.12.1999,Britain,Ely,payable,2,present,victoross@gmail.com
-11,Sylvia,Fuchs,f,25.07.1998,German,Magdenburg,stipend,1,present,sylvia25fuchs@gmail.com
-12,Ruby,Roth,f,29.12.1998,Netherlands,Amsterdam,payable,1,present,ruby.roth@gmail.com
+1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com
+2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com
+3,Alice,Cook,FEMALE,14.4.1999,Ungarn,Paks,PAYABLE,1,ONLINE,alicook@gmail.com
+4,Della,Fox,FEMALE,5.12.1998,German,Bochum,PAYABLE,3,PRESENT,della.fox@gmail.com
+5,Alphonse,Mason,MALE,17.3.2000,Switzerland,Brig,STIPEND,3,PRESENT,alph05mason@gmail.com
+6,Kenneth,Meier,MALE,24.9.1999,German,Hamburg,STIPEND,2,ONLINE,kenneth_meier@gmail.com
+7,Lexi,Carter,FEMALE,19.10.1998,German,Erfurt,PAYABLE,1,ONLINE,lexii98carter@gmail.com
+8,Diana,Davidson,FEMALE,1.6.1999,German,Jena,STIPEND,2,ONLINE,diana.davidson@gmail.com
+9,Morgana,Walter,FEMALE,3.1.2000,Ungarn,Budapest,PAYABLE,3,PRESENT,morganawalter@gmail.com
+10,Victor,Ross,MALE,11.12.1999,Britain,Ely,PAYABLE,2,PRESENT,victoross@gmail.com
+11,Sylvia,Fuchs,FEMALE,25.7.1998,German,Magdenburg,STIPEND,1,PRESENT,sylvia25fuchs@gmail.com
+12,Ruby,Roth,FEMALE,29.12.1998,Netherlands,Amsterdam,PAYABLE,1,PRESENT,ruby.roth@gmail.com
