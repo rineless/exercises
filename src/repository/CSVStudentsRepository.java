@@ -42,16 +42,16 @@ public class CSVStudentsRepository implements IStudentsRepository {
         if (firstElement.isPresent()) {
             student = firstElement.get();
         } else {
-            System.out.println("Student not found");
+            System.out.println("Student not found"); //TODO think if it is needed
         }
         return student;
     }
 
     public void add(Student student) throws IllegalArgumentException {
 
-            if (StudentValidation.isValid(student)) {//DONE please follow the Single Responsibility principle and move the validation to an appropriate class
+            if (StudentValidation.isValid(student)) {
 
-                writer.appendLine(parser.parseStudentToLine(student) + "\n", PathFinder.findFromResources(studentDataPath));//DONE move this code to FileReader and rename it to thr File ReaderWriter
+                writer.appendLine(parser.parseStudentToLine(student) + "\n", PathFinder.findFromResources(studentDataPath));
 
             }
     }
