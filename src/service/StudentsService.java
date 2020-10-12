@@ -34,16 +34,10 @@ public class StudentsService implements IStudentsService{
 
         if (StudentValidation.isValid(student)) {
             if (student.getTypeOfStudying() == TypeOfStudying.PRESENT) {
-                Group group = groupsRepository.getById(student.getGroupId());
-                if (group != null) {
-                    int numberOfStudentsInGroup = getAttendeesStudentsInGroup(group.getId()).size();
-                    if (numberOfStudentsInGroup < group.getMaxAttendeesPresent())
-                        studentsRepository.add(student);
-                    else
-                        System.out.println(group.getId() + "Group is full. Student cannot be added");
-                } else {
-                    System.out.println("Student attends not existing group. Cannot be added to repository");
-                }
+
+                if (studentIsAddibleToGroup(student))
+                    studentsRepository.add(student);
+
             } else
                 studentsRepository.add(student);
         }
@@ -58,12 +52,8 @@ public class StudentsService implements IStudentsService{
                 if (studentToUpdate != null) {
                     if (studentToUpdate.getGroupId() != student.getGroupId()) {
 
-                        int numberOfStudentsInGroup = getAttendeesStudentsInGroup(student.getGroupId()).size();
-                        Group group = groupsRepository.getById(student.getGroupId());
-                        if (numberOfStudentsInGroup < group.getMaxAttendeesPresent())
+                        if (studentIsAddibleToGroup(student))
                             studentsRepository.update(student);
-                        else
-                            System.out.println("Group is full. Student cannot be transferred to group" + group.getId());
 
                     } else
                         studentsRepository.update(student);
@@ -71,6 +61,26 @@ public class StudentsService implements IStudentsService{
 
             } else
                 studentsRepository.update(student);
+        }
+    }
+
+    private boolean studentIsAddibleToGroup(Student student) {
+
+        Group group = groupsRepository.getById(student.getGroupId());
+        if (group != null) {
+
+            int numberOfStudentsInGroup = getAttendeesStudentsInGroup(group.getId()).size();
+
+            if (numberOfStudentsInGroup < group.getMaxAttendeesPresent())
+                return true;
+            else {
+                System.out.println(group.getId() + "Group is full. Student cannot be added");
+                return false;
+            }
+
+        } else {
+            System.out.println("Student attends not existing group. Cannot be added to repository");
+            return false;
         }
     }
 
