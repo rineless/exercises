@@ -54,7 +54,8 @@ public class StudentsService implements IStudentsService{
 
                 Student studentToUpdate = studentsRepository.getById(student.getId());
                 if (studentToUpdate != null) {
-                    if (studentToUpdate.getGroupId() != student.getGroupId()) {
+                    if (studentToUpdate.getGroupId() != student.getGroupId()
+                            || studentToUpdate.getTypeOfStudying() == TypeOfStudying.ONLINE) {
 
                         if (studentIsAddibleToGroup(student))
                             studentsRepository.update(student);
@@ -78,7 +79,7 @@ public class StudentsService implements IStudentsService{
             if (numberOfStudentsInGroup < group.getMaxAttendeesPresent())
                 return true;
             else {
-                System.out.println(group.getId() + "Group is full. Student cannot be added");
+                System.out.println(group.getId() + " Group is full. Student cannot be added");
                 return false;
             }
 
