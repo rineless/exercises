@@ -18,7 +18,7 @@ public class StudentValidation implements IValidation {
 
     public static boolean isValid(Student student) {
         if (Objects.nonNull(student)) {
-            if (Objects.nonNull(student.getName()) & Objects.nonNull(student.getSurname()) & Objects.nonNull(student.getGender())
+            if (student.getId() != 0 && Objects.nonNull(student.getName()) & Objects.nonNull(student.getSurname()) & Objects.nonNull(student.getGender())
                     & Objects.nonNull(student.getBirthDate()) & Objects.nonNull(student.getCitizenship()) & Objects.nonNull(student.getPlaceOfBirth())
                     & Objects.nonNull(student.getTypeOfContract()) & Objects.nonNull(student.getTypeOfStudying()) & Objects.nonNull(student.getContactInformation()))
                 return true;
