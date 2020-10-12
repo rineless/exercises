@@ -12,7 +12,7 @@ import repository.IStudentsRepository;
 import util.validation.StudentValidation;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class StudentsService implements IStudentsService{
@@ -37,8 +37,10 @@ public class StudentsService implements IStudentsService{
         if (StudentValidation.isValid(student)) {
             if (student.getTypeOfStudying() == TypeOfStudying.PRESENT) {
 
-                if (studentIsAddibleToGroup(student))
-                    studentsRepository.add(student);
+                if (!studentExists(student.getId())) {
+                    if (studentIsAddibleToGroup(student))
+                        studentsRepository.add(student);
+                }
 
             } else
                 studentsRepository.add(student);
@@ -88,6 +90,10 @@ public class StudentsService implements IStudentsService{
 
     public void delete(Student student){
         studentsRepository.delete(student);
+    }
+
+    public boolean studentExists(int id){
+        return Objects.nonNull(getById(id));
     }
 
     public List<Student> getAllStudentsInGroup(int id){
