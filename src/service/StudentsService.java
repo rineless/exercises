@@ -1,7 +1,9 @@
 package service;
 
 import model.group.Group;
+import model.student.Gender;
 import model.student.Student;
+import model.student.TypeOfContract;
 import model.student.TypeOfStudying;
 import repository.CSVGroupsRepository;
 import repository.CSVStudentsRepository;
@@ -89,47 +91,47 @@ public class StudentsService implements IStudentsService{
     }
 
     public List<Student> getAllStudentsInGroup(int id){
-        return getAll().stream().filter(studentInRepository -> studentInRepository.getGroupId() == id)
+        return getAll().stream().filter(student -> student.getGroupId() == id)
                 .collect(Collectors.toList());
     }
 
     public List<Student> getAttendeesStudentsInGroup(int id){
-        //TODO
-        return null;
+        return getAll().stream().filter(student -> student.getGroupId() == id
+                && student.getTypeOfStudying() == TypeOfStudying.PRESENT).collect(Collectors.toList());
     }
 
     public List<Student> getOnlineStudentsInGroup(int id){
-        //TODO
-        return null;
+        return getAll().stream().filter(student -> student.getGroupId() == id
+                && student.getTypeOfStudying() == TypeOfStudying.ONLINE).collect(Collectors.toList());
     }
 
     public List<Student> findStipends(){
-        //TODO
-        return null;
+        return getAll().stream().filter(student -> student.getTypeOfContract() == TypeOfContract.STIPEND)
+                .collect(Collectors.toList());
     }
 
     public List<Student> findStudentsWithPayableContract(){
-        //TODO
-        return null;
+        return getAll().stream().filter(student -> student.getTypeOfContract() == TypeOfContract.PAYABLE)
+                .collect(Collectors.toList());
     }
 
     public List<Student> findAttendeesStudents(){
-        //TODO
-        return null;
+        return getAll().stream().filter(student -> student.getTypeOfStudying() == TypeOfStudying.PRESENT)
+                .collect(Collectors.toList());
     }
 
     public List<Student> findOnlineStudents(){
-        //TODO
-        return null;
+        return getAll().stream().filter(student -> student.getTypeOfStudying() == TypeOfStudying.ONLINE)
+                .collect(Collectors.toList());
     }
 
     public List<Student> findAllMaleStudents(){
-        //TODO
-        return null;
+        return getAll().stream().filter(student -> student.getGender() == Gender.MALE)
+                .collect(Collectors.toList());
     }
 
     public List<Student> findAllFemaleStudents(){
-        //TODO
-        return null;
+        return getAll().stream().filter(student -> student.getGender() == Gender.FEMALE)
+                .collect(Collectors.toList());
     }
 }
