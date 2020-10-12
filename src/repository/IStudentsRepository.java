@@ -4,7 +4,7 @@ import model.student.Student;
 
 import java.util.List;
 
-public interface StudentsRepository {
+public interface IStudentsRepository {
 
     List<Student> getAll();
 

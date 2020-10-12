@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class CSVGroupsRepository implements GroupsRepository {
+public class CSVGroupsRepository implements IGroupsRepository {
     private final FileReader reader;
     private final FileWriter writer;
     private final ILineParser parser;

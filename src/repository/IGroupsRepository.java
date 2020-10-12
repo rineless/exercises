@@ -4,7 +4,7 @@ import model.group.Group;
 
 import java.util.List;
 
-public interface GroupsRepository {
+public interface IGroupsRepository {
     List<Group> getAll();
 
     Group getById(int id);
