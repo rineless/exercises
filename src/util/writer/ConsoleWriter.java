@@ -26,8 +26,8 @@ public class ConsoleWriter {
         System.out.println("----------------------------------");
     }
 
-    public void printListOfLinesWithNameAndSeparation(String name, List<String> lines){
-        System.out.println("-----------------" + name +"-----------------");
+    public void printListOfLinesWithMessageAndSeparation(String message, List<String> lines){
+        System.out.println("-----------------" + message +"-----------------");
         printListOfLines(lines);
         System.out.println("----------------------------------");
     }
