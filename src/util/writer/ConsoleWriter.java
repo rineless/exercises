@@ -5,17 +5,26 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ConsoleWriter {
+    private final String separatorPattern;
+    private final int separatorLength;
     private final String separator;
 
     public ConsoleWriter(){
-        separator = "";
+        separatorPattern = "";
+        separatorLength = 0;
+        separator = calculateSeparator();
     }
 
-    public ConsoleWriter(String separator){
-        if(Objects.isNull(separator))
-            this.separator = "";
-        else
-            this.separator = separator;
+    public ConsoleWriter(String separatorPattern, int separatorLength){
+        if(Objects.isNull(separatorPattern) || separatorLength < 0) {
+            this.separatorPattern = "";
+            this.separatorLength = 0;
+        }
+        else {
+            this.separatorPattern = separatorPattern;
+            this.separatorLength = separatorLength;
+        }
+        this.separator = calculateSeparator();
     }
 
     public void printLine(String line){
@@ -62,5 +71,9 @@ public class ConsoleWriter {
 
     private String receiveHalfOfSeparator(){
         return separator.substring(0, separator.length()/2);
+    }
+
+    private String calculateSeparator(){
+        return separatorPattern.repeat(separatorLength);
     }
 }
