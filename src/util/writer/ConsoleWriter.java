@@ -1,9 +1,22 @@
 package util.writer;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ConsoleWriter {
+    private final String separator;
+
+    public ConsoleWriter(){
+        separator = "";
+    }
+
+    public ConsoleWriter(String separator){
+        if(Objects.isNull(separator))
+            this.separator = "";
+        else
+            this.separator = separator;
+    }
 
     public void printLine(String line){
         System.out.println(line);
@@ -14,27 +27,40 @@ public class ConsoleWriter {
         System.out.println(text);
     }
 
-    public void printLineWithMessageAndSeparation(String message, String line){
-        System.out.println("-----------------" + message +"-----------------");
+    public void printHeader(String header){
+        System.out.println(receiveHalfOfSeparator() + header +receiveHalfOfSeparator());
+    }
+
+    public void printSeparator(){
+        System.out.println(separator);
+    };
+
+    public void printLineWithHeaderAndSeparation(String header, String line){
+        printHeader(header);
         printLine(line);
-        System.out.println("----------------------------------");
+        printSeparator();
     }
 
     public void printLineWithSeparation(String line){
-        System.out.println("----------------------------------");
+        printSeparator();
         printLine(line);
-        System.out.println("----------------------------------");
+        printSeparator();
     }
 
-    public void printListOfLinesWithMessageAndSeparation(String message, List<String> lines){
-        System.out.println("-----------------" + message +"-----------------");
+    public void printListOfLinesWithMessageAndSeparation(String header, List<String> lines){
+        printHeader(header);
         printListOfLines(lines);
-        System.out.println("----------------------------------");
+        printSeparator();
     }
 
     public void printListOfLinesWithSeparation(List<String> lines){
-        System.out.println("----------------------------------");
+        printSeparator();
         printListOfLines(lines);
-        System.out.println("----------------------------------");
+        printSeparator();
+    }
+
+
+    private String receiveHalfOfSeparator(){
+        return separator.substring(0, separator.length()/2);
     }
 }
