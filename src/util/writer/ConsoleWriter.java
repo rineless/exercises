@@ -27,6 +27,14 @@ public class ConsoleWriter {
         this.separator = calculateSeparator(separatorLength);
     }
 
+    public String getSeparatorPattern(){
+        return separatorPattern;
+    }
+
+    public int getSeparatorLength(){
+        return separatorLength;
+    }
+
     public void printLine(String line){
         System.out.println(line);
     }
