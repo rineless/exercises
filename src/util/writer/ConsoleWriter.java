@@ -12,7 +12,7 @@ public class ConsoleWriter {
     public ConsoleWriter(){
         separatorPattern = "";
         separatorLength = 0;
-        separator = calculateSeparator();
+        separator = calculateSeparator(0);
     }
 
     public ConsoleWriter(String separatorPattern, int separatorLength){
@@ -24,7 +24,7 @@ public class ConsoleWriter {
             this.separatorPattern = separatorPattern;
             this.separatorLength = separatorLength;
         }
-        this.separator = calculateSeparator();
+        this.separator = calculateSeparator(separatorLength);
     }
 
     public void printLine(String line){
@@ -32,22 +32,36 @@ public class ConsoleWriter {
     }
 
     public void printListOfLines(List<String> lines){
-        String text = lines.stream().map(line -> line + "\n").collect(Collectors.joining());
-        System.out.println(text);
+        if(Objects.nonNull(lines)) {
+            String text = lines.stream().map(line -> line + "\n").collect(Collectors.joining());
+            System.out.println(text);
+        }
+        else
+            System.out.println("null");
     }
 
     public void printHeader(String header){
-        System.out.println(receiveHalfOfSeparator() + header +receiveHalfOfSeparator());
+        System.out.println(receiveHalfOfSeparator() + header + receiveHalfOfSeparator());
     }
 
     public void printSeparator(){
         System.out.println(separator);
     };
 
+    public void printSeparator(int length){
+        if(length < 0)
+            length = 0;
+
+        System.out.println(calculateSeparator(length));
+    }
+
     public void printLineWithHeaderAndSeparation(String header, String line){
+        if(Objects.isNull(header))
+            header = "null";
+
         printHeader(header);
         printLine(line);
-        printSeparator();
+        printSeparator(separatorLength + header.length());
     }
 
     public void printLineWithSeparation(String line){
@@ -57,9 +71,12 @@ public class ConsoleWriter {
     }
 
     public void printListOfLinesWithMessageAndSeparation(String header, List<String> lines){
+        if(Objects.isNull(header))
+            header = "null";
+
         printHeader(header);
         printListOfLines(lines);
-        printSeparator();
+        printSeparator(separatorLength+header.length());
     }
 
     public void printListOfLinesWithSeparation(List<String> lines){
@@ -73,7 +90,7 @@ public class ConsoleWriter {
         return separator.substring(0, separator.length()/2);
     }
 
-    private String calculateSeparator(){
-        return separatorPattern.repeat(separatorLength);
+    private String calculateSeparator(int length){
+        return separatorPattern.repeat(length);
     }
 }
