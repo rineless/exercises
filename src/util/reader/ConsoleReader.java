@@ -20,4 +20,12 @@ public class ConsoleReader {
         }
     }
 
+    public void close(){
+        try {
+            reader.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 }
