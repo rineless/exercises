@@ -28,7 +28,7 @@ public class StudentsService implements IStudentsService{
         return studentsRepository.getAll();
     }
 
-    public Student getById(int id){
+    public Student getById(int id) {
         return studentsRepository.getById(id);
     }
 
@@ -42,8 +42,16 @@ public class StudentsService implements IStudentsService{
                         studentsRepository.add(student);
                 }
 
-            } else
-                studentsRepository.add(student);
+            } else {
+                Group group = groupsRepository.getById(student.getGroupId());
+                if (Objects.nonNull(group)) {
+                    if (group.isOnlineAccessible())
+                        studentsRepository.add(student);
+                    else
+                        System.out.println(group.getId() + " Group is not online accessible. Adding interrupted");
+                } else
+                    System.out.println(student.getGroupId() + " Group do not exist. Adding interrupted");
+            }
         }
     }
 
@@ -64,8 +72,16 @@ public class StudentsService implements IStudentsService{
                         studentsRepository.update(student);
                 }
 
-            } else
-                studentsRepository.update(student);
+            } else {
+                Group group = groupsRepository.getById(student.getGroupId());
+                if (Objects.nonNull(group)) {
+                    if (group.isOnlineAccessible())
+                        studentsRepository.update(student);
+                    else
+                        System.out.println(group.getId() + " Group is not online accessible. Updating interrupted");
+                } else
+                    System.out.println(student.getGroupId() + " Group do not exist. Updating interrupted");
+            }
         }
     }
 
