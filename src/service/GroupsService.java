@@ -46,7 +46,14 @@ public class GroupsService implements IGroupsService{
     }
 
     public void delete(Group group){
-        groupsRepository.delete(group);
+        if(GroupValidation.isValid(group)) {
+            if(Objects.nonNull(groupsRepository.getById(group.getId())))
+                groupsRepository.delete(group);
+            else
+                System.out.println("Group do not exist. Cannot be deleted");
+        }
+        else
+            System.out.println("Group do not exist. Cannot be deleted");
     }
 
     public List<Student> findAllStudentsInGroup(int id){
