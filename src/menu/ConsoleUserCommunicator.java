@@ -139,7 +139,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
         System.out.print("Student ID:");
         String input = reader.readLine();
 
-        if (input.matches("\\d")) {
+        if (input.matches("\\d+")) {
 
             int id = Integer.parseInt(input);
             Student student = studentsService.getById(id);
@@ -161,7 +161,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
         String input = reader.readLine();
         writer.printSeparator();
 
-        if (input.matches("\\d")) {
+        if (input.matches("\\d+")) {
             int id = Integer.parseInt(input);
             Group group = groupsService.getById(id);
 
