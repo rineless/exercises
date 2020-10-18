@@ -41,9 +41,9 @@ public class CSVStudentsRepository implements IStudentsRepository {
                 .filter(s -> s.getId() == id).findFirst();
         if (firstElement.isPresent()) {
             student = firstElement.get();
-        } else {
+        } /*else {
             System.out.println("Student not found"); //TODO think if it is needed
-        }
+        }*/
         return student;
     }
 
@@ -51,7 +51,7 @@ public class CSVStudentsRepository implements IStudentsRepository {
 
             if (StudentValidation.isValid(student)) {
 
-                writer.appendLine(parser.parseStudentToLine(student) + "\n", PathFinder.findFromResources(studentDataPath));
+                writer.appendLine("\n" + parser.parseStudentToLine(student), PathFinder.findFromResources(studentDataPath));
 
             }
     }

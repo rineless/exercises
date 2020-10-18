@@ -43,7 +43,7 @@ public class CSVGroupsRepository implements IGroupsRepository {
     public void add(Group group) {
         if (Objects.nonNull(group)) {
             if (GroupValidation.isValid(group)) {
-                writer.appendLine(parser.parseGroupToLine(group) + "\n", PathFinder.findFromResources(groupsDataPath));
+                writer.appendLine("\n" + parser.parseGroupToLine(group), PathFinder.findFromResources(groupsDataPath));
             }
         }
 
