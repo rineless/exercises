@@ -35,7 +35,6 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
         while(!stopCommunication){
             writer.printHeader("SYSTEM_REQUEST");
             String option = receiveCheckedInputForRequest("Option number: ", "\\d+");
-            printSeparatorForSystemRequest();
 
             if(!option.isEmpty())
                 executeOption(Integer.parseInt(option));
@@ -77,9 +76,9 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
 
     private void executeOption(int operationNumber){
         switch (operationNumber) {
-            case 1: printStudentList("All students", studentsService.getAll());
+            case 1: printStudentList("ALL_STUDENTS", studentsService.getAll());
                 break;
-            case 2: printGroupList("All groups", groupsService.getAll());
+            case 2: printGroupList("ALL_GROUPS", groupsService.getAll());
                 break;
             case 3: executeOption_getStudentById();
                 break;
@@ -97,11 +96,13 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
     }
 
     private void stopCommunication(){
+        writer.printHeader("END");
         stopCommunication = true;
     }
 
     private void executeOption_addStudent(){
 
+        writer.printHeader("ADD_STUDENT");
         writer.printHeader("SYSTEM_REQUEST");
         Student student = receiveStudentFromUserInput();
         printSeparatorForSystemRequest();
@@ -200,6 +201,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
 
     private void executeOption_addGroup(){
 
+        writer.printHeader("ADD_GROUP");
         writer.printHeader("SYSTEM_REQUEST");
         Group group = receiveGroupFromUserInput();
         printSeparatorForSystemRequest();
@@ -244,11 +246,11 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
     }
 
     private void executeOption_getStudentById() {
+        writer.printHeader("GET_STUDENT_BY_ID");
         writer.printHeader("SYSTEM_REQUEST");
 
         System.out.print("Student ID:");
         String input = reader.readLine();
-        writer.printSeparator();
 
         if (input.matches("\\d")) {
 
@@ -256,15 +258,16 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
             Student student = studentsService.getById(id);
 
             if (Objects.isNull(student)) {
-                writer.printLineWithSeparation("Student with id:" + input + "do not exist");
+                writer.printLineWithSeparation("Student with id:" + input + " do not exist");
             } else
                 printStudent("Student with id: " + input, student);
         } else {
-            writer.printLineWithSeparation("Student with id: " + input + "do not exist");
+            writer.printLineWithSeparation("Student with id: " + input + " do not exist");
         }
     }
 
     private void executeOption_getGroupById() {
+        writer.printHeader("GET_GROUP_BY_ID");
         writer.printHeader("SYSTEM_REQUEST");
 
         System.out.print("Group ID: ");
@@ -276,12 +279,12 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
             Group group = groupsService.getById(id);
 
             if (Objects.isNull(group)) {
-                writer.printLineWithSeparation("Group with id:" + input + "do not exist");
+                writer.printLineWithSeparation("Group with id:" + input + " do not exist");
 
             } else
                 printGroup("Group with id: " + input, group);
         } else {
-            writer.printLineWithSeparation("Group with id: " + input + "do not exist");
+            writer.printLineWithSeparation("Group with id: " + input + " do not exist");
         }
     }
 
