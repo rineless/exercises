@@ -106,7 +106,14 @@ public class StudentsService implements IStudentsService{
     }
 
     public void delete(Student student){
-        studentsRepository.delete(student);
+        if(StudentValidation.isValid(student)) {
+            if(studentExists(student.getId()))
+                studentsRepository.delete(student);
+            else
+                System.out.println("Student do not exist. Cannot be deleted");
+        }
+        else
+            System.out.println("Student do not exist. Cannot be deleted");
     }
 
     public boolean studentExists(int id){
