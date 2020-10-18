@@ -30,23 +30,20 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
 
     @Override
     public void applyUserCommunicationLogic() {
-        System.out.println("Write one of the options");
+        System.out.println("Choose one of the options");
         printOptions();
         while(!stopCommunication){
             writer.printHeader("SYSTEM_REQUEST");
-            System.out.print("Option number: ");
-            String option = reader.readLine();
-            writer.printSeparator();
+            String option = receiveCheckedInputForRequest("Option number: ", "\\d+");
+            printSeparatorForSystemRequest();
 
-            try{
-                int optionNumber = Integer.parseInt(option);
-                executeOption(optionNumber);
+            if(!option.isEmpty())
+                executeOption(Integer.parseInt(option));
+            else
+                stopCommunication();
 
-            }catch(NumberFormatException exp){
-                writer.printLineWithHeaderAndSeparation("ERROR", "Option format unacceptable");
-            }
         }
-
+        reader.close();
 
     }
 
@@ -104,14 +101,146 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
     }
 
     private void executeOption_addStudent(){
+
         writer.printHeader("SYSTEM_REQUEST");
-        System.out.print("Student ID: ");
+        Student student = receiveStudentFromUserInput();
+        printSeparatorForSystemRequest();
+
+        if(Objects.nonNull(student))
+            studentsService.add(student);
+
+        else
+            System.out.println("Input of student data is interrupted. Student addition is denied");
+
+    }
+
+    private Student receiveStudentFromUserInput(){
+        Student student = new Student();
+
+        String id = receiveCheckedInputForRequest("Student ID: ", "\\d+");
+        if(!id.isEmpty()){
+            student.setId(Integer.parseInt(id));
+            String name = receiveCheckedInputForRequest("Name: ", "([a-zA-Z]|\\p{Blank}|'|´)+");
+            if(!name.isEmpty()){
+                student.setName(name);
+                String surname = receiveCheckedInputForRequest("Surname: ", "([a-zA-Z]|\\p{Blank}|'|´)+");
+                if(!surname.isEmpty()){
+                    student.setSurname(surname);
+                    String gender = receiveCheckedInputForRequest("Gender (m or f): ", "m|f");
+                    if(!gender.isEmpty()){
+                        student.setGender(gender);
+                        String birthDate = receiveCheckedInputForRequest("Birth date (__.__.____): "
+                                , "((0?[1-9])|((1|2)[0-9])|(3[0-1]))\\.((0?[1-9])|1[0-2])" +
+                                        "\\.((19[5-9][0-9])|(20[0-1][0-9]))");
+                        if(!birthDate.isEmpty()){
+                            student.setBirthDate(birthDate);
+                            String citizenship = receiveCheckedInputForRequest("Cititenship: ", "([a-zA-Z]|\\p{Blank}|\\p{Punct})+");
+                            if(!citizenship.isEmpty()){
+                                student.setCitizenship(citizenship);
+                                String placeOfBirth = receiveCheckedInputForRequest("Place of Birth: ", "([a-zA-Z]|\\p{Blank}|\\p{Punct})+");
+                                if(!placeOfBirth.isEmpty()){
+                                    student.setPlaceOfBirth(placeOfBirth);
+                                    String typeOfContract = receiveCheckedInputForRequest("Type of Contract (stipend|payable): ", "stipend|payable");
+                                    if(!typeOfContract.isEmpty()){
+                                        student.setTypeOfContract(typeOfContract);
+                                        String groupId = receiveCheckedInputForRequest("Group Id: ", "\\d+");
+                                        if(!groupId.isEmpty()){
+                                            student.setGroupId(Integer.parseInt(groupId));
+                                            String typeOfStudying = receiveCheckedInputForRequest("Type of studying (present|online): "
+                                                    , "present|online");
+                                            if(!typeOfStudying.isEmpty()){
+                                                student.setTypeOfStudying(typeOfStudying);
+                                                String contactInf = receiveCheckedInputForRequest("Contact information: ", ".+");
+                                                if(!contactInf.isEmpty()){
+                                                    student.setContactInformation(contactInf);
+                                                    return student;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
+        return null;
+    }
 
 
+    private String receiveCheckedInputForRequest(String request, String regex){
+        boolean repeatRequest;
+
+        do {
+            System.out.print(request);
+            String input = reader.readLine();
+
+            if (input.matches(regex)) {
+                return input;
+            }
+            else if (input.contentEquals("")) {
+                return "";
+            }
+            else {
+                System.out.println("Forbidden input. To close request leave the field blank");
+                repeatRequest = true;
+            }
+
+        } while(repeatRequest);
+
+        return "";
+    }
+
+    private void printSeparatorForSystemRequest(){
+        writer.printSeparator(writer.getSeparatorLength() + "SYSTEM_REQUEST".length());
     }
 
     private void executeOption_addGroup(){
 
+        writer.printHeader("SYSTEM_REQUEST");
+        Group group = receiveGroupFromUserInput();
+        printSeparatorForSystemRequest();
+
+         if(Objects.nonNull(group))
+             groupsService.add(group);
+
+         else
+             System.out.println("Input of group data is interrupted. Group addition is denied");
+
+
+    }
+
+    private Group receiveGroupFromUserInput(){
+        Group group = new Group();
+
+        String id = receiveCheckedInputForRequest("Group Id: ", "\\d+");
+        if(!id.isEmpty()){
+            group.setId(Integer.parseInt(id));
+            String name = receiveCheckedInputForRequest("Group name (alg|ds|anl): ", "alg|ds|anl");
+            if(!name.isEmpty()){
+                group.setGroupName(name);
+                String onlineAccess = receiveCheckedInputForRequest("Online access: (true|false)", "true|false");
+                if(!onlineAccess.isEmpty()){
+                    group.isOnlineAccessible(onlineAccess);
+                    System.out.println("Responsible for group");
+                    String respName = receiveCheckedInputForRequest("   Name: ", "([a-zA-Z]|\\p{Blank}|'|´)+");
+                    String respSurname = receiveCheckedInputForRequest("    Surname: ", "([a-zA-Z]|\\p{Blank}|'|´)+");
+                    if(!respName.isEmpty() & !respSurname.isEmpty()){
+                        group.setResponsibleForGroup(new String[]{respName, respSurname});
+                        String contactInf = receiveCheckedInputForRequest("Contact information: ", ".+");
+                        if(!contactInf.isEmpty()){
+                            group.setContactInformation(contactInf);
+                            return group;
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     private void executeOption_getStudentById() {
@@ -121,14 +250,16 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
         String input = reader.readLine();
         writer.printSeparator();
 
-        try {
+        if (input.matches("\\d")) {
+
             int id = Integer.parseInt(input);
             Student student = studentsService.getById(id);
+
             if (Objects.isNull(student)) {
                 writer.printLineWithSeparation("Student with id:" + input + "do not exist");
             } else
                 printStudent("Student with id: " + input, student);
-        } catch (NumberFormatException exp) {
+        } else {
             writer.printLineWithSeparation("Student with id: " + input + "do not exist");
         }
     }
@@ -140,7 +271,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
         String input = reader.readLine();
         writer.printSeparator();
 
-        try {
+        if (input.matches("\\d")) {
             int id = Integer.parseInt(input);
             Group group = groupsService.getById(id);
 
@@ -149,7 +280,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
 
             } else
                 printGroup("Group with id: " + input, group);
-        } catch (NumberFormatException exp) {
+        } else {
             writer.printLineWithSeparation("Group with id: " + input + "do not exist");
         }
     }
