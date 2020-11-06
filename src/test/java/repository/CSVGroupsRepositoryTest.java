@@ -77,11 +77,12 @@ public class CSVGroupsRepositoryTest {
                 "1,DS,germany,true,30,Adam Becker,adam.becker@myuni.de\n" +
                 "2,ALG,english,true,20,Shon Braun,shon.braun@myuni.de\n" +
                 "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de\n" +
-                "4,ALG,germany,true,20,Jas Merol,jas.marol@myuni.de\n";
+                "4,ALG,germany,true,20,Jas Merol,jas.marol@myuni.de";
 
         groupsRepository.add(new Group().setId(4).setGroupName(GroupNames.ALG).setLanguage(new Locale("germany")).isOnlineAccessible(true)
                 .setMaxAttendeesPresent(20).setResponsibleForGroup(new String[]{"Jas","Merol"}).setContactInformation("jas.marol@myuni.de"));
         String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+        actual = actual.substring(0, actual.length()-1);
 
         Assertions.assertEquals(expected, actual, "Expected adding group to repository");
     }
@@ -93,7 +94,7 @@ public class CSVGroupsRepositoryTest {
         String expected = "ID,Group name,Language,Online access,max_Attendees(Present),Responsible for Group,Contact information\n" +
                 "1,DS,germany,true,30,Adam Becker,adam.becker@myuni.de\n" +
                 "2,ALG,english,true,20,Shon Braun,shon.braun@myuni.de\n" +
-                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de\n";
+                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de";
 
         groupsRepository.add(null);
         String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
@@ -108,11 +109,12 @@ public class CSVGroupsRepositoryTest {
         String expected = "ID,Group name,Language,Online access,max_Attendees(Present),Responsible for Group,Contact information\n" +
                 "1,DS,germany,true,30,Adam Becker,adam.becker@myuni.de\n" +
                 "2,ALG,english,true,20,Shon Braun,shon.braun@myuni.de\n" +
-                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de\n";
+                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de";
 
         groupsRepository.add(new Group().setId(4).setLanguage(new Locale("germany")).isOnlineAccessible(true)
                 .setResponsibleForGroup(new String[]{"Jas","Merol"}));
         String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+        actual = actual.substring(0, actual.length()-1);
 
         Assertions.assertEquals(expected, actual, "Expected by not valid group unchanged repository");
     }
@@ -124,11 +126,12 @@ public class CSVGroupsRepositoryTest {
         String expected = "ID,Group name,Language,Online access,max_Attendees(Present),Responsible for Group,Contact information\n" +
                 "1,DS,germany,true,30,Adam Becker,adam.becker@myuni.de\n" +
                 "2,ALG,english,false,15,Mai Theon,mai.theon@myuni.de\n" +
-                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de\n";
+                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de";
 
         groupsRepository.update(new Group().setId(2).setGroupName(GroupNames.ALG).setLanguage(new Locale("english")).isOnlineAccessible(false)
                 .setMaxAttendeesPresent(15).setResponsibleForGroup(new String[]{"Mai","Theon"}).setContactInformation("mai.theon@myuni.de"));
         String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+        actual = actual.substring(0, actual.length()-1);
 
         Assertions.assertEquals(expected, actual, "Expected updating existing group in repository");
     }
@@ -140,11 +143,12 @@ public class CSVGroupsRepositoryTest {
         String expected = "ID,Group name,Language,Online access,max_Attendees(Present),Responsible for Group,Contact information\n" +
                 "1,DS,germany,true,30,Adam Becker,adam.becker@myuni.de\n" +
                 "2,ALG,english,true,20,Shon Braun,shon.braun@myuni.de\n" +
-                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de\n";
+                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de";
 
         groupsRepository.update(new Group().setId(10).setGroupName(GroupNames.ALG).setLanguage(new Locale("german")).isOnlineAccessible(true).setMaxAttendeesPresent(20)
                 .setResponsibleForGroup(new String[]{"Shon","Braun"}).setContactInformation("shon.braun@myuni.de"));
         String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+        actual = actual.substring(0, actual.length()-1);
 
         Assertions.assertEquals(expected, actual, "Expected by not existing group input unchanged repository");
     }
@@ -156,10 +160,11 @@ public class CSVGroupsRepositoryTest {
         String expected = "ID,Group name,Language,Online access,max_Attendees(Present),Responsible for Group,Contact information\n" +
                 "1,DS,germany,true,30,Adam Becker,adam.becker@myuni.de\n" +
                 "2,ALG,english,true,20,Shon Braun,shon.braun@myuni.de\n" +
-                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de\n";
+                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de";
 
         groupsRepository.update(null);
         String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+        actual = actual.substring(0, actual.length()-1);
 
         Assertions.assertEquals(expected, actual, "Expected by null input unchanged repository");
     }
@@ -171,11 +176,12 @@ public class CSVGroupsRepositoryTest {
         String expected = "ID,Group name,Language,Online access,max_Attendees(Present),Responsible for Group,Contact information\n" +
                 "1,DS,germany,true,30,Adam Becker,adam.becker@myuni.de\n" +
                 "2,ALG,english,true,20,Shon Braun,shon.braun@myuni.de\n" +
-                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de\n";
+                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de";
 
         groupsRepository.update(new Group().setId(2).setLanguage(new Locale("english")).isOnlineAccessible(true).setMaxAttendeesPresent(20)
                 .setResponsibleForGroup(new String[]{"Shon","Braun"}).setContactInformation("shon.braun@myuni.de"));
         String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+        actual = actual.substring(0, actual.length()-1);
 
         Assertions.assertEquals(expected, actual, "Expected by not valid group input unchanged repository");
     }
@@ -186,11 +192,12 @@ public class CSVGroupsRepositoryTest {
         CSVGroupsRepository groupsRepository = new CSVGroupsRepository();
         String expected = "ID,Group name,Language,Online access,max_Attendees(Present),Responsible for Group,Contact information\n" +
                 "1,DS,germany,true,30,Adam Becker,adam.becker@myuni.de\n" +
-                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de\n";
+                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de";
 
         groupsRepository.delete(new Group().setId(2).setGroupName(GroupNames.ALG).setLanguage(new Locale("english")).isOnlineAccessible(true).setMaxAttendeesPresent(20)
                 .setResponsibleForGroup(new String[]{"Shon","Braun"}).setContactInformation("shon.braun@myuni.de"));
         String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+        actual = actual.substring(0, actual.length()-1);
 
         Assertions.assertEquals(expected, actual, "Expected adding group to repository");
     }
@@ -202,10 +209,11 @@ public class CSVGroupsRepositoryTest {
         String expected = "ID,Group name,Language,Online access,max_Attendees(Present),Responsible for Group,Contact information\n" +
                 "1,DS,germany,true,30,Adam Becker,adam.becker@myuni.de\n" +
                 "2,ALG,english,true,20,Shon Braun,shon.braun@myuni.de\n" +
-                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de\n";
+                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de";
 
         groupsRepository.delete(null);
         String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+        actual = actual.substring(0, actual.length()-1);
 
         Assertions.assertEquals(expected, actual, "Expected by null input unchanged repository");
     }
@@ -217,11 +225,12 @@ public class CSVGroupsRepositoryTest {
         String expected = "ID,Group name,Language,Online access,max_Attendees(Present),Responsible for Group,Contact information\n" +
                 "1,DS,germany,true,30,Adam Becker,adam.becker@myuni.de\n" +
                 "2,ALG,english,true,20,Shon Braun,shon.braun@myuni.de\n" +
-                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de\n";
+                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de";
 
         groupsRepository.delete(new Group().setId(2).setLanguage(new Locale("english")).isOnlineAccessible(true).setMaxAttendeesPresent(20)
                 .setResponsibleForGroup(new String[]{"Shon","Braun"}).setContactInformation("shon.braun@myuni.de"));
         String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+        actual = actual.substring(0, actual.length()-1);
 
         Assertions.assertEquals(expected, actual, "Expected by not valid group input unchanged repository");
     }
@@ -233,11 +242,12 @@ public class CSVGroupsRepositoryTest {
         String expected = "ID,Group name,Language,Online access,max_Attendees(Present),Responsible for Group,Contact information\n" +
                 "1,DS,germany,true,30,Adam Becker,adam.becker@myuni.de\n" +
                 "2,ALG,english,true,20,Shon Braun,shon.braun@myuni.de\n" +
-                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de\n";
+                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de";
 
         groupsRepository.delete(new Group().setId(18).setGroupName(GroupNames.ALG).setLanguage(new Locale("english")).isOnlineAccessible(true).setMaxAttendeesPresent(20)
                 .setResponsibleForGroup(new String[]{"Shery","Brick"}).setContactInformation("shery.brick@myuni.de"));
         String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+        actual = actual.substring(0, actual.length()-1);
 
         Assertions.assertEquals(expected, actual, "Expected by not existing group input unchanged repository");
     }
@@ -249,11 +259,12 @@ public class CSVGroupsRepositoryTest {
         String expected = "ID,Group name,Language,Online access,max_Attendees(Present),Responsible for Group,Contact information\n" +
                 "1,DS,germany,true,30,Adam Becker,adam.becker@myuni.de\n" +
                 "2,ALG,english,true,20,Shon Braun,shon.braun@myuni.de\n" +
-                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de\n";
+                "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de";
 
         groupsRepository.delete(new Group().setId(2).setGroupName(GroupNames.DS).setLanguage(new Locale("english")).isOnlineAccessible(true).setMaxAttendeesPresent(20)
                 .setResponsibleForGroup(new String[]{"Shon","Braun"}).setContactInformation("shon.braun@myuni.de"));
         String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+        actual = actual.substring(0, actual.length()-1);
 
         Assertions.assertEquals(expected, actual, "Expected by group with some modified data input unchanged repository");
     }
