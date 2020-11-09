@@ -1,9 +1,16 @@
 package util.finder;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class PathFinder {
 
@@ -29,8 +36,19 @@ public class PathFinder {
     public static Path findFromResources(String path){
         try {
             URL url = new PathFinder().getClass().getClassLoader().getResource(path);
-            return Path.of(new File(url.getPath()).getPath());
-        } catch(NullPointerException exp){
+            if(Objects.nonNull(url)) {
+                if (url.toString().contains("!")) {
+                    String[] array = url.toURI().toString().split("!");
+                    FileSystem fs = FileSystems.newFileSystem(URI.create(array[0]), new HashMap<>());
+                    return fs.getPath(array[1]);
+                } else
+                    return Path.of(url.toURI());
+            }
+            else{
+                System.out.println("File not found. Return empty path");
+                return Path.of("");
+            }
+        } catch(URISyntaxException | IOException exp){
             System.out.println(exp.getMessage());
             System.out.println("Return empty path");
             return Path.of("");
