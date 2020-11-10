@@ -24,7 +24,9 @@ public class CSVGroupsRepositoryTest {
         lines.add("1,DS,germany,true,30,Adam Becker,adam.becker@myuni.de");
         lines.add("2,ALG,english,true,20,Shon Braun,shon.braun@myuni.de");
         lines.add("3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de");
-        Files.write(repository, lines);
+        String groups = lines.stream().map(line -> line + "\n").collect(Collectors.joining());
+        groups = groups.substring(0, groups.length()-1);
+        Files.write(repository, groups.getBytes());
     }
 
     @AfterEach
@@ -98,6 +100,7 @@ public class CSVGroupsRepositoryTest {
 
         groupsRepository.add(null);
         String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+        actual = actual.substring(0, actual.length()-1);
 
         Assertions.assertEquals(expected, actual, "Expected by null input unchanged repository");
     }

@@ -25,7 +25,9 @@ public class CSVStudentsRepositoryTest {
         lines.add("1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com");
         lines.add("2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com");
         lines.add("3,Alice,Cook,FEMALE,14.4.1999,Ungarn,Paks,PAYABLE,1,ONLINE,alicook@gmail.com");
-        Files.write(repository, lines);
+        String students = lines.stream().map(line -> line + "\n").collect(Collectors.joining());
+        students = students.substring(0, students.length()-1);
+        Files.write(repository, students.getBytes());
     }
 
     @AfterEach
@@ -86,13 +88,14 @@ public class CSVStudentsRepositoryTest {
                 "1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com\n" +
                 "2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com\n" +
                 "3,Alice,Cook,FEMALE,14.4.1999,Ungarn,Paks,PAYABLE,1,ONLINE,alicook@gmail.com\n" +
-                "4,Gerald,Anond,MALE,13.6.1998,German,Dresden,STIPEND,3,ONLINE,gerald.anond@gmail.com\n";
+                "4,Gerald,Anond,MALE,13.6.1998,German,Dresden,STIPEND,3,ONLINE,gerald.anond@gmail.com";
 
         studentsRepository.add(new Student().setId(4).setName("Gerald").setSurname("Anond").setGender(Gender.MALE)
                 .setBirthDate(LocalDate.of(1998, 6, 13)).setCitizenship("German").setPlaceOfBirth("Dresden")
                 .setTypeOfContract(TypeOfContract.STIPEND).setGroupId(3).setTypeOfStudying(TypeOfStudying.ONLINE)
                 .setContactInformation("gerald.anond@gmail.com"));
         String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+        actual = actual.substring(0, actual.length()-1);
 
         Assertions.assertEquals(expected, actual, "Expected adding student to repository");
     }
