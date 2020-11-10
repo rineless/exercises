@@ -1,0 +1,13 @@
+ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information
+1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com
+2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com
+3,Alice,Cook,FEMALE,14.4.1999,Ungarn,Paks,PAYABLE,1,ONLINE,alicook@gmail.com
+4,Della,Fox,FEMALE,5.12.1998,German,Bochum,PAYABLE,3,PRESENT,della.fox@gmail.com
+5,Alphonse,Mason,MALE,17.3.2000,Switzerland,Brig,STIPEND,3,PRESENT,alph05mason@gmail.com
+6,Kenneth,Meier,MALE,24.9.1999,German,Hamburg,STIPEND,2,ONLINE,kenneth_meier@gmail.com
+7,Lexi,Carter,FEMALE,19.10.1998,German,Erfurt,PAYABLE,1,ONLINE,lexii98carter@gmail.com
+8,Diana,Davidson,FEMALE,1.6.1999,German,Jena,STIPEND,2,ONLINE,diana.davidson@gmail.com
+9,Morgana,Walter,FEMALE,3.1.2000,Ungarn,Budapest,PAYABLE,3,PRESENT,morganawalter@gmail.com
+10,Victor,Ross,MALE,11.12.1999,Britain,Ely,PAYABLE,2,PRESENT,victoross@gmail.com
+11,Sylvia,Fuchs,FEMALE,25.7.1998,German,Magdenburg,STIPEND,1,PRESENT,sylvia25fuchs@gmail.com
+12,Ruby,Roth,FEMALE,29.12.1998,Netherlands,Amsterdam,PAYABLE,1,PRESENT,ruby.roth@gmail.com
