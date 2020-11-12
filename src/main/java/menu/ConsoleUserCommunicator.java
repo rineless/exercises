@@ -9,34 +9,56 @@ import util.parser.CSVParser;
 import util.reader.ConsoleReader;
 import util.writer.ConsoleWriter;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ConsoleUserCommunicator implements IUserCommunicator{
-    private ConsoleReader reader;
-    private ConsoleWriter writer;
-    private StudentsService studentsService;
-    private GroupsService groupsService;
-    private CSVParser parser;
+    private final ConsoleReader reader;
+    private final ConsoleWriter writer;
+    private final StudentsService studentsService;
+    private final GroupsService groupsService;
+    private final CSVParser parser;
     private boolean stopCommunication = false;
+
+    private ResourceBundle groupProp;
+    private ResourceBundle studentProp;
+    private ResourceBundle systemCommentsProp;
+    private ResourceBundle systemHeadersProp;
+    private final ResourceBundle progValues;
 
     public ConsoleUserCommunicator(){
         reader = new ConsoleReader();
-        writer = new ConsoleWriter("-", 50);
+        writer = new ConsoleWriter("-", 100);
         studentsService = new StudentsService();
         groupsService = new GroupsService();
         parser = new CSVParser();
-    }
+
+        progValues = ResourceBundle.getBundle("properties.consoleUserCommunicator.valuesForProg");
+
+        groupProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.group.group_en" );
+        studentProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.student.student_en");
+        systemCommentsProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemComments.systemComments_en");
+        systemHeadersProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemHeaders.systemHeaders_en");    }
 
     @Override
     public void applyUserCommunicationLogic() {
-        System.out.println("Choose one of the options");
+        String language = receiveCheckedInputForRequest("Choose language: (en) : ", "en");
+        if(!language.isEmpty()){
+                groupProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.group.group_" + language);
+                studentProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.student.student_" + language);
+                systemCommentsProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemComments.systemComments_" + language);
+                systemHeadersProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemHeaders.systemHeaders_" + language);
+
+        }
+        System.out.println(systemCommentsProp.getString("choose_option"));
         printOptions();
+
+
         while(!stopCommunication){
-            writer.printHeader("SYSTEM_REQUEST");
-            String option = receiveCheckedInputForRequest("Option number: ", "\\d+");
+            writer.printHeader(systemHeadersProp.getString("system_request"));
+            String option = receiveCheckedInputForRequest(systemCommentsProp.getString("option_number") + ": "
+                    , systemCommentsProp.getString("option_number_regex"));
 
             if(!option.isEmpty())
                 executeOption(Integer.parseInt(option));
@@ -49,39 +71,20 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
     }
 
     public void printOptions(){
-        writer.printLineWithHeaderAndSeparation("OPTIONS",
-                "1 : get all students\n" +
-                "2 : get all groups\n" +
-                "3 : get student by id\n" +
-                "4 : get group by id\n" +
-                "5 : add student\n" +
-                "6 : add group\n" +
-                "7 : update student\n" +
-                "8 : update group\n" +
-                "9 : delete student\n" +
-                "10 : delete group\n" +
-                "11 : check if student exist in database\n" +
-                "12 : get all students in group\n" +
-                "13 : get attendees in group\n" +
-                "14 : get online students in group\n" +
-                "15 : get all attendees (students with type of studying: present)\n" +
-                "16 : get all online students\n" +
-                "17 : get all stipends\n" +
-                "18 : get all students with type of contract: payable\n" +
-                "19 : get all male students\n" +
-                "20 : get all female students\n" +
-                "21 : get all groups by language\n" +
-                "22 : get all groups with online access\n" +
-                "23 : get full groups\n" +
-                "24 : get all groups with same name\n" +
-                "   : end");
+        StringBuilder strBuf = new StringBuilder();
+        for(int i = 1 ; i < 25 ; ++i){
+           strBuf.append(systemCommentsProp.getString("op" + i));
+           strBuf.append("\n");
+        }
+        strBuf.append(systemCommentsProp.getString("op0"));
+        writer.printLineWithHeaderAndSeparation(systemHeadersProp.getString("options"), strBuf.toString());
     }
 
     private void executeOption(int operationNumber){
         switch (operationNumber) {
-            case 1: printStudentList("ALL_STUDENTS", studentsService.getAll());
+            case 1: printStudentList(systemHeadersProp.getString("all_students"), studentsService.getAll());
                 break;
-            case 2: printGroupList("ALL_GROUPS", groupsService.getAll());
+            case 2: printGroupList(systemHeadersProp.getString("all_groups"), groupsService.getAll());
                 break;
             case 3: executeOption_getStudentById();
                 break;
@@ -107,78 +110,74 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
                 break;
             case 14: executeOption_getOnlineStudentsInGroup();
                 break;
-            case 15: printStudentList("ALL_ATTENDEES_STUDENTS", studentsService.findAttendeesStudents());
+            case 15: printStudentList(systemHeadersProp.getString("all_attendees_students"), studentsService.findAttendeesStudents());
                 break;
-            case 16: printStudentList("ALL_ONLINE_STUDENTS", studentsService.findOnlineStudents());
+            case 16: printStudentList(systemHeadersProp.getString("all_online_students"), studentsService.findOnlineStudents());
                 break;
-            case 17: printStudentList("ALL_STIPENDS", studentsService.findStipends());
+            case 17: printStudentList(systemHeadersProp.getString("all_stipends"), studentsService.findStipends());
                 break;
-            case 18: printStudentList("ALL_WITH_PAYABLE_CONTRACT", studentsService.findStudentsWithPayableContract());
+            case 18: printStudentList(systemHeadersProp.getString("all_with_payable_contract"), studentsService.findStudentsWithPayableContract());
                 break;
-            case 19: printStudentList("ALL_MALE_STUDENTS", studentsService.findAllMaleStudents());
+            case 19: printStudentList(systemHeadersProp.getString("all_male_students"), studentsService.findAllMaleStudents());
                 break;
-            case 20: printStudentList("ALL_FEMALE_STUDENTS", studentsService.findAllFemaleStudents());
+            case 20: printStudentList(systemHeadersProp.getString("all_female_students"), studentsService.findAllFemaleStudents());
                 break;
             case 21: executeOption_getFindAllGroupsByLanguage();
                 break;
-            case 22: printGroupList("ALL_GROUPS_WITH_ONLINE_ACCESS", groupsService.findAllGroupsWithOnlineAccess(true));
+            case 22: printGroupList(systemHeadersProp.getString("all_groups_with_online_access"), groupsService.findAllGroupsWithOnlineAccess(true));
                 break;
-            case 23: printGroupList("ALL_FULL_GROUPS", groupsService.findFullGroups());
+            case 23: printGroupList(systemHeadersProp.getString("all_full_groups"), groupsService.findFullGroups());
                 break;
             case 24: executeOption_getAllGroupsWithSameName();
                 break;
-            default: writer.printLineWithHeaderAndSeparation("Error", "Command not found");
+            default: writer.printLineWithHeaderAndSeparation(systemHeadersProp.getString("error")
+                    , systemCommentsProp.getString("command_not_found"));
         }
 
     }
 
     private void executeOption_getStudentById() {
-        writer.printHeader("GET_STUDENT_BY_ID");
-        writer.printHeader("SYSTEM_REQUEST");
+        writer.printHeader(systemHeadersProp.getString("get_student_by_id"));
+        writer.printHeader(systemHeadersProp.getString("system_request"));
 
-        System.out.print("Student ID:");
-        String input = reader.readLine();
+        String input = receiveCheckedInputForRequest(studentProp.getString("student_id") + ": "
+                , studentProp.getString("student_id_regex"));
 
-        if (input.matches("\\d+")) {
+        if (!input.isEmpty()) {
 
-            int id = Integer.parseInt(input);
-            Student student = studentsService.getById(id);
+            Student student = studentsService.getById(Integer.parseInt(input));
 
             if (Objects.isNull(student)) {
-                writer.printLineWithSeparation("Student with id:" + input + " do not exist");
+                writer.printLineWithSeparation(systemCommentsProp.getString("student_with_id") + input
+                        + " " +  systemCommentsProp.getString("do_not_exist"));
             } else
-                printStudent("Student with id: " + input, student);
-        } else {
-            writer.printLineWithSeparation("Student with id: " + input + " do not exist");
+                printStudent(systemCommentsProp.getString("student_with_id") + input, student);
         }
     }
 
     private void executeOption_getGroupById() {
-        writer.printHeader("GET_GROUP_BY_ID");
-        writer.printHeader("SYSTEM_REQUEST");
+        writer.printHeader(systemHeadersProp.getString("get_group_by_id"));
+        writer.printHeader(systemHeadersProp.getString("system_request"));
 
-        System.out.print("Group ID: ");
-        String input = reader.readLine();
-        writer.printSeparator();
+        String input = receiveCheckedInputForRequest(groupProp.getString("group_id") + ": "
+                , groupProp.getString("group_id_regex"));
 
-        if (input.matches("\\d+")) {
-            int id = Integer.parseInt(input);
-            Group group = groupsService.getById(id);
+        if (!input.isEmpty()) {
+            Group group = groupsService.getById(Integer.parseInt(input));
 
             if (Objects.isNull(group)) {
-                writer.printLineWithSeparation("Group with id:" + input + " do not exist");
+                writer.printLineWithSeparation(systemCommentsProp.getString("group_with_id") + input
+                        + " " + systemCommentsProp.getString("do_not_exist"));
 
             } else
-                printGroup("Group with id: " + input, group);
-        } else {
-            writer.printLineWithSeparation("Group with id: " + input + " do not exist");
+                printGroup(systemCommentsProp.getString("group_with_id") + input, group);
         }
     }
 
     private void executeOption_addStudent(){
 
-        writer.printHeader("ADD_STUDENT");
-        writer.printHeader("SYSTEM_REQUEST");
+        writer.printHeader(systemHeadersProp.getString("add_student"));
+        writer.printHeader(systemHeadersProp.getString("system_request"));
         Student student = receiveStudentFromUserInput();
         printSeparatorForSystemRequest();
 
@@ -186,48 +185,82 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
             studentsService.add(student);
 
         else
-            System.out.println("Input of student data is interrupted. Student addition is denied");
+            System.out.println(systemCommentsProp.getString("student_input_interrupted") + " "
+                    + systemCommentsProp.getString("student_addition_denied"));
 
     }
 
     private Student receiveStudentFromUserInput(){
         Student student = new Student();
 
-        String id = receiveCheckedInputForRequest("Student ID: ", "\\d+");
+        String id = receiveCheckedInputForRequest(studentProp.getString("student_id") + ": ", studentProp.getString("student_id_regex"));
         if(!id.isEmpty()){
+
             student.setId(Integer.parseInt(id));
-            String name = receiveCheckedInputForRequest("Name: ", "([a-zA-Z]|\\p{Blank}|'|´)+");
+            String name = receiveCheckedInputForRequest(studentProp.getString("name") + ": ", studentProp.getString("name_regex"));
+
             if(!name.isEmpty()){
+
                 student.setName(name);
-                String surname = receiveCheckedInputForRequest("Surname: ", "([a-zA-Z]|\\p{Blank}|'|´)+");
+                String surname = receiveCheckedInputForRequest(studentProp.getString("surname") + ": ", studentProp.getString("surname_regex"));
+
                 if(!surname.isEmpty()){
+
                     student.setSurname(surname);
-                    String gender = receiveCheckedInputForRequest("Gender (m or f): ", "m|f");
+                    String gender = receiveCheckedInputForRequest(studentProp.getString("gender") + ": (" + studentProp.getString("gender_regex") + "): "
+                            , studentProp.getString("gender_regex"));
+
                     if(!gender.isEmpty()){
+
+                        List<String> genders = Stream.of(studentProp.getString("gender_regex").split("\\|")).collect(Collectors.toList());
+                        gender = progValues.getString("gender" + (genders.indexOf(gender) + 1));
                         student.setGender(gender);
-                        String birthDate = receiveCheckedInputForRequest("Birth date (__.__.____): "
-                                , "((0?[1-9])|((1|2)[0-9])|(3[0-1]))\\.((0?[1-9])|1[0-2])" +
-                                        "\\.((19[5-9][0-9])|(20[0-1][0-9]))");
+                        String birthDate = receiveCheckedInputForRequest(studentProp.getString("birth_date") + ": ("
+                                        + studentProp.getString("birth_date_label") + "): ", studentProp.getString("birth_date_regex"));
+
                         if(!birthDate.isEmpty()){
+
                             student.setBirthDate(birthDate);
-                            String citizenship = receiveCheckedInputForRequest("Cititenship: ", "([a-zA-Z]|\\p{Blank}|\\p{Punct})+");
+                            String citizenship = receiveCheckedInputForRequest(studentProp.getString("citizenship") + ": ", studentProp.getString("citizenship_regex"));
+
                             if(!citizenship.isEmpty()){
+
                                 student.setCitizenship(citizenship);
-                                String placeOfBirth = receiveCheckedInputForRequest("Place of Birth: ", "([a-zA-Z]|\\p{Blank}|\\p{Punct})+");
+                                String placeOfBirth = receiveCheckedInputForRequest(studentProp.getString("place_of_birth") + ": ", studentProp.getString("place_of_birth_regex"));
+
                                 if(!placeOfBirth.isEmpty()){
+
                                     student.setPlaceOfBirth(placeOfBirth);
-                                    String typeOfContract = receiveCheckedInputForRequest("Type of Contract (stipend|payable): ", "stipend|payable");
+                                    String typeOfContract = receiveCheckedInputForRequest(studentProp.getString("type_of_contract") + ": ("
+                                                    + studentProp.getString("type_of_contract_regex") + "): "
+                                            , studentProp.getString("type_of_contract_regex"));
+
                                     if(!typeOfContract.isEmpty()){
+
+                                        List<String> contractTypes = Stream.of(studentProp.getString("type_of_contract_regex")
+                                                .split("\\|")).collect(Collectors.toList());
+                                        typeOfContract = progValues.getString("type_of_contract" + (contractTypes.indexOf(typeOfContract) + 1));
                                         student.setTypeOfContract(typeOfContract);
-                                        String groupId = receiveCheckedInputForRequest("Group Id: ", "\\d+");
+                                        String groupId = receiveCheckedInputForRequest(groupProp.getString("group_id") + ": "
+                                                , groupProp.getString("group_id_regex"));
+
                                         if(!groupId.isEmpty()){
+
                                             student.setGroupId(Integer.parseInt(groupId));
-                                            String typeOfStudying = receiveCheckedInputForRequest("Type of studying (present|online): "
-                                                    , "present|online");
+                                            String typeOfStudying = receiveCheckedInputForRequest(studentProp.getString("type_of_studying") + ": ("
+                                                            + studentProp.getString("type_of_studying_regex") + "): "
+                                                    , studentProp.getString("type_of_studying_regex"));
+
                                             if(!typeOfStudying.isEmpty()){
+
+                                                List<String> studyingTypes = Stream.of(studentProp.getString("type_of_studying_regex").split("\\|")).collect(Collectors.toList());
+                                                typeOfStudying = progValues.getString("type_of_studying" + (studyingTypes.indexOf(typeOfStudying) + 1));
                                                 student.setTypeOfStudying(typeOfStudying);
-                                                String contactInf = receiveCheckedInputForRequest("Contact information: ", ".+");
+                                                String contactInf = receiveCheckedInputForRequest(studentProp.getString("contact_information") + ": "
+                                                        , studentProp.getString("contact_information_regex"));
+
                                                 if(!contactInf.isEmpty()){
+
                                                     student.setContactInformation(contactInf);
                                                     return student;
                                                 }
@@ -249,8 +282,8 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
 
     private void executeOption_addGroup(){
 
-        writer.printHeader("ADD_GROUP");
-        writer.printHeader("SYSTEM_REQUEST");
+        writer.printHeader(systemHeadersProp.getString("add_group"));
+        writer.printHeader(systemHeadersProp.getString("system_request"));
         Group group = receiveGroupFromUserInput();
         printSeparatorForSystemRequest();
 
@@ -258,7 +291,8 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
              groupsService.add(group);
 
          else
-             System.out.println("Input of group data is interrupted. Group addition is denied");
+             System.out.println(systemCommentsProp.getString("group_input_interrupted") + " "
+                     + systemCommentsProp.getString("group_addition_denied"));
 
 
     }
@@ -266,21 +300,37 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
     private Group receiveGroupFromUserInput(){
         Group group = new Group();
 
-        String id = receiveCheckedInputForRequest("Group Id: ", "\\d+");
+        String id = receiveCheckedInputForRequest(groupProp.getString("group_id") + ": ", groupProp.getString("group_id_regex"));
         if(!id.isEmpty()){
+
             group.setId(Integer.parseInt(id));
-            String name = receiveCheckedInputForRequest("Group name (alg|ds|anl): ", "alg|ds|anl");
+            String name = receiveCheckedInputForRequest(groupProp.getString("group_name") + ": (" + groupProp.getString("group_name_regex") + "): "
+                    , groupProp.getString("group_name_regex"));
+
             if(!name.isEmpty()){
+
+                if(groupProp.getString("group_name_regex").contains("|")) {
+                    List<String> names = Stream.of(groupProp.getString("group_name_regex").split("\\|")).collect(Collectors.toList());
+                    name = progValues.getString("group_name" + (names.indexOf(name) + 1));
+                }
                 group.setGroupName(name);
-                String onlineAccess = receiveCheckedInputForRequest("Online access: (true|false)", "true|false");
+                String onlineAccess = receiveCheckedInputForRequest(groupProp.getString("online_access") + ": (" + groupProp.getString("online_access_regex") + "): "
+                        , groupProp.getString("online_access_regex"));
+
                 if(!onlineAccess.isEmpty()){
+
+                    onlineAccess = groupProp.getString("online_access_regex").startsWith(onlineAccess) ?  "true" : "false";
                     group.isOnlineAccessible(onlineAccess);
-                    System.out.println("Responsible for group");
-                    String respName = receiveCheckedInputForRequest("   Name: ", "([a-zA-Z]|\\p{Blank}|'|´)+");
-                    String respSurname = receiveCheckedInputForRequest("    Surname: ", "([a-zA-Z]|\\p{Blank}|'|´)+");
+                    System.out.println(groupProp.getString("responsible_for_group"));
+                    String respName = receiveCheckedInputForRequest(groupProp.getString("name") + ": ", groupProp.getString("name_regex"));
+                    String respSurname = receiveCheckedInputForRequest(groupProp.getString("surname") + ": ", groupProp.getString("surname_regex"));
+
                     if(!respName.isEmpty() & !respSurname.isEmpty()){
+
                         group.setResponsibleForGroup(new String[]{respName, respSurname});
-                        String contactInf = receiveCheckedInputForRequest("Contact information: ", ".+");
+                        String contactInf = receiveCheckedInputForRequest(groupProp.getString("contact_information") + ": "
+                                , groupProp.getString("contact_information_regex"));
+
                         if(!contactInf.isEmpty()){
                             group.setContactInformation(contactInf);
                             return group;
@@ -307,7 +357,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
                 return "";
             }
             else {
-                System.out.println("Forbidden input. To close request leave the field blank");
+                System.out.println(systemCommentsProp.getString("forbidden_input"));
                 repeatRequest = true;
             }
 
@@ -317,8 +367,8 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
     }
 
     private void executeOption_updateStudent(){
-        writer.printHeader("UPDATE_STUDENT");
-        writer.printHeader("SYSTEM_REQUEST");
+        writer.printHeader(systemHeadersProp.getString("update_student"));
+        writer.printHeader(systemHeadersProp.getString("system_request"));
         Student student = receiveStudentFromUserInput();
         printSeparatorForSystemRequest();
 
@@ -326,12 +376,13 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
             studentsService.update(student);
 
         else
-            System.out.println("Input of student data is interrupted. Student update is denied");
+            System.out.println(systemCommentsProp.getString("student_input_interrupted") + " "
+                    + systemCommentsProp.getString("student_update_denied"));
     }
 
     private void executeOption_updateGroup(){
-        writer.printHeader("UPDATE_GROUP");
-        writer.printHeader("SYSTEM_REQUEST");
+        writer.printHeader(systemHeadersProp.getString("update_group"));
+        writer.printHeader(systemHeadersProp.getString("system_request"));
         Group group = receiveGroupFromUserInput();
         printSeparatorForSystemRequest();
 
@@ -339,13 +390,15 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
             groupsService.update(group);
 
         else
-            System.out.println("Input of group data is interrupted. Group update is denied");
+            System.out.println(systemCommentsProp.getString("group_input_interrupted") + " "
+                    + systemCommentsProp.getString("group_update_denied"));
     }
 
     private void executeOption_deleteStudent(){
-        writer.printHeader("DELETE_STUDENT");
-        writer.printHeader("SYSTEM_REQUEST");
-        String studentId = receiveCheckedInputForRequest("Student ID: ", "\\d+");
+        writer.printHeader(systemHeadersProp.getString("delete_student"));
+        writer.printHeader(systemHeadersProp.getString("system_request"));
+        String studentId = receiveCheckedInputForRequest(studentProp.getString("student_id") + ": "
+                , studentProp.getString("student_id_regex"));
         printSeparatorForSystemRequest();
 
         if(!studentId.isEmpty()){
@@ -353,13 +406,15 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
         }
 
         else
-            System.out.println("Input is interrupted. Nothing will be deleted");
+            System.out.println(systemCommentsProp.getString("input_interrupted") + " "
+                    + systemCommentsProp.getString("nothing_deleted"));
     }
 
     private void executeOption_deleteGroup(){
-        writer.printHeader("DELETE_GROUP");
-        writer.printHeader("SYSTEM_REQUEST");
-        String groupId = receiveCheckedInputForRequest("Group ID: ", "\\d+");
+        writer.printHeader(systemHeadersProp.getString("delete_group"));
+        writer.printHeader(systemHeadersProp.getString("system_request"));
+        String groupId = receiveCheckedInputForRequest(groupProp.getString("group_id") + ": "
+                , groupProp.getString("group_id_regex"));
         printSeparatorForSystemRequest();
 
         if(!groupId.isEmpty()){
@@ -367,100 +422,110 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
         }
 
         else
-            System.out.println("Input is interrupted. Nothing will be deleted");
+            System.out.println(systemCommentsProp.getString("input_interrupted") + " "
+                    + systemCommentsProp.getString("nothing_deleted"));
     }
 
     private void executeOption_studentExist(){
-        writer.printHeader("STUDENT_EXIST");
-        writer.printHeader("SYSTEM_REQUEST");
-        String studentId = receiveCheckedInputForRequest("Student ID: ", "\\d+");
+        writer.printHeader(systemHeadersProp.getString("student_exist"));
+        writer.printHeader(systemHeadersProp.getString("system_request"));
+        String studentId = receiveCheckedInputForRequest(studentProp.getString("student_id") + ": "
+                , studentProp.getString("student_id_regex"));
         printSeparatorForSystemRequest();
 
         if(!studentId.isEmpty()){
-            System.out.println(studentsService.studentExists(Integer.parseInt(studentId)) ? "TRUE" : "FALSE");
+            System.out.println(studentsService.studentExists(Integer.parseInt(studentId)) ? systemHeadersProp.getString("true")
+                    : systemHeadersProp.getString("false"));
         }
 
         else
-            System.out.println("Input is interrupted.");
+            System.out.println(systemCommentsProp.getString("input_interrupted"));
     }
 
     private void executeOption_getAllStudentsInGroup(){
-        writer.printHeader("GET_ALL_STUDENTS_IN_GROUP");
-        writer.printHeader("SYSTEM_REQUEST");
-        String groupId = receiveCheckedInputForRequest("Group ID: ", "\\d+");
+        writer.printHeader(systemHeadersProp.getString("get_all_students_in_group"));
+        writer.printHeader(systemHeadersProp.getString("system_request"));
+        String groupId = receiveCheckedInputForRequest(groupProp.getString("group_id") + ": "
+                , groupProp.getString("group_id_regex"));
         printSeparatorForSystemRequest();
 
         if(!groupId.isEmpty()){
             if(Objects.nonNull(groupsService.getById(Integer.parseInt(groupId))))
-                printStudentList("All students in group" + groupId
+                printStudentList(groupProp.getString("students") + groupId
                     , studentsService.getAllStudentsInGroup(Integer.parseInt(groupId)));
         }
 
         else
-            System.out.println("Input is interrupted.");
+            System.out.println(systemCommentsProp.getString("input_interrupted"));
     }
 
     private void executeOption_getAttendeesInGroup(){
-        writer.printHeader("GET_ATTENDEES_IN_GROUP");
-        writer.printHeader("SYSTEM_REQUEST");
-        String groupId = receiveCheckedInputForRequest("Group ID: ", "\\d+");
+        writer.printHeader(systemHeadersProp.getString("get_attendees_in_group"));
+        writer.printHeader(systemHeadersProp.getString("system_request"));
+        String groupId = receiveCheckedInputForRequest(groupProp.getString("group_id") + ": "
+                , groupProp.getString("group_id_regex"));
         printSeparatorForSystemRequest();
 
         if(!groupId.isEmpty()){
             if(Objects.nonNull(groupsService.getById(Integer.parseInt(groupId))))
-                printStudentList("Attendees in group" + groupId
+                printStudentList(groupProp.getString("attendees") + groupId
                         , studentsService.getAttendeesStudentsInGroup(Integer.parseInt(groupId)));
         }
 
         else
-            System.out.println("Input is interrupted.");
+            System.out.println(groupProp.getString("attendees"));
     }
 
     private void executeOption_getOnlineStudentsInGroup(){
-        writer.printHeader("GET_ONLINE_STUDENTS_IN_GROUP");
-        writer.printHeader("SYSTEM_REQUEST");
-        String groupId = receiveCheckedInputForRequest("Group ID: ", "\\d+");
+        writer.printHeader(systemHeadersProp.getString("get_online_students_in_group"));
+        writer.printHeader(systemHeadersProp.getString("system_request"));
+        String groupId = receiveCheckedInputForRequest(groupProp.getString("group_id") + ": "
+                , groupProp.getString("group_id_regex"));
         printSeparatorForSystemRequest();
 
         if(!groupId.isEmpty()){
             if(Objects.nonNull(groupsService.getById(Integer.parseInt(groupId))))
-                printStudentList("Online students in group: " + groupId
+                printStudentList(groupProp.getString("online_students") + groupId
                         , studentsService.getOnlineStudentsInGroup(Integer.parseInt(groupId)));
         }
 
         else
-            System.out.println("Input is interrupted.");
+            System.out.println(systemCommentsProp.getString("input_interrupted"));
     }
 
     private void executeOption_getFindAllGroupsByLanguage(){
-        writer.printHeader("FIND_ALL_GROUPS_BY_LANGUAGE");
-        writer.printHeader("SYSTEM_REQUEST");
-        String language = receiveCheckedInputForRequest("Language: ", "[a-zA-Z]+");
+        writer.printHeader(systemHeadersProp.getString("find_all_groups_by_language"));
+        writer.printHeader(systemHeadersProp.getString("system_request"));
+        String language = receiveCheckedInputForRequest(groupProp.getString("language") + ": "
+                , groupProp.getString("language_regex"));
         printSeparatorForSystemRequest();
 
         if(!language.isEmpty()){
-           printGroupList("All groups with language: " + language, groupsService.findAllGroupsByLanguage(new Locale(language)));
+           printGroupList(systemCommentsProp.getString("groups_with_language") + language
+                   , groupsService.findAllGroupsByLanguage(new Locale(language)));
         }
         else
-            System.out.println("Input is interrupted.");
+            System.out.println(systemCommentsProp.getString("input_interrupted"));
     }
 
     private void executeOption_getAllGroupsWithSameName(){
-        writer.printHeader("FIND_ALL_GROUPS_WITH_SAME_NAME");
-        writer.printHeader("SYSTEM_REQUEST");
-        String name = receiveCheckedInputForRequest("Group name (alg|anl|ds): ", "alg|anl|ds");
+        writer.printHeader(systemHeadersProp.getString("find_all_groups_with_same_name"));
+        writer.printHeader(systemHeadersProp.getString("system_request"));
+        String name = receiveCheckedInputForRequest(groupProp.getString("name") + " :(" + groupProp.getString("name_regex")
+                + "): ", groupProp.getString("name_regex"));
         printSeparatorForSystemRequest();
 
         if(!name.isEmpty()) {
-            printGroupList("All groups with name: " + name, groupsService.findAllGroupsByName(GroupNames.valueOf(name.toUpperCase())));
+            printGroupList(systemCommentsProp.getString("groups_with_name") + name
+                    , groupsService.findAllGroupsByName(GroupNames.valueOf(name.toUpperCase())));
         }
         else
-            System.out.println("Input is interrupted");
+            System.out.println(systemCommentsProp.getString("input_interrupted"));
 
     }
 
     private void stopCommunication(){
-        writer.printHeader("END");
+        writer.printHeader(systemHeadersProp.getString("end"));
         stopCommunication = true;
     }
 
@@ -475,18 +540,18 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
     private void printStudentList(String message, List<Student> students){
         if(Objects.nonNull(students))
             writer.printListOfLinesWithMessageAndSeparation(message
-                , students.stream().map(student -> parser.parseStudentToLine(student))
+                , students.stream().map(parser::parseStudentToLine)
                         .collect(Collectors.toList()));
     }
 
     private void printGroupList(String message, List<Group> groups){
         if(Objects.nonNull(groups))
             writer.printListOfLinesWithMessageAndSeparation(message
-                , groups.stream().map(group -> parser.parseGroupToLine(group))
+                , groups.stream().map(parser::parseGroupToLine)
                         .collect(Collectors.toList()));
     }
 
     private void printSeparatorForSystemRequest(){
-        writer.printSeparator(writer.getSeparatorLength() + "SYSTEM_REQUEST".length());
+        writer.printSeparator();
     }
 }
