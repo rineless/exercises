@@ -43,10 +43,10 @@ public interface ILineParser {
                         .setMaxAttendeesPresent(Integer.parseInt(dataForGroup[4])).setResponsibleForGroup(dataForGroup[5])
                         .setContactInformation(dataForGroup[6]);
             else {
-                throw new IllegalArgumentException("Line cannot be resolved into Group. Not enough data");
+                throw new IllegalArgumentException("Line cannot be resolved into Group. Inappropriate amount of data.");
             }
         }
-        throw new IllegalArgumentException("Null cannot be resolved into group");
+        throw new IllegalArgumentException("Null cannot be resolved into group. ");
     }
 
     default String parseStudentToLine(Student student){
