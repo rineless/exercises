@@ -12,7 +12,7 @@ public interface ILineParser {
     String parseArrayToLine(String[] array);
 
 
-    default Student parseLineToStudent(String line) {
+    default Student parseLineToStudent(String line) throws IllegalArgumentException{
         if (line != null) {
             String[] dataForStudent = parseLineToArray(line);
             if (dataForStudent.length == 11)
@@ -23,11 +23,11 @@ public interface ILineParser {
                             .setTypeOfContract(dataForStudent[7]).setGroupId(Integer.parseInt(dataForStudent[8]))
                             .setTypeOfStudying(dataForStudent[9]).setContactInformation(dataForStudent[10]);
                 }
-                catch(ArrayIndexOutOfBoundsException ex){
-                    throw new IllegalArgumentException("Line cannot be resolved into Student. Incorrect input of student birth date");
+                catch(IllegalArgumentException ex){
+                    throw new IllegalArgumentException(ex.getMessage());
                 }
             else {
-                throw new IllegalArgumentException("Line cannot be resolved into Student. Not enough data");
+                throw new IllegalArgumentException("Line cannot be resolved into Student. Inappropriate amount of data.");
             }
         } else
             throw new IllegalArgumentException("Null cannot be resolved into Student.");
