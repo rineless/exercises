@@ -33,10 +33,10 @@ public class CSVGroupsRepository implements IGroupsRepository {
     public Group getById(int id) {
         Group group = null;
         Optional<Group> optional = getAll().stream().filter(groupFromList -> groupFromList.getId() == id).findFirst();
+
         if (optional.isPresent())
             group = optional.get();
-        else
-            System.out.println("Group not found");
+
         return group;
     }
 

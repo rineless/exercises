@@ -39,11 +39,11 @@ public class CSVStudentsRepository implements IStudentsRepository {
         Student student = null;
         Optional<Student> firstElement = this.getAll().stream()
                 .filter(s -> s.getId() == id).findFirst();
+
         if (firstElement.isPresent()) {
             student = firstElement.get();
-        } /*else {
-            System.out.println("Student not found"); //TODO think if it is needed
-        }*/
+        }
+
         return student;
     }
 
