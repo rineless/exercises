@@ -4,6 +4,7 @@ import model.group.Group;
 import model.student.Student;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -59,8 +60,8 @@ public interface ILineParser {
         studentData[2] = student.getSurname();
         studentData[3] = student.getGender() == null ? null : student.getGender().toString();
         LocalDate date = student.getBirthDate();
-        studentData[4] = date == null ? null : String.valueOf(date.getDayOfMonth())+"."+String.valueOf(date.getMonthValue())
-                +"."+String.valueOf(date.getYear());
+        studentData[4] = date == null ? null : date.getDayOfMonth() + "." + date.getMonthValue()
+                + "." + date.getYear();
         studentData[5] = student.getCitizenship();
         studentData[6] = student.getPlaceOfBirth();
         studentData[7] = student.getTypeOfContract() == null ? null : student.getTypeOfContract().toString();
@@ -80,7 +81,8 @@ public interface ILineParser {
         groupData[2] = group.getLanguage() == null ? null : group.getLanguage().toString();
         groupData[3] = String.valueOf(group.isOnlineAccessible());
         groupData[4] = group.getMaxAttendeesPresent() == 0 ? "" : String.valueOf(group.getMaxAttendeesPresent());
-        String responsibleForGroup = (group.getResponsibleForGroup() == null | group.getResponsibleForGroup().length < 1) ? " "
+        String responsibleForGroup = (group.getResponsibleForGroup() == null ||
+                Objects.requireNonNull(group.getResponsibleForGroup()).length < 1) ? " "
                 : Stream.of(group.getResponsibleForGroup())
                 .map(name -> name + " ").collect(Collectors.joining());
         groupData[5] = responsibleForGroup.substring(0, responsibleForGroup.length() - 1);
