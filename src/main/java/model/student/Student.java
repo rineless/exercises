@@ -3,6 +3,11 @@ package model.student;
 import util.parser.SeparatedValuesParser;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Student {
 
@@ -18,6 +23,9 @@ public class Student {
     private TypeOfStudying typeOfStudying;
     private String contactInformation;
 
+    private final ResourceBundle properties = ResourceBundle.getBundle("properties.model.student.student"
+            , Locale.getDefault());
+
     public Student setId(int id) {
         this.id = id;
         return this;
@@ -25,9 +33,7 @@ public class Student {
 
     public Student setName(String name) throws IllegalArgumentException{
         if (name == null)
-            throw new IllegalArgumentException("Null cannot be resolved into student name");
-        if (name.contentEquals(""))
-            throw new IllegalArgumentException("Empty student name is prohibited");
+            throw new IllegalArgumentException(properties.getString("null_name"));
 
         this.name = name;
         return this;
@@ -35,42 +41,53 @@ public class Student {
 
     public Student setSurname(String surname) throws IllegalArgumentException{
         if (surname == null)
-            throw new IllegalArgumentException("Null cannot be resolved to student surname");
-        if (surname.contentEquals(""))
-            throw new IllegalArgumentException("Empty student surname is prohibited");
+            throw new IllegalArgumentException(properties.getString("null_surname"));
 
         this.surname = surname;
         return this;
     }
 
     public Student setGender(String gender) throws IllegalArgumentException{
-        if (gender.toLowerCase().contentEquals("f") | gender.toUpperCase().contentEquals("FEMALE"))
-            this.gender = Gender.valueOf("FEMALE");
-        else if (gender.toLowerCase().contentEquals("m") | gender.toUpperCase().contentEquals("MALE"))
-            this.gender = Gender.valueOf("MALE");
+        if(gender == null)
+            throw new IllegalArgumentException(properties.getString("null_gender"));
+
+        if(gender.toUpperCase().matches(properties.getString("gender_regex"))) {
+            List<String>  genders = Stream.of(properties.getString("gender_regex").split("\\|")).collect(Collectors.toList());
+            if(genders.indexOf(gender) == 0)
+                this.gender = Gender.valueOf("MALE");
+            else
+                this.gender = Gender.valueOf("FEMALE");
+        }
         else
-            throw new IllegalArgumentException("Incorrect input of gender for student (should be one of m|M|f|F)");
+            throw new IllegalArgumentException(properties.getString("incorrect_gender"));
         return this;
     }
 
     public Student setGender(Gender gender) throws IllegalArgumentException{
         if(gender == null)
-            throw new IllegalArgumentException("Null cannot be resolved to student gender");
+            throw new IllegalArgumentException(properties.getString("null_gender"));
 
         this.gender = gender;
         return this;
     }
 
     public Student setBirthDate(String birthDate) {
-        String[] date = new SeparatedValuesParser("\\.").parseLineToArray(birthDate);
-        this.birthDate = LocalDate.of(Integer.parseInt(date[2]), Integer.parseInt(date[1])
-                , Integer.parseInt(date[0]));
+        if(birthDate == null)
+            throw new IllegalArgumentException(properties.getString("null_birthDate"));
+
+        if(birthDate.matches(properties.getString("birthDate_regex"))) {
+            String[] date = birthDate.split("\\.");
+            this.birthDate = LocalDate.of(Integer.parseInt(date[2]), Integer.parseInt(date[1])
+                    , Integer.parseInt(date[0]));
+        }
+        else
+            throw new IllegalArgumentException("incorrect_birthDate");
         return this;
     }
 
     public Student setBirthDate(LocalDate birthDate) throws IllegalArgumentException{
         if(birthDate == null)
-            throw new IllegalArgumentException("Null cannot be resolved to student birth date");
+            throw new IllegalArgumentException(properties.getString("null_birthDate"));
 
         this.birthDate = birthDate;
         return this;
@@ -78,9 +95,7 @@ public class Student {
 
     public Student setCitizenship(String citizenship) throws IllegalArgumentException{
         if (citizenship == null)
-            throw new IllegalArgumentException("Null cannot be resolved to student citizenship");
-        if (citizenship.contentEquals(""))
-            throw new IllegalArgumentException("Empty student citizenship is prohibited");
+            throw new IllegalArgumentException(properties.getString("null_citizenship"));
 
         this.citizenship = citizenship;
         return this;
@@ -88,22 +103,26 @@ public class Student {
 
     public Student setPlaceOfBirth(String placeOfBirth) throws IllegalArgumentException{
         if (placeOfBirth == null)
-            throw new IllegalArgumentException("Null cannot be resolved to student placeOfBirth");
-        if (placeOfBirth.contentEquals(""))
-            throw new IllegalArgumentException("Empty student placeOfBirth is prohibited");
+            throw new IllegalArgumentException(properties.getString("null_placeOfBirth"));
 
         this.placeOfBirth = placeOfBirth;
         return this;
     }
 
     public Student setTypeOfContract(String typeOfContract) throws IllegalArgumentException{
-        this.typeOfContract = TypeOfContract.valueOf(typeOfContract.toUpperCase());
+        if(typeOfContract == null)
+            throw new IllegalArgumentException(properties.getString("null_typeOfContract"));
+
+        if(typeOfContract.toUpperCase().matches(properties.getString("typeOfContract_regex")))
+            this.typeOfContract = TypeOfContract.valueOf(typeOfContract.toUpperCase());
+        else
+            throw new IllegalArgumentException(properties.getString("incorrect_typeOfContract"));
         return this;
     }
 
     public Student setTypeOfContract(TypeOfContract typeOfContract) throws IllegalArgumentException{
         if(typeOfContract == null)
-            throw new IllegalArgumentException("Null cannot be resolved to student type of contract");
+            throw new IllegalArgumentException(properties.getString("null_typeOfContract"));
 
         this.typeOfContract = typeOfContract;
         return this;
@@ -115,13 +134,19 @@ public class Student {
     }
 
     public Student setTypeOfStudying(String typeOfStudying) throws IllegalArgumentException{
-        this.typeOfStudying = TypeOfStudying.valueOf(typeOfStudying.toUpperCase());
+        if(typeOfStudying == null)
+            throw new IllegalArgumentException(properties.getString("null_typeOfStudying"));
+
+        if(typeOfStudying.toUpperCase().matches(properties.getString("typeOfStudying_regex")))
+            this.typeOfContract = TypeOfContract.valueOf(typeOfStudying.toUpperCase());
+        else
+            throw new IllegalArgumentException(properties.getString("incorrect_typeOfStudying"));
         return this;
     }
 
     public Student setTypeOfStudying(TypeOfStudying typeOfStudying) throws IllegalArgumentException{
         if(typeOfStudying == null)
-            throw new IllegalArgumentException("Null cannot be resolved to student type of studying");
+            throw new IllegalArgumentException(properties.getString("null_typeOfStudying"));
 
         this.typeOfStudying = typeOfStudying;
         return this;
@@ -129,7 +154,7 @@ public class Student {
 
     public Student setContactInformation(String contactInformation) throws IllegalArgumentException{
         if (contactInformation == null)
-            throw new IllegalArgumentException("Null cannot be resolved to student contract information");
+            throw new IllegalArgumentException(properties.getString("null_contactInf"));
 
         this.contactInformation = contactInformation;
         return this;
