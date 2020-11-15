@@ -27,7 +27,7 @@ public class CSVGroupsRepository implements IGroupsRepository {
 
     public List<Group> getAll() {
         return reader.receiveLinesAsList(PathFinder.findFromResources(groupsDataPath))
-                .stream().skip(1).map(line -> parser.parseLineToGroup(line)).collect(Collectors.toList());
+                .stream().skip(1).map(parser::parseLineToGroup).collect(Collectors.toList());
     }
 
     public Group getById(int id) {

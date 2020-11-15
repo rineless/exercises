@@ -29,10 +29,8 @@ public class CSVStudentsRepository implements IStudentsRepository {
 
     public List<Student> getAll() {
 
-        List<Student> studentData = reader.receiveLinesAsList(PathFinder.findFromResources(studentDataPath)).stream().skip(1)
-                .map(line -> parser.parseLineToStudent(line)).collect(Collectors.toList());
-
-        return studentData.stream().collect(Collectors.toList());
+        return reader.receiveLinesAsList(PathFinder.findFromResources(studentDataPath)).stream().skip(1)
+                .map(parser::parseLineToStudent).collect(Collectors.toList());
     }
 
     public Student getById(int id) {
