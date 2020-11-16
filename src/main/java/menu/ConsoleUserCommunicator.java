@@ -36,19 +36,19 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
 
         progValues = ResourceBundle.getBundle("properties.consoleUserCommunicator.valuesForProg");
 
-        groupProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.group.group_en" );
-        studentProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.student.student_en");
-        systemCommentsProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemComments.systemComments_en");
-        systemHeadersProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemHeaders.systemHeaders_en");    }
+        groupProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.group");
+        studentProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.student");
+        systemCommentsProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemComments");
+        systemHeadersProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemHeaders");    }
 
     @Override
     public void applyUserCommunicationLogic() {
-        String language = receiveCheckedInputForRequest("Choose language: (en) : ", "en");
+        String language = receiveCheckedInputForRequest("Choose language: (en|de) : ", "en|de");
         if(!language.isEmpty()){
-                groupProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.group.group_" + language);
-                studentProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.student.student_" + language);
-                systemCommentsProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemComments.systemComments_" + language);
-                systemHeadersProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemHeaders.systemHeaders_" + language);
+                groupProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.group", new Locale(language));
+                studentProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.student", new Locale(language));
+                systemCommentsProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemComments", new Locale(language));
+                systemHeadersProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemHeaders", new Locale(language));
 
         }
         System.out.println(systemCommentsProp.getString("choose_option"));
@@ -256,8 +256,8 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
                                                 List<String> studyingTypes = Stream.of(studentProp.getString("type_of_studying_regex").split("\\|")).collect(Collectors.toList());
                                                 typeOfStudying = progValues.getString("type_of_studying" + (studyingTypes.indexOf(typeOfStudying) + 1));
                                                 student.setTypeOfStudying(typeOfStudying);
-                                                String contactInf = receiveCheckedInputForRequest(studentProp.getString("contact_information") + ": "
-                                                        , studentProp.getString("contact_information_regex"));
+                                                String contactInf = receiveCheckedInputForRequest(studentProp.getString("contact_inf") + ": "
+                                                        , studentProp.getString("contact_inf_regex"));
 
                                                 if(!contactInf.isEmpty()){
 
@@ -314,26 +314,32 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
                     name = progValues.getString("group_name" + (names.indexOf(name) + 1));
                 }
                 group.setGroupName(name);
-                String onlineAccess = receiveCheckedInputForRequest(groupProp.getString("online_access") + ": (" + groupProp.getString("online_access_regex") + "): "
-                        , groupProp.getString("online_access_regex"));
+                String language = receiveCheckedInputForRequest(groupProp.getString("language") + ": ", groupProp.getString("language_regex"));
 
-                if(!onlineAccess.isEmpty()){
+                if(!language.isEmpty()) {
 
-                    onlineAccess = groupProp.getString("online_access_regex").startsWith(onlineAccess) ?  "true" : "false";
-                    group.isOnlineAccessible(onlineAccess);
-                    System.out.println(groupProp.getString("responsible_for_group"));
-                    String respName = receiveCheckedInputForRequest(groupProp.getString("name") + ": ", groupProp.getString("name_regex"));
-                    String respSurname = receiveCheckedInputForRequest(groupProp.getString("surname") + ": ", groupProp.getString("surname_regex"));
+                    group.setLanguage(new Locale(language));
+                    String onlineAccess = receiveCheckedInputForRequest(groupProp.getString("online_access") + ": (" + groupProp.getString("online_access_regex") + "): "
+                            , groupProp.getString("online_access_regex"));
 
-                    if(!respName.isEmpty() & !respSurname.isEmpty()){
+                    if (!onlineAccess.isEmpty()) {
 
-                        group.setResponsibleForGroup(new String[]{respName, respSurname});
-                        String contactInf = receiveCheckedInputForRequest(groupProp.getString("contact_information") + ": "
-                                , groupProp.getString("contact_information_regex"));
+                        onlineAccess = groupProp.getString("online_access_regex").startsWith(onlineAccess) ? "true" : "false";
+                        group.isOnlineAccessible(onlineAccess);
+                        System.out.println(groupProp.getString("responsible_for_group"));
+                        String respName = receiveCheckedInputForRequest(groupProp.getString("name") + ": ", groupProp.getString("name_regex"));
+                        String respSurname = receiveCheckedInputForRequest(groupProp.getString("surname") + ": ", groupProp.getString("surname_regex"));
 
-                        if(!contactInf.isEmpty()){
-                            group.setContactInformation(contactInf);
-                            return group;
+                        if (!respName.isEmpty() & !respSurname.isEmpty()) {
+
+                            group.setResponsibleForGroup(new String[]{respName, respSurname});
+                            String contactInf = receiveCheckedInputForRequest(groupProp.getString("contact_information") + ": "
+                                    , groupProp.getString("contact_information_regex"));
+
+                            if (!contactInf.isEmpty()) {
+                                group.setContactInformation(contactInf);
+                                return group;
+                            }
                         }
                     }
                 }
@@ -511,8 +517,8 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
     private void executeOption_getAllGroupsWithSameName(){
         writer.printHeader(systemHeadersProp.getString("find_all_groups_with_same_name"));
         writer.printHeader(systemHeadersProp.getString("system_request"));
-        String name = receiveCheckedInputForRequest(groupProp.getString("name") + " :(" + groupProp.getString("name_regex")
-                + "): ", groupProp.getString("name_regex"));
+        String name = receiveCheckedInputForRequest(groupProp.getString("name") + ": "
+                , groupProp.getString("name_regex"));
         printSeparatorForSystemRequest();
 
         if(!name.isEmpty()) {
