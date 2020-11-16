@@ -34,12 +34,12 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
         groupsService = new GroupsService();
         parser = new CSVParser();
 
-        progValues = ResourceBundle.getBundle("properties.consoleUserCommunicator.valuesForProg");
+        progValues = ResourceBundle.getBundle("properties.consoleUserCommunicator.valuesForProg", Locale.getDefault());
 
-        groupProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.group");
-        studentProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.student");
-        systemCommentsProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemComments");
-        systemHeadersProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemHeaders");    }
+        groupProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.group", Locale.getDefault());
+        studentProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.student", Locale.getDefault());
+        systemCommentsProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemComments", Locale.getDefault());
+        systemHeadersProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemHeaders", Locale.getDefault());    }
 
     @Override
     public void applyUserCommunicationLogic() {
