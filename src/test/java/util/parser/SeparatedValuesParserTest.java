@@ -120,10 +120,10 @@ public class SeparatedValuesParserTest {
     class ParseLineToStudentTests {
 
         @ParameterizedTest
-        @CsvSource({"_,3_Alice_Cook_f_14.04.1999_Ungarn_Paks_payable_1_online_alicook@gmail.com"
-                , "\\|>\\*>\\|,3|>*>|Alice|>*>|Cook|>*>|f|>*>|14.04.1999" +
+        @CsvSource({"_,3_Alice_Cook_FEMALE_14.04.1999_Ungarn_Paks_payable_1_online_alicook@gmail.com"
+                , "\\|>\\*>\\|,3|>*>|Alice|>*>|Cook|>*>|FEMALE|>*>|14.04.1999" +
                 "|>*>|Ungarn|>*>|Paks|>*>|payable|>*>|1|>*>|online|>*>|alicook@gmail.com"
-                , ";,3;Alice;Cook;f;14.04.1999;Ungarn;Paks;payable;1;online;alicook@gmail.com"})
+                , ";,3;Alice;Cook;FEMALE;14.04.1999;Ungarn;Paks;payable;1;online;alicook@gmail.com"})
         @DisplayName("Line should be parsed into student")
         void shouldParseLineToStudent(String separator_regex, String line) {
             SeparatedValuesParser parser = new SeparatedValuesParser(separator_regex);
@@ -386,16 +386,6 @@ public class SeparatedValuesParserTest {
             Assertions.assertThrows(IllegalArgumentException.class
                     , () -> parser.parseLineToGroup("3,emdfe,english,false,15,Karol Maier,karol.maier@myuni.de")
                     , "Expected IllegalArgumentException by prohibited group name input");
-        }
-
-        @Test
-        @DisplayName("By input with missing language should throw IllegalArgumentException")
-        void parseLineToGroup_WithMissingLanguageInput_ShouldThrowException() {
-            SeparatedValuesParser parser = new SeparatedValuesParser(",");
-
-            Assertions.assertThrows(IllegalArgumentException.class
-                    , () -> parser.parseLineToGroup("3,Anl,,false,15,Karol Maier,karol.maier@myuni.de")
-                    , "Expected IllegalArgumentException by missing language input");
         }
 
         @Test
