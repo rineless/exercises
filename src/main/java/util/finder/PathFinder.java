@@ -9,22 +9,22 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static java.nio.file.FileSystems.getFileSystem;
 
 public class PathFinder {
     private static FileSystem fileSystemForResourcesFolder;
+    private static final ResourceBundle properties = ResourceBundle.getBundle("properties.util.finder.pathFinder.pathFinder"
+            , Locale.getDefault());
 
     public static void findByName(String name, File rootDirectory, List<String> paths)
             throws IllegalArgumentException {
         if (name == null | rootDirectory == null | paths == null) {
-            throw new IllegalArgumentException("Null cannot be resolved into name or rootDirectory or paths");
+            throw new IllegalArgumentException(properties.getString("null_path_dir_root"));
         }
         if (!rootDirectory.isDirectory()) {
-            throw new IllegalArgumentException(" Given rootDirectory is not a directory");
+            throw new IllegalArgumentException(properties.getString("not_dir"));
         }
 
         for (File file : rootDirectory.listFiles()) {
@@ -51,12 +51,12 @@ public class PathFinder {
                 } else
                     return Path.of(url.toURI());
             } else {
-                System.out.println("File not found. Return empty path");
+                System.out.println(properties.getString("file_not_found") + properties.getString("return_empty_path"));
                 return Path.of("");
             }
         } catch (URISyntaxException | IOException exp) {
             System.out.println(exp.getMessage());
-            System.out.println("Return empty path");
+            System.out.println(properties.getString("return_empty_path"));
             return Path.of("");
         }
     }
