@@ -4,13 +4,18 @@ import model.group.Group;
 import model.student.Student;
 
 import java.time.LocalDate;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public interface ILineParser {
     String[] parseLineToArray(String line);
     String parseArrayToLine(String[] array);
+
+    ResourceBundle properties = ResourceBundle.getBundle("properties.util.parser.iLineParser.iLineParser"
+            , Locale.getDefault());
 
 
     default Student parseLineToStudent(String line) throws IllegalArgumentException{
@@ -28,10 +33,11 @@ public interface ILineParser {
                     throw new IllegalArgumentException(ex.getMessage());
                 }
             else {
-                throw new IllegalArgumentException("Line cannot be resolved into Student. Inappropriate amount of data.");
+                throw new IllegalArgumentException(properties.getString("cannot_line_into_student")
+                        + properties.getString("inappropriate_data"));
             }
         } else
-            throw new IllegalArgumentException("Null cannot be resolved into Student.");
+            throw new IllegalArgumentException(properties.getString("null_student"));
 
     }
 
@@ -44,10 +50,11 @@ public interface ILineParser {
                         .setMaxAttendeesPresent(Integer.parseInt(dataForGroup[4])).setResponsibleForGroup(dataForGroup[5])
                         .setContactInformation(dataForGroup[6]);
             else {
-                throw new IllegalArgumentException("Line cannot be resolved into Group. Inappropriate amount of data.");
+                throw new IllegalArgumentException(properties.getString("cannot_line_into_group")
+                        + properties.getString("inappropriate_data"));
             }
         }
-        throw new IllegalArgumentException("Null cannot be resolved into group. ");
+        throw new IllegalArgumentException(properties.getString("null_group"));
     }
 
     default String parseStudentToLine(Student student){
