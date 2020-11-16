@@ -81,7 +81,8 @@ public class Student {
                     , Integer.parseInt(date[0]));
         }
         else
-            throw new IllegalArgumentException("incorrect_birthDate");
+            throw new IllegalArgumentException(properties.getString("incorrect_birthDate"));
+
         return this;
     }
 
@@ -138,7 +139,7 @@ public class Student {
             throw new IllegalArgumentException(properties.getString("null_typeOfStudying"));
 
         if(typeOfStudying.toUpperCase().matches(properties.getString("typeOfStudying_regex")))
-            this.typeOfContract = TypeOfContract.valueOf(typeOfStudying.toUpperCase());
+            this.typeOfStudying = TypeOfStudying.valueOf(typeOfStudying.toUpperCase());
         else
             throw new IllegalArgumentException(properties.getString("incorrect_typeOfStudying"));
         return this;
