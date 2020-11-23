@@ -75,7 +75,7 @@ public class Student {
         if(birthDate == null)
             throw new IllegalArgumentException(properties.getString("student.null_birthDate"));
 
-        if(birthDate.matches("[0-9]+\\\\.[0-9]+\\\\.[0-9]+")) {
+        if(birthDate.matches("[0-9]+\\.[0-9]+\\.[0-9]+")) {
             String[] date = birthDate.split("\\.");
             this.birthDate = LocalDate.of(Integer.parseInt(date[2]), Integer.parseInt(date[1])
                     , Integer.parseInt(date[0]));
