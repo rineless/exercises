@@ -9,7 +9,7 @@ import java.util.ResourceBundle;
 public class ConsoleReader {
     private BufferedReader reader;
 
-    private final ResourceBundle properties = ResourceBundle.getBundle("properties.util.reader.consoleReader.consoleReader"
+    private final ResourceBundle properties = ResourceBundle.getBundle("properties.valuesForProg"
             , Locale.getDefault());
 
     public ConsoleReader(){
@@ -20,7 +20,8 @@ public class ConsoleReader {
         try {
             return reader.readLine();
         } catch (IOException e) {
-            System.out.println(properties.getString("cannot_read_line") + properties.getString("return_empty_line"));
+            System.out.println(properties.getString("consoleReader.cannot_read_line")
+                    + properties.getString("consoleReader.return_empty_line"));
             return "";
         }
     }
