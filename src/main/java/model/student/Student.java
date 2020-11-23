@@ -51,7 +51,7 @@ public class Student {
         if(gender == null)
             throw new IllegalArgumentException(properties.getString("student.null_gender"));
 
-        if(gender.toUpperCase().matches(properties.getString("student.gender_regex"))) {
+        if(gender.toUpperCase().matches("MALE|FEMALE")) {
             List<String>  genders = Stream.of("MALE|FEMALE".split("\\|")).collect(Collectors.toList());
             if(genders.indexOf(gender) == 0)
                 this.gender = Gender.valueOf("MALE");
