@@ -16,7 +16,7 @@ public class GroupsService implements IGroupsService{
     private final IStudentsRepository studentsRepository;
     private final IGroupsRepository groupsRepository;
 
-    private final ResourceBundle properties = ResourceBundle.getBundle("properties.service.groupsService.groupsService"
+    private final ResourceBundle properties = ResourceBundle.getBundle("properties.valuesForProg"
             , Locale.getDefault());
 
     public GroupsService() {
@@ -37,10 +37,10 @@ public class GroupsService implements IGroupsService{
             if (Objects.isNull(getById(group.getId())))
                 groupsRepository.add(group);
             else
-                System.out.println(properties.getString("already_exist"));
+                System.out.println(properties.getString("groupsService.already_exist"));
         }
         else
-            System.out.println(properties.getString("not_valid"));
+            System.out.println(properties.getString("groupsService.not_valid"));
     }
 
     public void update(Group group){
@@ -52,10 +52,12 @@ public class GroupsService implements IGroupsService{
             if(Objects.nonNull(groupsRepository.getById(group.getId())))
                 groupsRepository.delete(group);
             else
-                System.out.println(properties.getString("dont_exist") + properties.getString("cannot_delete"));
+                System.out.println(properties.getString("groupsService.dont_exist")
+                        + properties.getString("groupsService.cannot_delete"));
         }
         else
-            System.out.println(properties.getString("dont_exist") + properties.getString("cannot_delete"));
+            System.out.println(properties.getString("groupsService.dont_exist")
+                    + properties.getString("groupsService.cannot_delete"));
     }
 
     public List<Student> findAllStudentsInGroup(int id){

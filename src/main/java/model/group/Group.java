@@ -16,7 +16,7 @@ public class Group {
     private String[] responsibleForGroup;
     private String contactInformation;
 
-    private final ResourceBundle properties = ResourceBundle.getBundle("properties.model.group.group", Locale.getDefault());
+    private final ResourceBundle properties = ResourceBundle.getBundle("properties.valuesForProg", Locale.getDefault());
 
     public Group setId(int id) {
         this.id = id;
@@ -25,15 +25,15 @@ public class Group {
 
     public Group setGroupName(String groupName) throws IllegalArgumentException{
         if(groupName != null) {
-            if(groupName.toUpperCase().matches(properties.getString("name_regex"))) {
+            if(groupName.toUpperCase().matches(properties.getString("group.name_regex"))) {
                 this.groupName = GroupNames.valueOf(groupName.toUpperCase());
                 return this;
             }
 
-            throw new IllegalArgumentException(properties.getString("incorrect_name"));
+            throw new IllegalArgumentException(properties.getString("group.incorrect_name"));
         }
 
-        throw new IllegalArgumentException(properties.getString("null_name"));
+        throw new IllegalArgumentException(properties.getString("group.null_name"));
     }
 
     public Group setGroupName(GroupNames groupName) throws IllegalArgumentException{
@@ -42,7 +42,7 @@ public class Group {
             return this;
         }
 
-        throw new IllegalArgumentException(properties.getString("null_name"));
+        throw new IllegalArgumentException(properties.getString("group.null_name"));
     }
 
     public Group setLanguage(String language) throws IllegalArgumentException{
@@ -51,7 +51,7 @@ public class Group {
                 return this;
         }
 
-        throw new IllegalArgumentException(properties.getString("null_language"));
+        throw new IllegalArgumentException(properties.getString("group.null_language"));
     }
 
     public Group setLanguage(Locale language) throws IllegalArgumentException{
@@ -60,12 +60,12 @@ public class Group {
             return this;
         }
 
-        throw new IllegalArgumentException(properties.getString("null_language"));
+        throw new IllegalArgumentException(properties.getString("group.null_language"));
     }
 
     public Group isOnlineAccessible(String isOnlineAccessible) throws IllegalArgumentException{
         if(isOnlineAccessible != null) {
-            if(isOnlineAccessible.toLowerCase().matches(properties.getString("onlineAccess_regex"))) {
+            if(isOnlineAccessible.toLowerCase().matches(properties.getString("group.onlineAccess_regex"))) {
                 if (isOnlineAccessible.toLowerCase().contentEquals("true")) {
                     this.isOnlineAccessible = true;
                 } else {
@@ -74,10 +74,10 @@ public class Group {
                 return this;
             }
 
-            throw new IllegalArgumentException(properties.getString("incorrect_onlineAccess"));
+            throw new IllegalArgumentException(properties.getString("group.incorrect_onlineAccess"));
         }
 
-        throw new IllegalArgumentException(properties.getString("null_onlineAccess"));
+        throw new IllegalArgumentException(properties.getString("group.null_onlineAccess"));
     }
 
     public Group isOnlineAccessible(boolean isOnlineAccessible){
@@ -92,16 +92,16 @@ public class Group {
 
     public Group setResponsibleForGroup(String responsibleForGroup) throws IllegalArgumentException{
         if(responsibleForGroup != null) {
-            if(responsibleForGroup.matches(properties.getString("responsible_regex"))) {
+            if(responsibleForGroup.matches(properties.getString("group.responsible_regex"))) {
                 String[] array = new SeparatedValuesParser(" ").parseLineToArray(responsibleForGroup);
                 this.responsibleForGroup = Arrays.copyOf(array, array.length);
                 return this;
             }
 
-            throw new IllegalArgumentException(properties.getString("incorrect_responsible"));
+            throw new IllegalArgumentException(properties.getString("group.incorrect_responsible"));
         }
 
-        throw new IllegalArgumentException(properties.getString("null_responsible"));
+        throw new IllegalArgumentException(properties.getString("group.null_responsible"));
     }
 
     public Group setResponsibleForGroup(String[] responsibleForGroup) throws IllegalArgumentException{
@@ -110,7 +110,7 @@ public class Group {
             return this;
         }
 
-        throw new IllegalArgumentException(properties.getString("null_responsible"));
+        throw new IllegalArgumentException(properties.getString("group.null_responsible"));
     }
 
     public Group setContactInformation(String contactInformation) throws IllegalArgumentException{
@@ -119,7 +119,7 @@ public class Group {
             return this;
         }
 
-        throw new IllegalArgumentException(properties.getString("null_contactInf"));
+        throw new IllegalArgumentException(properties.getString("group.null_contactInf"));
     }
 
     public int getId() {

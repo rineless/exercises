@@ -14,7 +14,7 @@ public interface ILineParser {
     String[] parseLineToArray(String line);
     String parseArrayToLine(String[] array);
 
-    ResourceBundle properties = ResourceBundle.getBundle("properties.util.parser.iLineParser.iLineParser"
+    ResourceBundle properties = ResourceBundle.getBundle("properties.valuesForProg"
             , Locale.getDefault());
 
 
@@ -33,11 +33,11 @@ public interface ILineParser {
                     throw new IllegalArgumentException(ex.getMessage());
                 }
             else {
-                throw new IllegalArgumentException(properties.getString("cannot_line_into_student")
-                        + properties.getString("inappropriate_data"));
+                throw new IllegalArgumentException(properties.getString("iLineParser.cannot_line_into_student")
+                        + properties.getString("iLineParser.inappropriate_data"));
             }
         } else
-            throw new IllegalArgumentException(properties.getString("null_student"));
+            throw new IllegalArgumentException(properties.getString("iLineParser.null_student"));
 
     }
 
@@ -50,11 +50,11 @@ public interface ILineParser {
                         .setMaxAttendeesPresent(Integer.parseInt(dataForGroup[4])).setResponsibleForGroup(dataForGroup[5])
                         .setContactInformation(dataForGroup[6]);
             else {
-                throw new IllegalArgumentException(properties.getString("cannot_line_into_group")
-                        + properties.getString("inappropriate_data"));
+                throw new IllegalArgumentException(properties.getString("iLineParser.cannot_line_into_group")
+                        + properties.getString("iLineParser.inappropriate_data"));
             }
         }
-        throw new IllegalArgumentException(properties.getString("null_group"));
+        throw new IllegalArgumentException(properties.getString("iLineParser.null_group"));
     }
 
     default String parseStudentToLine(Student student){

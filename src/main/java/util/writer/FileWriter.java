@@ -10,7 +10,7 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class FileWriter {
-    private final ResourceBundle properties = ResourceBundle.getBundle("properties.util.writer.fileWriter.fileWriter");
+    private final ResourceBundle properties = ResourceBundle.getBundle("properties.valuesForProg");
 
     public boolean appendLine(String line, Path path) {
         try {
@@ -23,7 +23,7 @@ public class FileWriter {
             }
             return false;
         } catch (IOException e) {
-            System.out.println(properties.getString("file_not_found") + e.getMessage());
+            System.out.println(properties.getString("fileWriter.ile_not_found") + e.getMessage());
             return false;
         }
     }
@@ -40,7 +40,7 @@ public class FileWriter {
             }
             return false;
         } catch (IOException exception) {
-            System.out.println(properties.getString("path_not_found"));
+            System.out.println(properties.getString("fileWriter.path_not_found"));
             return false;
         }
     }
@@ -58,10 +58,10 @@ public class FileWriter {
             }
             return false;
         } catch (IOException e) {
-            System.out.println(properties.getString("file_not_found"));
+            System.out.println(properties.getString("fileWriter.file_not_found"));
             return false;
         } catch (IndexOutOfBoundsException e) {
-            System.out.println(properties.getString("line_number_incorrect"));
+            System.out.println(properties.getString("fileWriter.line_number_incorrect"));
             return false;
         }
     }

@@ -21,7 +21,7 @@ public class StudentsService implements IStudentsService{
     private final IStudentsRepository studentsRepository;
     private final IGroupsRepository groupsRepository;
 
-    private final ResourceBundle properties = ResourceBundle.getBundle("properties.service.studentsService.studentsService"
+    private final ResourceBundle properties = ResourceBundle.getBundle("properties.valuesForProg"
             , Locale.getDefault());
 
     public StudentsService(){
@@ -53,11 +53,11 @@ public class StudentsService implements IStudentsService{
                     if (group.isOnlineAccessible())
                         studentsRepository.add(student);
                     else
-                        System.out.println(group.getId() + " " + properties.getString("not_online_accessible")
-                                + properties.getString("adding_interrupted"));
+                        System.out.println(group.getId() + " " + properties.getString("studentsService.not_online_accessible")
+                                + properties.getString("studentsService.adding_interrupted"));
                 } else
-                    System.out.println(student.getGroupId() + " " + properties.getString("group_not_exist")
-                            + properties.getString("adding_interrupted"));
+                    System.out.println(student.getGroupId() + " " + properties.getString("studentsService.group_not_exist")
+                            + properties.getString("studentsService.adding_interrupted"));
             }
         }
     }
@@ -85,11 +85,11 @@ public class StudentsService implements IStudentsService{
                     if (group.isOnlineAccessible())
                         studentsRepository.update(student);
                     else
-                        System.out.println(group.getId() + " " + properties.getString("not_online_accessible")
-                                + properties.getString("updating_interrupted"));
+                        System.out.println(group.getId() + " " + properties.getString("studentsService.not_online_accessible")
+                                + properties.getString("studentsService.updating_interrupted"));
                 } else
-                    System.out.println(student.getGroupId() + " " + properties.getString("group_not_exist")
-                            + properties.getString("updating_interrupted"));
+                    System.out.println(student.getGroupId() + " " + properties.getString("studentsService.group_not_exist")
+                            + properties.getString("studentsService.updating_interrupted"));
             }
         }
     }
@@ -104,13 +104,14 @@ public class StudentsService implements IStudentsService{
             if (numberOfStudentsInGroup < group.getMaxAttendeesPresent())
                 return true;
             else {
-                System.out.println(group.getId() + " " + properties.getString("group_is_full")
-                        + properties.getString("cannot_added"));
+                System.out.println(group.getId() + " " + properties.getString("studentsService.group_is_full")
+                        + properties.getString("studentsService.cannot_added"));
                 return false;
             }
 
         } else {
-            System.out.println(properties.getString("not_existing_group") + properties.getString("cannot_added"));
+            System.out.println(properties.getString("studentsService.not_existing_group")
+                    + properties.getString("studentsService.cannot_added"));
             return false;
         }
     }
@@ -120,10 +121,12 @@ public class StudentsService implements IStudentsService{
             if(studentExists(student.getId()))
                 studentsRepository.delete(student);
             else
-                System.out.println(properties.getString("not_exist") + properties.getString("cannot_delete"));
+                System.out.println(properties.getString("studentsService.not_exist")
+                        + properties.getString("studentsService.cannot_delete"));
         }
         else
-            System.out.println(properties.getString("not_exist") + properties.getString("cannot_delete"));
+            System.out.println(properties.getString("studentsService.not_exist")
+                    + properties.getString("studentsService.cannot_delete"));
     }
 
     public boolean studentExists(int id){

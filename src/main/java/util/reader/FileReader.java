@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class FileReader extends Reader {
-    private final ResourceBundle properties = ResourceBundle.getBundle("properties.util.reader.fileReader.fileReader");
+    private final ResourceBundle properties = ResourceBundle.getBundle("properties.valuesForProg");
 
     public List<String> receiveLinesAsList(Path path) {
         try {
@@ -16,21 +16,22 @@ public class FileReader extends Reader {
                         && Files.isReadable(path))
                     return Files.lines(path).collect(Collectors.toList());
                 else {
-                    throw new IllegalArgumentException(properties.getString("not_found_readable"));
+                    throw new IllegalArgumentException(properties.getString("fileReader.not_found_readable"));
                 }
             }
             return new ArrayList<>();
         } catch (IOException | IllegalArgumentException exp) {
             if(exp instanceof IllegalArgumentException)
                 System.out.println(exp.getMessage());
-            System.out.println(properties.getString("path_incorrect") + properties.getString("create_empty"));
+            System.out.println(properties.getString("fileReader.path_incorrect")
+                    + properties.getString("fileReader.create_empty"));
             return new ArrayList<>();
         }
     }
 
     public List<String> receiveLinesAsList(String path) {
         if (Objects.nonNull(path)){
-            System.out.println(properties.getString("null_path") + properties.getString("create_empty"));
+            System.out.println(properties.getString("fileReader.null_path") + properties.getString("fileReader.create_empty"));
             return new ArrayList<>();
         }
 
