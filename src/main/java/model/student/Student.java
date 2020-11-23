@@ -52,7 +52,7 @@ public class Student {
             throw new IllegalArgumentException(properties.getString("student.null_gender"));
 
         if(gender.toUpperCase().matches(properties.getString("student.gender_regex"))) {
-            List<String>  genders = Stream.of(properties.getString("student.gender_regex").split("\\|")).collect(Collectors.toList());
+            List<String>  genders = Stream.of("MALE|FEMALE".split("\\|")).collect(Collectors.toList());
             if(genders.indexOf(gender) == 0)
                 this.gender = Gender.valueOf("MALE");
             else
@@ -75,7 +75,7 @@ public class Student {
         if(birthDate == null)
             throw new IllegalArgumentException(properties.getString("student.null_birthDate"));
 
-        if(birthDate.matches(properties.getString("student.birthDate_regex"))) {
+        if(birthDate.matches("[0-9]+\\\\.[0-9]+\\\\.[0-9]+")) {
             String[] date = birthDate.split("\\.");
             this.birthDate = LocalDate.of(Integer.parseInt(date[2]), Integer.parseInt(date[1])
                     , Integer.parseInt(date[0]));
@@ -114,7 +114,7 @@ public class Student {
         if(typeOfContract == null)
             throw new IllegalArgumentException(properties.getString("student.null_typeOfContract"));
 
-        if(typeOfContract.toUpperCase().matches(properties.getString("student.typeOfContract_regex")))
+        if(typeOfContract.toUpperCase().matches("STIPEND|PAYABLE"))
             this.typeOfContract = TypeOfContract.valueOf(typeOfContract.toUpperCase());
         else
             throw new IllegalArgumentException(properties.getString("student.incorrect_typeOfContract"));
@@ -138,7 +138,7 @@ public class Student {
         if(typeOfStudying == null)
             throw new IllegalArgumentException(properties.getString("student.null_typeOfStudying"));
 
-        if(typeOfStudying.toUpperCase().matches(properties.getString("student.typeOfStudying_regex")))
+        if(typeOfStudying.toUpperCase().matches("ONLINE|PRESENT"))
             this.typeOfStudying = TypeOfStudying.valueOf(typeOfStudying.toUpperCase());
         else
             throw new IllegalArgumentException(properties.getString("student.incorrect_typeOfStudying"));

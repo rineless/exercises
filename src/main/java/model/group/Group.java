@@ -25,7 +25,7 @@ public class Group {
 
     public Group setGroupName(String groupName) throws IllegalArgumentException{
         if(groupName != null) {
-            if(groupName.toUpperCase().matches(properties.getString("group.name_regex"))) {
+            if(groupName.toUpperCase().matches("DS|ALG|ANL")) {
                 this.groupName = GroupNames.valueOf(groupName.toUpperCase());
                 return this;
             }
@@ -65,7 +65,7 @@ public class Group {
 
     public Group isOnlineAccessible(String isOnlineAccessible) throws IllegalArgumentException{
         if(isOnlineAccessible != null) {
-            if(isOnlineAccessible.toLowerCase().matches(properties.getString("group.onlineAccess_regex"))) {
+            if(isOnlineAccessible.toLowerCase().matches("true|false")) {
                 if (isOnlineAccessible.toLowerCase().contentEquals("true")) {
                     this.isOnlineAccessible = true;
                 } else {
@@ -92,7 +92,7 @@ public class Group {
 
     public Group setResponsibleForGroup(String responsibleForGroup) throws IllegalArgumentException{
         if(responsibleForGroup != null) {
-            if(responsibleForGroup.matches(properties.getString("group.responsible_regex"))) {
+            if(responsibleForGroup.matches("(.+ .+)")) {
                 String[] array = new SeparatedValuesParser(" ").parseLineToArray(responsibleForGroup);
                 this.responsibleForGroup = Arrays.copyOf(array, array.length);
                 return this;
