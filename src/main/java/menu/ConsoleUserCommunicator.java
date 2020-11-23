@@ -206,7 +206,8 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
                 if(!surname.isEmpty()){
 
                     student.setSurname(surname);
-                    String gender = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.gender") + "(" + progValues.getString("gender_regex") + "): "
+                    String gender = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.gender") + "("
+                                    + progValues.getString("consoleUserCommunicator.gender_regex") + "): "
                             , progValues.getString("consoleUserCommunicator.gender_regex"));
 
                     if(!gender.isEmpty()){
@@ -331,21 +332,28 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
 
                         onlineAccess = progValues.getString("consoleUserCommunicator.online_access_regex").startsWith(onlineAccess) ? "true" : "false";
                         group.isOnlineAccessible(onlineAccess);
-                        System.out.println(progValues.getString("consoleUserCommunicator.responsible_for_group"));
-                        String respName = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.resp_name")
-                                , progValues.getString("consoleUserCommunicator.resp_name_regex"));
-                        String respSurname = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.resp_surname")
-                                , progValues.getString("consoleUserCommunicator.resp_surname_regex"));
+                        String maxAttendeesPresent = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.max_attendees")
+                                , progValues.getString("consoleUserCommunicator.max_attendees_regex"));
 
-                        if (!respName.isEmpty() & !respSurname.isEmpty()) {
+                        if(!maxAttendeesPresent.isEmpty()) {
 
-                            group.setResponsibleForGroup(new String[]{respName, respSurname});
-                            String contactInf = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.contact_information") + ": "
-                                    , progValues.getString("consoleUserCommunicator.contact_information_regex"));
+                            group.setMaxAttendeesPresent(Integer.parseInt(maxAttendeesPresent));
+                            System.out.println(progValues.getString("consoleUserCommunicator.responsible_for_group"));
+                            String respName = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.resp_name")
+                                    , progValues.getString("consoleUserCommunicator.resp_name_regex"));
+                            String respSurname = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.resp_surname")
+                                    , progValues.getString("consoleUserCommunicator.resp_surname_regex"));
 
-                            if (!contactInf.isEmpty()) {
-                                group.setContactInformation(contactInf);
-                                return group;
+                            if (!respName.isEmpty() & !respSurname.isEmpty()) {
+
+                                group.setResponsibleForGroup(new String[]{respName, respSurname});
+                                String contactInf = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.contact_information") + ": "
+                                        , progValues.getString("consoleUserCommunicator.contact_information_regex"));
+
+                                if (!contactInf.isEmpty()) {
+                                    group.setContactInformation(contactInf);
+                                    return group;
+                                }
                             }
                         }
                     }
