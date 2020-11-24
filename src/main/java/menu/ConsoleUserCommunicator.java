@@ -35,7 +35,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
 
     @Override
     public void applyUserCommunicationLogic() {
-        String language = receiveCheckedInputForRequest("Choose language: (en|de) : ", "en|de");
+        String language = receiveCheckedInputForRequest("Choose language: (en|de|ru) : ", "en|de|ru");
         if(!language.isEmpty()){
                 progValues = ResourceBundle.getBundle("properties.valuesForProg", new Locale(language));
         }
