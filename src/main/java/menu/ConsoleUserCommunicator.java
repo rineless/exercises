@@ -551,24 +551,69 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
     }
 
     private void printStudent(String message, Student student){
-        writer.printLineWithHeaderAndSeparation(message, parser.parseStudentToLine(student));
+        writer.printLineWithHeaderAndSeparation(message, translateStudent(student));
+    }
+
+    private String translateStudent(Student student){
+        String[] translatedStudent = parser.parseLineToArray(parser.parseStudentToLine(student));
+
+        List<String> defaultGenders = Stream.of(progValues.getString("consoleUserCommunicator.gender0").split("\\|"))
+                .collect(Collectors.toList());
+        List<String> genders = Stream.of(progValues.getString("consoleUserCommunicator.gender_regex").split("\\|"))
+                .collect(Collectors.toList());
+        int index = defaultGenders.indexOf(student.getGender().toString());
+        translatedStudent[3] = genders.get(index);
+
+        List<String> defaultContracts = Stream.of(progValues.getString("consoleUserCommunicator.type_of_contract0").split("\\|"))
+                .collect(Collectors.toList());
+        List<String> contracts = Stream.of(progValues.getString("consoleUserCommunicator.type_of_contract_regex").split("\\|"))
+                .collect(Collectors.toList());
+        index = defaultContracts.indexOf(student.getTypeOfContract().toString());
+        translatedStudent[7] = contracts.get(index);
+
+        List<String> defaultStudyings = Stream.of(progValues.getString("consoleUserCommunicator.type_of_studying0").split("\\|"))
+                .collect(Collectors.toList());
+        List<String> studyings = Stream.of(progValues.getString("consoleUserCommunicator.type_of_studying_regex").split("\\|"))
+                .collect(Collectors.toList());
+        index = defaultStudyings.indexOf(student.getTypeOfStudying().toString());
+        translatedStudent[9] = studyings.get(index);
+
+        return parser.parseArrayToLine(translatedStudent);
     }
 
     private void printGroup(String message, Group group){
-        writer.printLineWithHeaderAndSeparation(message, parser.parseGroupToLine(group));
+        writer.printLineWithHeaderAndSeparation(message, translateGroup(group));
+    }
+
+    private String translateGroup(Group group){
+        String[] translatedGroup = parser.parseLineToArray(parser.parseGroupToLine(group));
+
+        List<String> defaultNames = Stream.of(progValues.getString("consoleUserCommunicator.group_name0").split("\\|"))
+                .collect(Collectors.toList());
+        List<String> names = Stream.of(progValues.getString("consoleUserCommunicator.group_name_regex").split("\\|"))
+                .collect(Collectors.toList());
+        int index = defaultNames.indexOf(group.getGroupName().toString());
+        translatedGroup[1] = names.get(index);
+
+        List<String> accesses = Stream.of(progValues.getString("consoleUserCommunicator.online_access_regex").split("\\|"))
+                .collect(Collectors.toList());
+        index = group.isOnlineAccessible() ? 0 : 1;
+        translatedGroup[3] = accesses.get(index);
+
+        return parser.parseArrayToLine(translatedGroup);
     }
 
     private void printStudentList(String message, List<Student> students){
         if(Objects.nonNull(students))
             writer.printListOfLinesWithMessageAndSeparation(message
-                , students.stream().map(parser::parseStudentToLine)
+                , students.stream().map(this::translateStudent)
                         .collect(Collectors.toList()));
     }
 
     private void printGroupList(String message, List<Group> groups){
         if(Objects.nonNull(groups))
             writer.printListOfLinesWithMessageAndSeparation(message
-                , groups.stream().map(parser::parseGroupToLine)
+                , groups.stream().map(this::translateGroup)
                         .collect(Collectors.toList()));
     }
 
