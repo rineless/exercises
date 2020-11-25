@@ -9,7 +9,9 @@ import repository.CSVGroupsRepository;
 import repository.CSVStudentsRepository;
 import repository.IGroupsRepository;
 import repository.IStudentsRepository;
+import util.reader.FileReader;
 import util.validation.StudentValidation;
+import util.writer.FileWriter;
 
 import java.util.List;
 import java.util.Locale;
@@ -25,7 +27,7 @@ public class StudentsService implements IStudentsService{
             , Locale.getDefault());
 
     public StudentsService(){
-        studentsRepository = new CSVStudentsRepository();
+        studentsRepository = new CSVStudentsRepository(new FileReader(), new FileWriter());
         groupsRepository = new CSVGroupsRepository();
     }
 

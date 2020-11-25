@@ -20,9 +20,9 @@ public class CSVStudentsRepository implements IStudentsRepository {
     private final ILineParser parser;
     private final String studentDataPath = "data/StudentData.csv";
 
-    public CSVStudentsRepository() {
-        reader = new FileReader();
-        writer = new FileWriter();
+    public CSVStudentsRepository(FileReader reader, FileWriter writer) {
+        this.reader = reader;
+        this.writer = writer;
         parser = new CSVParser();
 
     }

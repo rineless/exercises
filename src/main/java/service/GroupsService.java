@@ -7,7 +7,9 @@ import repository.CSVGroupsRepository;
 import repository.CSVStudentsRepository;
 import repository.IGroupsRepository;
 import repository.IStudentsRepository;
+import util.reader.FileReader;
 import util.validation.GroupValidation;
+import util.writer.FileWriter;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,7 +22,7 @@ public class GroupsService implements IGroupsService{
             , Locale.getDefault());
 
     public GroupsService() {
-        studentsRepository = new CSVStudentsRepository();
+        studentsRepository = new CSVStudentsRepository(new FileReader(), new FileWriter());
         groupsRepository = new CSVGroupsRepository();
     }
 
