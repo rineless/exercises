@@ -5,34 +5,54 @@ import model.student.Student;
 import model.student.TypeOfContract;
 import model.student.TypeOfStudying;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import util.finder.PathFinder;
+import util.reader.FileReader;
+import util.writer.FileWriter;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.validateMockitoUsage;
+
+@ExtendWith(MockitoExtension.class)
 public class CSVStudentsRepositoryTest {
     static Path repository = PathFinder.findFromResources("data/StudentData.csv");
+    List<String> lines;
+
+    @Mock
+    FileReader mockReader;
+
+    @Mock
+    FileWriter mockWriter;
+
 
     @BeforeEach
-    public void fillTestRepository() throws IOException {
-        List<String> lines = new LinkedList<>();
+    public void prepareMock() {
+        lines = new LinkedList<>();
         lines.add("ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information");
         lines.add("1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com");
         lines.add("2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com");
         lines.add("3,Alice,Cook,FEMALE,14.4.1999,Ungarn,Paks,PAYABLE,1,ONLINE,alicook@gmail.com");
-        String students = lines.stream().map(line -> line + "\n").collect(Collectors.joining());
-        students = students.substring(0, students.length()-1);
-        Files.write(repository, students.getBytes());
+        Mockito.when(mockReader.receiveLinesAsList(repository)).thenReturn(lines);
+
+        //Mockito.when(mockWriter.appendLine(Mockito.any(), Mockito.eq(repository))).thenReturn(true);
+      //  Mockito.when(mockWriter.deleteLine(Mockito.any(), Mockito.eq(repository))).thenReturn(true);
+      //  Mockito.when(mockWriter.rewriteLine(Mockito.any(), Mockito.any(), Mockito.eq(repository))).thenReturn(true);
+
     }
 
     @AfterEach
-    public void clearTestRepository() throws IOException {
-        Files.write(repository, "".getBytes());
+    public void validate() {
+        validateMockitoUsage();
     }
 
     @Test
@@ -52,7 +72,7 @@ public class CSVStudentsRepositoryTest {
                 .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(1).setTypeOfStudying(TypeOfStudying.ONLINE)
                 .setContactInformation("alicook@gmail.com"));
 
-        List<Student> actual = new CSVStudentsRepository().getAll();
+        List<Student> actual = new CSVStudentsRepository(mockReader, mockWriter).getAll();
 
         Assertions.assertIterableEquals(expected, actual, "Expected returned list of all students");
     }
@@ -60,12 +80,13 @@ public class CSVStudentsRepositoryTest {
     @Test
     @DisplayName("Student with inputted id should be returned")
     public void getById_ShouldReturnStudent() {
+
         Student expected = new Student().setId(2).setName("Peter").setSurname("Tailor").setGender(Gender.MALE)
                 .setBirthDate(LocalDate.of(1999, 6, 25)).setCitizenship("German").setPlaceOfBirth("Bremen")
                 .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(2).setTypeOfStudying(TypeOfStudying.PRESENT)
                 .setContactInformation("petter99tailor@gmail.com");
 
-        Student actual = new CSVStudentsRepository().getById(2);
+        Student actual = new CSVStudentsRepository(mockReader, mockWriter).getById(2);
 
         Assertions.assertEquals(expected, actual, "Expected returned student with inputted id");
     }
@@ -73,17 +94,19 @@ public class CSVStudentsRepositoryTest {
     @Test
     @DisplayName("Empty student should be returned if student not found")
     public void getById_WithNotExistingStudentId_ShouldReturnNull(){
-        CSVStudentsRepository studentsRepository = new CSVStudentsRepository();
+        CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter);
 
         Student actual = studentsRepository.getById(5);
 
         Assertions.assertNull(actual, "Expected null by not existing student id input");
     }
 
-    @Test
+   @Test
     @DisplayName("Student should be added to repository")
-    public void addStudent_ShouldAddStudentToRepository() throws IOException {
-        CSVStudentsRepository studentsRepository = new CSVStudentsRepository();
+    public void addStudent_ShouldAddStudentToRepository() {
+        Mockito.when(mockWriter.appendLine(Mockito.anyString(), Mockito.eq(repository))).thenReturn(true);
+
+        CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter);
         String expected = "ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information\n" +
                 "1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com\n" +
                 "2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com\n" +
@@ -94,7 +117,13 @@ public class CSVStudentsRepositoryTest {
                 .setBirthDate(LocalDate.of(1998, 6, 13)).setCitizenship("German").setPlaceOfBirth("Dresden")
                 .setTypeOfContract(TypeOfContract.STIPEND).setGroupId(3).setTypeOfStudying(TypeOfStudying.ONLINE)
                 .setContactInformation("gerald.anond@gmail.com"));
-        String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+
+        Mockito.verify(mockWriter, Mockito.times(1)).appendLine("\n4,Gerald,Anond,MALE,13.6.1998,German,Dresden,STIPEND,3,ONLINE" +
+                ",gerald.anond@gmail.com", repository);
+        lines.add("4,Gerald,Anond,MALE,13.6.1998,German,Dresden,STIPEND,3,ONLINE,gerald.anond@gmail.com");
+
+       String actual = mockReader.receiveLinesAsList(repository).stream().map(line -> line + "\n")
+               .collect(Collectors.joining());
         actual = actual.substring(0, actual.length()-1);
 
         Assertions.assertEquals(expected, actual, "Expected adding student to repository");
@@ -102,23 +131,26 @@ public class CSVStudentsRepositoryTest {
 
     @Test
     @DisplayName("Null should not be added to repository")
-    public void addStudent_WithNullInput_ShouldChangeNothingInRepository() throws IOException {
-        CSVStudentsRepository studentsRepository = new CSVStudentsRepository();
+    public void addStudent_WithNullInput_ShouldChangeNothingInRepository() {
+        CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter);
         String expected = "ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information\n" +
                 "1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com\n" +
                 "2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com\n" +
                 "3,Alice,Cook,FEMALE,14.4.1999,Ungarn,Paks,PAYABLE,1,ONLINE,alicook@gmail.com\n";
 
         studentsRepository.add(null);
-        String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+        Mockito.verify(mockWriter, Mockito.never()).appendLine(Mockito.any(), Mockito.eq(repository));
+
+        String actual = mockReader.receiveLinesAsList(repository).stream()
+                .map(line -> line + "\n").collect(Collectors.joining());
 
         Assertions.assertEquals(expected, actual, "Expected by null input unchanged repository");
     }
 
     @Test
     @DisplayName("NonValid student should not be added to repository")
-    public void addStudent_WithNotValidStudentInput_ShouldChangeNothingInRepository() throws IOException {
-        CSVStudentsRepository studentsRepository = new CSVStudentsRepository();
+    public void addStudent_WithNotValidStudentInput_ShouldChangeNothingInRepository() {
+        CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter);
         String expected = "ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information\n" +
                 "1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com\n" +
                 "2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com\n" +
@@ -128,15 +160,21 @@ public class CSVStudentsRepositoryTest {
                 .setBirthDate(LocalDate.of(1998, 6, 13)).setCitizenship("German").setPlaceOfBirth("Dresden")
                 .setTypeOfContract(TypeOfContract.STIPEND).setGroupId(3).setTypeOfStudying(TypeOfStudying.ONLINE)
                 .setContactInformation("gerald.anond@gmail.com"));
-        String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+
+        Mockito.verify(mockWriter, Mockito.never()).appendLine(Mockito.anyString(), Mockito.eq(repository));
+
+        String actual = mockReader.receiveLinesAsList(repository).stream().map(line -> line + "\n")
+                .collect(Collectors.joining());
 
         Assertions.assertEquals(expected, actual, "Expected by not valid student unchanged repository");
     }
 
     @Test
     @DisplayName("Student information should be updated")
-    public void updateStudent_ShouldUpdateStudentInformation() throws IOException {
-        CSVStudentsRepository studentsRepository = new CSVStudentsRepository();
+    public void updateStudent_ShouldUpdateStudentInformation() {
+        lenient().when(mockWriter.appendLine(Mockito.anyString(), Mockito.eq(repository))).thenReturn(true);
+
+        CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter);
         String expected = "ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information\n" +
                 "1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com\n" +
                 "2,Pettery,Trailor,MALE,25.6.1999,German,Bremen,PAYABLE,1,PRESENT,pettery99trailor@gmail.com\n" +
@@ -146,15 +184,24 @@ public class CSVStudentsRepositoryTest {
                 .setBirthDate(LocalDate.of(1999, 6, 25)).setCitizenship("German").setPlaceOfBirth("Bremen")
                 .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(1).setTypeOfStudying(TypeOfStudying.PRESENT)
                 .setContactInformation("pettery99trailor@gmail.com"));
-        String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+
+        Mockito.verify(mockWriter, Mockito.times(1))
+                .rewriteLine("2,Pettery,Trailor,MALE,25.6.1999,German,Bremen,PAYABLE,1" +
+                        ",PRESENT,pettery99trailor@gmail.com",2,repository);
+        lines.remove(2);
+        lines.add(2,"2,Pettery,Trailor,MALE,25.6.1999,German,Bremen,PAYABLE,1" +
+                ",PRESENT,pettery99trailor@gmail.com");
+
+        String actual = mockReader.receiveLinesAsList(repository).stream()
+                .map(line -> line + "\n").collect(Collectors.joining());
 
         Assertions.assertEquals(expected, actual, "Expected updating existing student in repository");
     }
 
     @Test
     @DisplayName("Not existing student cannot be updated")
-    public void updateStudent_WithNotExistingStudentInput_ShouldChangeNothingInRepository() throws IOException {
-        CSVStudentsRepository studentsRepository = new CSVStudentsRepository();
+    public void updateStudent_WithNotExistingStudentInput_ShouldChangeNothingInRepository() {
+        CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter);
         String expected = "ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information\n" +
                 "1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com\n" +
                 "2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com\n" +
@@ -164,30 +211,38 @@ public class CSVStudentsRepositoryTest {
                 .setBirthDate(LocalDate.of(1998, 6, 13)).setCitizenship("German").setPlaceOfBirth("Dresden")
                 .setTypeOfContract(TypeOfContract.STIPEND).setGroupId(3).setTypeOfStudying(TypeOfStudying.ONLINE)
                 .setContactInformation("gerald.anond@gmail.com"));
-        String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+
+        Mockito.verify(mockWriter, Mockito.never()).rewriteLine(Mockito.anyString(), Mockito.anyInt(), Mockito.eq(repository));
+
+        String actual = mockReader.receiveLinesAsList(repository).stream()
+                .map(line -> line + "\n").collect(Collectors.joining());
 
         Assertions.assertEquals(expected, actual, "Expected by not existing student input unchanged repository");
     }
 
     @Test
     @DisplayName("Null cannot be updated")
-    public void updateStudent_WithNullInput_ShouldChangeNothingInRepository() throws IOException {
-        CSVStudentsRepository studentsRepository = new CSVStudentsRepository();
+    public void updateStudent_WithNullInput_ShouldChangeNothingInRepository() {
+        CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter);
         String expected = "ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information\n" +
                 "1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com\n" +
                 "2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com\n" +
                 "3,Alice,Cook,FEMALE,14.4.1999,Ungarn,Paks,PAYABLE,1,ONLINE,alicook@gmail.com\n";
 
         studentsRepository.update(null);
-        String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+
+        Mockito.verify(mockWriter, Mockito.never()).rewriteLine(Mockito.anyString(), Mockito.anyInt(), Mockito.eq(repository));
+
+        String actual = mockReader.receiveLinesAsList(repository).stream()
+                .map(line -> line + "\n").collect(Collectors.joining());
 
         Assertions.assertEquals(expected, actual, "Expected by null input unchanged repository");
     }
 
     @Test
     @DisplayName(" By not valid student input, student cannot be updated")
-    public void updateStudent_WithNotValidStudent_ShouldChangeNothingInRepository() throws IOException {
-        CSVStudentsRepository studentsRepository = new CSVStudentsRepository();
+    public void updateStudent_WithNotValidStudent_ShouldChangeNothingInRepository(){
+        CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter);
         String expected = "ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information\n" +
                 "1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com\n" +
                 "2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com\n" +
@@ -197,15 +252,21 @@ public class CSVStudentsRepositoryTest {
                 .setBirthDate(LocalDate.of(1998, 6, 13)).setCitizenship("German").setPlaceOfBirth("Dresden")
                 .setGroupId(3).setTypeOfStudying(TypeOfStudying.ONLINE)
                 .setContactInformation("gerald.anond@gmail.com"));
-        String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+
+        Mockito.verify(mockWriter, Mockito.never()).rewriteLine(Mockito.anyString(), Mockito.anyInt(), Mockito.eq(repository));
+
+        String actual = mockReader.receiveLinesAsList(repository).stream()
+                .map(line -> line + "\n").collect(Collectors.joining());
 
         Assertions.assertEquals(expected, actual, "Expected by not valid student input unchanged repository");
     }
 
     @Test
     @DisplayName("Student should be deleted from repository")
-    public void deleteStudent_ShouldDeleteStudentFromRepository() throws IOException {
-        CSVStudentsRepository studentsRepository = new CSVStudentsRepository();
+    public void deleteStudent_ShouldDeleteStudentFromRepository(){
+        lenient().when(mockWriter.deleteLine(Mockito.anyString(), Mockito.eq(repository))).thenReturn(true);
+
+        CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter);
         String expected = "ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information\n" +
                 "1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com\n" +
                 "3,Alice,Cook,FEMALE,14.4.1999,Ungarn,Paks,PAYABLE,1,ONLINE,alicook@gmail.com\n";
@@ -214,22 +275,32 @@ public class CSVStudentsRepositoryTest {
                 .setBirthDate(LocalDate.of(1999, 6, 25)).setCitizenship("German").setPlaceOfBirth("Bremen")
                 .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(2).setTypeOfStudying(TypeOfStudying.PRESENT)
                 .setContactInformation("petter99tailor@gmail.com"));
-        String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+
+        Mockito.verify(mockWriter, Mockito.times(1))
+                .deleteLine("2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com",repository);
+        lines.remove(2);
+
+        String actual = mockReader.receiveLinesAsList(repository).stream()
+        .map(line -> line + "\n").collect(Collectors.joining());
 
         Assertions.assertEquals(expected, actual, "Expected adding student to repository");
     }
 
     @Test
     @DisplayName("Null cannot be deleted from repository")
-    public void deleteStudent_WithNullInput_ShouldChangeNothingInRepository() throws IOException {
-        CSVStudentsRepository studentsRepository = new CSVStudentsRepository();
+    public void deleteStudent_WithNullInput_ShouldChangeNothingInRepository() {
+        CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter);
         String expected = "ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information\n" +
                 "1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com\n" +
                 "2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com\n" +
                 "3,Alice,Cook,FEMALE,14.4.1999,Ungarn,Paks,PAYABLE,1,ONLINE,alicook@gmail.com\n";
 
         studentsRepository.delete(null);
-        String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+
+        Mockito.verify(mockWriter, Mockito.never()).deleteLine(Mockito.anyString(), Mockito.eq(repository));
+
+        String actual = mockReader.receiveLinesAsList(repository).stream()
+        .map(line -> line + "\n").collect(Collectors.joining());
 
         Assertions.assertEquals(expected, actual, "Expected by null input unchanged repository");
     }
@@ -237,7 +308,7 @@ public class CSVStudentsRepositoryTest {
     @Test
     @DisplayName("By not valid student input nothing should be deleted from repository")
     public void deleteStudent_WithNotValidStudentInput_ShouldChangeNothingInRepository() throws IOException {
-        CSVStudentsRepository studentsRepository = new CSVStudentsRepository();
+        CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter);
         String expected = "ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information\n" +
                 "1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com\n" +
                 "2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com\n" +
@@ -247,7 +318,11 @@ public class CSVStudentsRepositoryTest {
                 .setBirthDate(LocalDate.of(1999, 6, 25)).setCitizenship("German").setPlaceOfBirth("Bremen")
                 .setTypeOfContract(TypeOfContract.PAYABLE).setTypeOfStudying(TypeOfStudying.PRESENT)
                 .setContactInformation("petter99tailor@gmail.com"));
-        String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+
+        Mockito.verify(mockWriter, Mockito.never()).deleteLine(Mockito.anyString(), Mockito.eq(repository));
+
+        String actual = mockReader.receiveLinesAsList(repository).stream()
+        .map(line -> line + "\n").collect(Collectors.joining());
 
         Assertions.assertEquals(expected, actual, "Expected by not valid student input unchanged repository");
     }
@@ -255,7 +330,7 @@ public class CSVStudentsRepositoryTest {
     @Test
     @DisplayName("By not existing student input nothing should be deleted from repository")
     public void deleteStudent_WithNotExistingStudentInput_ShouldChangeNothingInRepository() throws IOException {
-        CSVStudentsRepository studentsRepository = new CSVStudentsRepository();
+        CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter);
         String expected = "ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information\n" +
                 "1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com\n" +
                 "2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com\n" +
@@ -265,7 +340,11 @@ public class CSVStudentsRepositoryTest {
                 .setBirthDate(LocalDate.of(1999, 6, 25)).setCitizenship("German").setPlaceOfBirth("Bremen")
                 .setTypeOfContract(TypeOfContract.PAYABLE).setTypeOfStudying(TypeOfStudying.PRESENT)
                 .setContactInformation("petter99tailor@gmail.com"));
-        String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+
+        Mockito.verify(mockWriter, Mockito.never()).deleteLine(Mockito.anyString(), Mockito.eq(repository));
+
+        String actual = mockReader.receiveLinesAsList(repository).stream()
+        .map(line -> line + "\n").collect(Collectors.joining());
 
         Assertions.assertEquals(expected, actual, "Expected by not existing student input unchanged repository");
     }
@@ -273,7 +352,7 @@ public class CSVStudentsRepositoryTest {
     @Test
     @DisplayName("By student with some modified data input nothing should be deleted from repository")
     public void deleteStudent_WithStudentWithModifiedDataInput_ShouldChangeNothingInRepository() throws IOException {
-        CSVStudentsRepository studentsRepository = new CSVStudentsRepository();
+        CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter);
         String expected = "ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information\n" +
                 "1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com\n" +
                 "2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com\n" +
@@ -283,7 +362,13 @@ public class CSVStudentsRepositoryTest {
                 .setBirthDate(LocalDate.of(1999, 7, 25)).setCitizenship("German").setPlaceOfBirth("Bremen")
                 .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(2).setTypeOfStudying(TypeOfStudying.PRESENT)
                 .setContactInformation("petter99tailor@gmail.com"));
-        String actual = Files.lines(repository).map(line -> line + "\n").collect(Collectors.joining());
+
+        Mockito.verify(mockWriter, Mockito.times(1))
+                .deleteLine("2,Peterry,Tailorre,MALE,25.7.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com"
+                        , repository);
+
+        String actual = mockReader.receiveLinesAsList(repository).stream()
+        .map(line -> line + "\n").collect(Collectors.joining());
 
         Assertions.assertEquals(expected, actual, "Expected by student with some modified data input unchanged repository");
     }
