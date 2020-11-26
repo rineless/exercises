@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import util.finder.PathFinder;
+import util.parser.ILineParser;
 import util.reader.FileReader;
 import util.writer.FileWriter;
 
@@ -33,6 +34,9 @@ public class CSVStudentsRepositoryTest {
     @Mock
     FileWriter mockWriter;
 
+    @Mock
+    ILineParser mockParser;
+
 
     @BeforeEach
     public void prepareMock() {
@@ -43,6 +47,24 @@ public class CSVStudentsRepositoryTest {
         lines.add("3,Alice,Cook,FEMALE,14.4.1999,Ungarn,Paks,PAYABLE,1,ONLINE,alicook@gmail.com");
         lenient().when(mockReader.receiveLinesAsList(repository)).thenReturn(lines);
 
+        Mockito.when(mockParser
+                .parseLineToStudent("1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com"))
+                .thenReturn(new Student().setId(1).setName("Anna").setSurname("Allen").setGender(Gender.FEMALE)
+                        .setBirthDate(LocalDate.of(1998, 11, 7)).setCitizenship("German").setPlaceOfBirth("Hamburg")
+                        .setTypeOfContract(TypeOfContract.STIPEND).setGroupId(1).setTypeOfStudying(TypeOfStudying.PRESENT)
+                        .setContactInformation("anna.allen98@gmail.com"));
+        Mockito.when(mockParser
+                .parseLineToStudent("2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com"))
+                .thenReturn(new Student().setId(2).setName("Peter").setSurname("Tailor").setGender(Gender.MALE)
+                        .setBirthDate(LocalDate.of(1999, 6, 25)).setCitizenship("German").setPlaceOfBirth("Bremen")
+                        .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(2).setTypeOfStudying(TypeOfStudying.PRESENT)
+                        .setContactInformation("petter99tailor@gmail.com"));
+        Mockito.when(mockParser
+                .parseLineToStudent("3,Alice,Cook,FEMALE,14.4.1999,Ungarn,Paks,PAYABLE,1,ONLINE,alicook@gmail.com"))
+                .thenReturn(new Student().setId(3).setName("Alice").setSurname("Cook").setGender(Gender.FEMALE)
+                        .setBirthDate(LocalDate.of(1999, 4, 14)).setCitizenship("Ungarn").setPlaceOfBirth("Paks")
+                        .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(1).setTypeOfStudying(TypeOfStudying.ONLINE)
+                        .setContactInformation("alicook@gmail.com"));
 
 
     }
@@ -70,7 +92,7 @@ public class CSVStudentsRepositoryTest {
                 .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(1).setTypeOfStudying(TypeOfStudying.ONLINE)
                 .setContactInformation("alicook@gmail.com"));
 
-        List<Student> actual = new CSVStudentsRepository(mockReader, mockWriter).getAll();
+        List<Student> actual = new CSVStudentsRepository(mockReader, mockWriter, mockParser).getAll();
 
         Assertions.assertIterableEquals(expected, actual, "Expected returned list of all students");
     }
@@ -84,7 +106,7 @@ public class CSVStudentsRepositoryTest {
                 .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(2).setTypeOfStudying(TypeOfStudying.PRESENT)
                 .setContactInformation("petter99tailor@gmail.com");
 
-        Student actual = new CSVStudentsRepository(mockReader, mockWriter).getById(2);
+        Student actual = new CSVStudentsRepository(mockReader, mockWriter, mockParser).getById(2);
 
         Assertions.assertEquals(expected, actual, "Expected returned student with inputted id");
     }
@@ -92,7 +114,7 @@ public class CSVStudentsRepositoryTest {
     @Test
     @DisplayName("Empty student should be returned if student not found")
     public void getById_WithNotExistingStudentId_ShouldReturnNull(){
-        CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter);
+        CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter, mockParser);
 
         Student actual = studentsRepository.getById(5);
 
@@ -103,27 +125,17 @@ public class CSVStudentsRepositoryTest {
     @DisplayName("Student should be added to repository")
     public void addStudent_ShouldAddStudentToRepository() {
         Mockito.when(mockWriter.appendLine(Mockito.anyString(), Mockito.eq(repository))).thenReturn(true);
-
-        CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter);
-        String expected = "ID,Name,Surname,Gender,Birth date,Citizenship,Place of Birth,Type of contract,Group ID,Type of Studying,Contact information\n" +
-                "1,Anna,Allen,FEMALE,7.11.1998,German,Hamburg,STIPEND,1,PRESENT,anna.allen98@gmail.com\n" +
-                "2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com\n" +
-                "3,Alice,Cook,FEMALE,14.4.1999,Ungarn,Paks,PAYABLE,1,ONLINE,alicook@gmail.com\n" +
-                "4,Gerald,Anond,MALE,13.6.1998,German,Dresden,STIPEND,3,ONLINE,gerald.anond@gmail.com\n";
+        CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter, mockParser);
 
         studentsRepository.add(new Student().setId(4).setName("Gerald").setSurname("Anond").setGender(Gender.MALE)
                 .setBirthDate(LocalDate.of(1998, 6, 13)).setCitizenship("German").setPlaceOfBirth("Dresden")
                 .setTypeOfContract(TypeOfContract.STIPEND).setGroupId(3).setTypeOfStudying(TypeOfStudying.ONLINE)
                 .setContactInformation("gerald.anond@gmail.com"));
 
-        Mockito.verify(mockWriter, Mockito.times(1)).appendLine("\n4,Gerald,Anond,MALE,13.6.1998,German,Dresden,STIPEND,3,ONLINE" +
+        Mockito.verify(mockWriter, Mockito.times(1).description("Expected adding student to repository. " +
+                "FileWriter appendLine method should be called with repository and line input: \\n4,Gerald,Anond,MALE,13.6.1998,German,Dresden,STIPEND,3,ONLINE,gerald.anond@gmail.com"))
+                .appendLine("\n4,Gerald,Anond,MALE,13.6.1998,German,Dresden,STIPEND,3,ONLINE" +
                 ",gerald.anond@gmail.com", repository);
-        lines.add("4,Gerald,Anond,MALE,13.6.1998,German,Dresden,STIPEND,3,ONLINE,gerald.anond@gmail.com");
-
-       String actual = mockReader.receiveLinesAsList(repository).stream().map(line -> line + "\n")
-               .collect(Collectors.joining());
-
-        Assertions.assertEquals(expected, actual, "Expected adding student to repository");
     }
 
     @Test
