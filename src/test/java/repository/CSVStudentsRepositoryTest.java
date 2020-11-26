@@ -26,6 +26,8 @@ import static org.mockito.Mockito.validateMockitoUsage;
 public class CSVStudentsRepositoryTest {
     static Path repository = PathFinder.findFromResources("data/StudentData.csv");
     List<String> lines;
+    Student existingStudent;
+    Student notValidStudent;
 
     @Mock
     FileReader mockReader;
@@ -67,6 +69,19 @@ public class CSVStudentsRepositoryTest {
 
     }
 
+    @BeforeEach
+    public void initStudent(){
+        existingStudent = new Student().setId(2).setName("Peter").setSurname("Tailor").setGender(Gender.MALE)
+                .setBirthDate(LocalDate.of(1999, 6, 25)).setCitizenship("German").setPlaceOfBirth("Bremen")
+                .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(2).setTypeOfStudying(TypeOfStudying.PRESENT)
+                .setContactInformation("petter99tailor@gmail.com");
+        notValidStudent = new Student().setId(2).setSurname("Tailor").setGender(Gender.MALE)
+                .setBirthDate(LocalDate.of(1999, 6, 25)).setCitizenship("German").setPlaceOfBirth("Bremen")
+                .setTypeOfContract(TypeOfContract.PAYABLE).setTypeOfStudying(TypeOfStudying.PRESENT)
+                .setContactInformation("petter99tailor@gmail.com");
+
+    }
+
     @AfterEach
     public void validate() {
         validateMockitoUsage();
@@ -99,10 +114,7 @@ public class CSVStudentsRepositoryTest {
     @DisplayName("Student with inputted id should be returned")
     public void getById_ShouldReturnStudent() {
 
-        Student expected = new Student().setId(2).setName("Peter").setSurname("Tailor").setGender(Gender.MALE)
-                .setBirthDate(LocalDate.of(1999, 6, 25)).setCitizenship("German").setPlaceOfBirth("Bremen")
-                .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(2).setTypeOfStudying(TypeOfStudying.PRESENT)
-                .setContactInformation("petter99tailor@gmail.com");
+        Student expected = existingStudent;
 
         Student actual = new CSVStudentsRepository(mockReader, mockWriter, mockParser).getById(2);
 
@@ -122,23 +134,17 @@ public class CSVStudentsRepositoryTest {
    @Test
     @DisplayName("Student should be added to repository")
     public void addStudent_ShouldAddStudentToRepository() {
-       Mockito.when(mockParser.parseStudentToLine(new Student().setId(4).setName("Gerald").setSurname("Anond").setGender(Gender.MALE)
-               .setBirthDate(LocalDate.of(1998, 6, 13)).setCitizenship("German").setPlaceOfBirth("Dresden")
-               .setTypeOfContract(TypeOfContract.STIPEND).setGroupId(3).setTypeOfStudying(TypeOfStudying.ONLINE)
-               .setContactInformation("gerald.anond@gmail.com")))
-               .thenReturn("4,Gerald,Anond,MALE,13.6.1998,German,Dresden,STIPEND,3,ONLINE,gerald.anond@gmail.com");
+       Mockito.when(mockParser.parseStudentToLine(existingStudent.setId(4)))
+               .thenReturn("4,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com");
        Mockito.when(mockWriter.appendLine(Mockito.anyString(), Mockito.eq(repository))).thenReturn(true);
        CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter, mockParser);
 
-       studentsRepository.add(new Student().setId(4).setName("Gerald").setSurname("Anond").setGender(Gender.MALE)
-                .setBirthDate(LocalDate.of(1998, 6, 13)).setCitizenship("German").setPlaceOfBirth("Dresden")
-                .setTypeOfContract(TypeOfContract.STIPEND).setGroupId(3).setTypeOfStudying(TypeOfStudying.ONLINE)
-                .setContactInformation("gerald.anond@gmail.com"));
+       studentsRepository.add(existingStudent.setId(4));
 
         Mockito.verify(mockWriter, Mockito.times(1).description("Expected adding student to repository. " +
-                "FileWriter appendLine method should be called with repository and line input: \\n4,Gerald,Anond,MALE,13.6.1998,German,Dresden,STIPEND,3,ONLINE,gerald.anond@gmail.com"))
-                .appendLine("\n4,Gerald,Anond,MALE,13.6.1998,German,Dresden,STIPEND,3,ONLINE" +
-                ",gerald.anond@gmail.com", repository);
+                "FileWriter appendLine method should be called with repository and line input: \\n4,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com"))
+                .appendLine("\n4,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com"
+                        , repository);
     }
 
     @Test
@@ -158,10 +164,7 @@ public class CSVStudentsRepositoryTest {
     public void addStudent_WithNotValidStudentInput_ShouldChangeNothingInRepository() {
         CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter, mockParser);
 
-        studentsRepository.add(new Student().setId(4).setSurname("Anond").setGender(Gender.MALE)
-                .setBirthDate(LocalDate.of(1998, 6, 13)).setCitizenship("German").setPlaceOfBirth("Dresden")
-                .setTypeOfContract(TypeOfContract.STIPEND).setGroupId(3).setTypeOfStudying(TypeOfStudying.ONLINE)
-                .setContactInformation("gerald.anond@gmail.com"));
+        studentsRepository.add(notValidStudent.setId(4));
 
         Mockito.verify(mockWriter, Mockito.never().description("Expected by not valid student unchanged repository. " +
                 "FileWriter method for appending line won't be used. "))
@@ -172,23 +175,16 @@ public class CSVStudentsRepositoryTest {
     @Test
     @DisplayName("Student information should be updated")
     public void updateStudent_ShouldUpdateStudentInformation() {
-        Mockito.when(mockParser.parseStudentToLine(new Student().setId(2).setName("Pettery").setSurname("Trailor").setGender(Gender.MALE)
-                .setBirthDate(LocalDate.of(1999, 6, 25)).setCitizenship("German").setPlaceOfBirth("Bremen")
-                .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(1).setTypeOfStudying(TypeOfStudying.PRESENT)
-                .setContactInformation("pettery99trailor@gmail.com")))
-                .thenReturn("2,Pettery,Trailor,MALE,25.6.1999,German,Bremen,PAYABLE,1,PRESENT,pettery99trailor@gmail.com");
+        Mockito.when(mockParser.parseStudentToLine(existingStudent.setName("Bob")))
+                .thenReturn("2,Bob,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com");
         lenient().when(mockWriter.appendLine(Mockito.anyString(), Mockito.eq(repository))).thenReturn(true);
         CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter, mockParser);
 
-        studentsRepository.update(new Student().setId(2).setName("Pettery").setSurname("Trailor").setGender(Gender.MALE)
-                .setBirthDate(LocalDate.of(1999, 6, 25)).setCitizenship("German").setPlaceOfBirth("Bremen")
-                .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(1).setTypeOfStudying(TypeOfStudying.PRESENT)
-                .setContactInformation("pettery99trailor@gmail.com"));
+        studentsRepository.update(existingStudent.setName("Bob"));
 
         Mockito.verify(mockWriter, Mockito.times(1).description("Expected updating existing student in repository. " +
-                "FileWriter should rewrite 2. line in repository to: 2,Pettery,Trailor,MALE,25.6.1999,German,Bremen,PAYABLE,1,PRESENT,pettery99trailor@gmail.com "))
-                .rewriteLine("2,Pettery,Trailor,MALE,25.6.1999,German,Bremen,PAYABLE,1" +
-                        ",PRESENT,pettery99trailor@gmail.com",2,repository);
+                "FileWriter should rewrite 2. line in repository to: 2,Bob,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com "))
+                .rewriteLine("2,Bob,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com",2,repository);
 
     }
 
@@ -197,10 +193,7 @@ public class CSVStudentsRepositoryTest {
     public void updateStudent_WithNotExistingStudentInput_ShouldChangeNothingInRepository() {
         CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter, mockParser);
 
-        studentsRepository.update(new Student().setId(7).setSurname("Anond").setGender(Gender.MALE)
-                .setBirthDate(LocalDate.of(1998, 6, 13)).setCitizenship("German").setPlaceOfBirth("Dresden")
-                .setTypeOfContract(TypeOfContract.STIPEND).setGroupId(3).setTypeOfStudying(TypeOfStudying.ONLINE)
-                .setContactInformation("gerald.anond@gmail.com"));
+        studentsRepository.update(existingStudent.setId(9));
 
         Mockito.verify(mockWriter, Mockito.never().description("Expected by not existing student input unchanged repository. " +
                 "FileWriter won't be used for rewriting line."))
@@ -226,10 +219,7 @@ public class CSVStudentsRepositoryTest {
     public void updateStudent_WithNotValidStudent_ShouldChangeNothingInRepository(){
         CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter, mockParser);
 
-        studentsRepository.update(new Student().setId(2).setGender(Gender.MALE)
-                .setBirthDate(LocalDate.of(1998, 6, 13)).setCitizenship("German").setPlaceOfBirth("Dresden")
-                .setGroupId(3).setTypeOfStudying(TypeOfStudying.ONLINE)
-                .setContactInformation("gerald.anond@gmail.com"));
+        studentsRepository.update(notValidStudent);
 
         Mockito.verify(mockWriter, Mockito.never().description("Expected by not valid student input unchanged repository. " +
                 "FileWriter rewrite method won't be called for repository. "))
@@ -240,17 +230,11 @@ public class CSVStudentsRepositoryTest {
     @DisplayName("Student should be deleted from repository")
     public void deleteStudent_ShouldDeleteStudentFromRepository(){
         lenient().when(mockWriter.deleteLine(Mockito.anyString(), Mockito.eq(repository))).thenReturn(true);
-        Mockito.when(mockParser.parseStudentToLine(new Student().setId(2).setName("Peter").setSurname("Tailor").setGender(Gender.MALE)
-                .setBirthDate(LocalDate.of(1999, 6, 25)).setCitizenship("German").setPlaceOfBirth("Bremen")
-                .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(2).setTypeOfStudying(TypeOfStudying.PRESENT)
-                .setContactInformation("petter99tailor@gmail.com")))
+        Mockito.when(mockParser.parseStudentToLine(existingStudent))
                 .thenReturn("2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com");
         CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter, mockParser);
 
-        studentsRepository.delete(new Student().setId(2).setName("Peter").setSurname("Tailor").setGender(Gender.MALE)
-                .setBirthDate(LocalDate.of(1999, 6, 25)).setCitizenship("German").setPlaceOfBirth("Bremen")
-                .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(2).setTypeOfStudying(TypeOfStudying.PRESENT)
-                .setContactInformation("petter99tailor@gmail.com"));
+        studentsRepository.delete(existingStudent);
 
         Mockito.verify(mockWriter, Mockito.times(1).description("Expected adding student to repository. " +
                 "FileWriter deleteLine method will be called with repository and line input: 2,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com"))
@@ -275,10 +259,7 @@ public class CSVStudentsRepositoryTest {
     public void deleteStudent_WithNotValidStudentInput_ShouldChangeNothingInRepository() {
         CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter, mockParser);
 
-        studentsRepository.delete(new Student().setId(2).setSurname("Tailor").setGender(Gender.MALE)
-                .setBirthDate(LocalDate.of(1999, 6, 25)).setCitizenship("German").setPlaceOfBirth("Bremen")
-                .setTypeOfContract(TypeOfContract.PAYABLE).setTypeOfStudying(TypeOfStudying.PRESENT)
-                .setContactInformation("petter99tailor@gmail.com"));
+        studentsRepository.delete(notValidStudent);
 
         Mockito.verify(mockWriter, Mockito.never().description("Expected by not valid student input unchanged repository. " +
                 "FileWriter deleteLine method won't be called for repository. "))
@@ -289,42 +270,30 @@ public class CSVStudentsRepositoryTest {
     @Test
     @DisplayName("By not existing student input nothing should be deleted from repository")
     public void deleteStudent_WithNotExistingStudentInput_ShouldChangeNothingInRepository() {
-        Mockito.when(mockParser.parseStudentToLine(new Student().setId(7).setName("Tailor").setSurname("Jh").setGender(Gender.MALE)
-                .setBirthDate(LocalDate.of(1999, 6, 25)).setCitizenship("German").setPlaceOfBirth("Bremen")
-                .setTypeOfContract(TypeOfContract.PAYABLE).setTypeOfStudying(TypeOfStudying.PRESENT).setGroupId(2)
-                .setContactInformation("petter99tailor@gmail.com")))
-                .thenReturn("7,Tailor,Jh,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com");
+        Mockito.when(mockParser.parseStudentToLine(existingStudent.setId(7)))
+                .thenReturn("7,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com");
         CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter, mockParser);
 
-        studentsRepository.delete(new Student().setId(7).setName("Tailor").setSurname("Jh").setGender(Gender.MALE)
-                .setBirthDate(LocalDate.of(1999, 6, 25)).setCitizenship("German").setPlaceOfBirth("Bremen")
-                .setTypeOfContract(TypeOfContract.PAYABLE).setTypeOfStudying(TypeOfStudying.PRESENT).setGroupId(2)
-                .setContactInformation("petter99tailor@gmail.com"));
+        studentsRepository.delete(existingStudent.setId(7));
 
         Mockito.verify(mockWriter, Mockito.times(1).description("Expected by not existing student input unchanged repository. " +
-                "FileWriter deleteLine method should be called with repository and line input: 7,Tailor,Jh,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com"))
-                .deleteLine("7,Tailor,Jh,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com", repository);
+                "FileWriter deleteLine method should be called with repository and line input: 7,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com"))
+                .deleteLine("7,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com", repository);
 
     }
 
     @Test
     @DisplayName("By student with some modified data input nothing should be deleted from repository")
     public void deleteStudent_WithStudentWithModifiedDataInput_ShouldChangeNothingInRepository() {
-        Mockito.when(mockParser.parseStudentToLine(new Student().setId(2).setName("Peterry").setSurname("Tailorre").setGender(Gender.MALE)
-                .setBirthDate(LocalDate.of(1999, 7, 25)).setCitizenship("German").setPlaceOfBirth("Bremen")
-                .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(2).setTypeOfStudying(TypeOfStudying.PRESENT)
-                .setContactInformation("petter99tailor@gmail.com")))
-                .thenReturn("2,Peterry,Tailorre,MALE,25.7.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com");
+        Mockito.when(mockParser.parseStudentToLine(existingStudent.setName("Bob")))
+                .thenReturn("2,Bob,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com");
         CSVStudentsRepository studentsRepository = new CSVStudentsRepository(mockReader, mockWriter, mockParser);
 
-        studentsRepository.delete(new Student().setId(2).setName("Peterry").setSurname("Tailorre").setGender(Gender.MALE)
-                .setBirthDate(LocalDate.of(1999, 7, 25)).setCitizenship("German").setPlaceOfBirth("Bremen")
-                .setTypeOfContract(TypeOfContract.PAYABLE).setGroupId(2).setTypeOfStudying(TypeOfStudying.PRESENT)
-                .setContactInformation("petter99tailor@gmail.com"));
+        studentsRepository.delete(existingStudent.setName("Bob"));
 
         Mockito.verify(mockWriter, Mockito.times(1).description("Expected by student with some modified data input unchanged repository. " +
-                "FileWriter deleteLine method should be called with repository and line input: 2,Peterry,Tailorre,MALE,25.7.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com"))
-                .deleteLine("2,Peterry,Tailorre,MALE,25.7.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com"
+                "FileWriter deleteLine method should be called with repository and line input: 2,Bob,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com"))
+                .deleteLine("2,Bob,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com"
                         , repository);
 
     }
