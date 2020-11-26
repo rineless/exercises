@@ -9,15 +9,15 @@ import repository.IGroupsRepository;
 import repository.IStudentsRepository;
 import util.validation.GroupValidation;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GroupsService implements IGroupsService{
     private final IStudentsRepository studentsRepository;
     private final IGroupsRepository groupsRepository;
+
+    private final ResourceBundle properties = ResourceBundle.getBundle("properties.valuesForProg"
+            , Locale.getDefault());
 
     public GroupsService() {
         studentsRepository = new CSVStudentsRepository();
@@ -37,8 +37,10 @@ public class GroupsService implements IGroupsService{
             if (Objects.isNull(getById(group.getId())))
                 groupsRepository.add(group);
             else
-                System.out.println("Group already exists");
+                System.out.println(properties.getString("groupsService.already_exist"));
         }
+        else
+            System.out.println(properties.getString("groupsService.not_valid"));
     }
 
     public void update(Group group){
@@ -50,10 +52,12 @@ public class GroupsService implements IGroupsService{
             if(Objects.nonNull(groupsRepository.getById(group.getId())))
                 groupsRepository.delete(group);
             else
-                System.out.println("Group do not exist. Cannot be deleted");
+                System.out.println(properties.getString("groupsService.dont_exist")
+                        + properties.getString("groupsService.cannot_delete"));
         }
         else
-            System.out.println("Group do not exist. Cannot be deleted");
+            System.out.println(properties.getString("groupsService.dont_exist")
+                    + properties.getString("groupsService.cannot_delete"));
     }
 
     public List<Student> findAllStudentsInGroup(int id){

@@ -12,12 +12,17 @@ import repository.IStudentsRepository;
 import util.validation.StudentValidation;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class StudentsService implements IStudentsService{
     private final IStudentsRepository studentsRepository;
     private final IGroupsRepository groupsRepository;
+
+    private final ResourceBundle properties = ResourceBundle.getBundle("properties.valuesForProg"
+            , Locale.getDefault());
 
     public StudentsService(){
         studentsRepository = new CSVStudentsRepository();
@@ -38,7 +43,7 @@ public class StudentsService implements IStudentsService{
             if (student.getTypeOfStudying() == TypeOfStudying.PRESENT) {
 
                 if (!studentExists(student.getId())) {
-                    if (studentIsAddibleToGroup(student))
+                    if (studentIsAddableToGroup(student))
                         studentsRepository.add(student);
                 }
 
@@ -48,9 +53,11 @@ public class StudentsService implements IStudentsService{
                     if (group.isOnlineAccessible())
                         studentsRepository.add(student);
                     else
-                        System.out.println(group.getId() + " Group is not online accessible. Adding interrupted");
+                        System.out.println(group.getId() + " " + properties.getString("studentsService.not_online_accessible")
+                                + properties.getString("studentsService.adding_interrupted"));
                 } else
-                    System.out.println(student.getGroupId() + " Group do not exist. Adding interrupted");
+                    System.out.println(student.getGroupId() + " " + properties.getString("studentsService.group_not_exist")
+                            + properties.getString("studentsService.adding_interrupted"));
             }
         }
     }
@@ -65,7 +72,7 @@ public class StudentsService implements IStudentsService{
                     if (studentToUpdate.getGroupId() != student.getGroupId()
                             || studentToUpdate.getTypeOfStudying() == TypeOfStudying.ONLINE) {
 
-                        if (studentIsAddibleToGroup(student))
+                        if (studentIsAddableToGroup(student))
                             studentsRepository.update(student);
 
                     } else
@@ -78,14 +85,16 @@ public class StudentsService implements IStudentsService{
                     if (group.isOnlineAccessible())
                         studentsRepository.update(student);
                     else
-                        System.out.println(group.getId() + " Group is not online accessible. Updating interrupted");
+                        System.out.println(group.getId() + " " + properties.getString("studentsService.not_online_accessible")
+                                + properties.getString("studentsService.updating_interrupted"));
                 } else
-                    System.out.println(student.getGroupId() + " Group do not exist. Updating interrupted");
+                    System.out.println(student.getGroupId() + " " + properties.getString("studentsService.group_not_exist")
+                            + properties.getString("studentsService.updating_interrupted"));
             }
         }
     }
 
-    private boolean studentIsAddibleToGroup(Student student) {
+    private boolean studentIsAddableToGroup(Student student) {
 
         Group group = groupsRepository.getById(student.getGroupId());
         if (group != null) {
@@ -95,12 +104,14 @@ public class StudentsService implements IStudentsService{
             if (numberOfStudentsInGroup < group.getMaxAttendeesPresent())
                 return true;
             else {
-                System.out.println(group.getId() + " Group is full. Student cannot be added");
+                System.out.println(group.getId() + " " + properties.getString("studentsService.group_is_full")
+                        + properties.getString("studentsService.cannot_added"));
                 return false;
             }
 
         } else {
-            System.out.println("Student attends not existing group. Cannot be added to repository");
+            System.out.println(properties.getString("studentsService.not_existing_group")
+                    + properties.getString("studentsService.cannot_added"));
             return false;
         }
     }
@@ -110,10 +121,12 @@ public class StudentsService implements IStudentsService{
             if(studentExists(student.getId()))
                 studentsRepository.delete(student);
             else
-                System.out.println("Student do not exist. Cannot be deleted");
+                System.out.println(properties.getString("studentsService.not_exist")
+                        + properties.getString("studentsService.cannot_delete"));
         }
         else
-            System.out.println("Student do not exist. Cannot be deleted");
+            System.out.println(properties.getString("studentsService.not_exist")
+                    + properties.getString("studentsService.cannot_delete"));
     }
 
     public boolean studentExists(int id){

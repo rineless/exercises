@@ -9,34 +9,44 @@ import util.parser.CSVParser;
 import util.reader.ConsoleReader;
 import util.writer.ConsoleWriter;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ConsoleUserCommunicator implements IUserCommunicator{
-    private ConsoleReader reader;
-    private ConsoleWriter writer;
-    private StudentsService studentsService;
-    private GroupsService groupsService;
-    private CSVParser parser;
+    private final ConsoleReader reader;
+    private final ConsoleWriter writer;
+    private final StudentsService studentsService;
+    private final GroupsService groupsService;
+    private final CSVParser parser;
     private boolean stopCommunication = false;
+
+    private  ResourceBundle progValues;
 
     public ConsoleUserCommunicator(){
         reader = new ConsoleReader();
-        writer = new ConsoleWriter("-", 50);
+        writer = new ConsoleWriter("-", 100);
         studentsService = new StudentsService();
         groupsService = new GroupsService();
         parser = new CSVParser();
+
+        progValues = ResourceBundle.getBundle("properties.valuesForProg", Locale.getDefault());
     }
 
     @Override
     public void applyUserCommunicationLogic() {
-        System.out.println("Choose one of the options");
+        String language = receiveCheckedInputForRequest("Choose language: (en|de|ru) : ", "en|de|ru");
+        if(!language.isEmpty()){
+                progValues = ResourceBundle.getBundle("properties.valuesForProg", new Locale(language));
+        }
+        System.out.println(progValues.getString("consoleUserCommunicator.choose_option"));
         printOptions();
+
+
         while(!stopCommunication){
-            writer.printHeader("SYSTEM_REQUEST");
-            String option = receiveCheckedInputForRequest("Option number: ", "\\d+");
+            writer.printHeader(progValues.getString("consoleUserCommunicator.system_request"));
+            String option = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.option_number")
+                    , progValues.getString("consoleUserCommunicator.option_number_regex"));
 
             if(!option.isEmpty())
                 executeOption(Integer.parseInt(option));
@@ -49,39 +59,20 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
     }
 
     public void printOptions(){
-        writer.printLineWithHeaderAndSeparation("OPTIONS",
-                "1 : get all students\n" +
-                "2 : get all groups\n" +
-                "3 : get student by id\n" +
-                "4 : get group by id\n" +
-                "5 : add student\n" +
-                "6 : add group\n" +
-                "7 : update student\n" +
-                "8 : update group\n" +
-                "9 : delete student\n" +
-                "10 : delete group\n" +
-                "11 : check if student exist in database\n" +
-                "12 : get all students in group\n" +
-                "13 : get attendees in group\n" +
-                "14 : get online students in group\n" +
-                "15 : get all attendees (students with type of studying: present)\n" +
-                "16 : get all online students\n" +
-                "17 : get all stipends\n" +
-                "18 : get all students with type of contract: payable\n" +
-                "19 : get all male students\n" +
-                "20 : get all female students\n" +
-                "21 : get all groups by language\n" +
-                "22 : get all groups with online access\n" +
-                "23 : get full groups\n" +
-                "24 : get all groups with same name\n" +
-                "   : end");
+        StringBuilder strBuf = new StringBuilder();
+        for(int i = 1 ; i < 25 ; ++i){
+           strBuf.append(progValues.getString("consoleUserCommunicator.op" + i));
+           strBuf.append("\n");
+        }
+        strBuf.append(progValues.getString("consoleUserCommunicator.op0"));
+        writer.printLineWithHeaderAndSeparation(progValues.getString("consoleUserCommunicator.options"), strBuf.toString());
     }
 
     private void executeOption(int operationNumber){
         switch (operationNumber) {
-            case 1: printStudentList("ALL_STUDENTS", studentsService.getAll());
+            case 1: printStudentList(progValues.getString("consoleUserCommunicator.all_students"), studentsService.getAll());
                 break;
-            case 2: printGroupList("ALL_GROUPS", groupsService.getAll());
+            case 2: printGroupList(progValues.getString("consoleUserCommunicator.all_groups"), groupsService.getAll());
                 break;
             case 3: executeOption_getStudentById();
                 break;
@@ -107,78 +98,82 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
                 break;
             case 14: executeOption_getOnlineStudentsInGroup();
                 break;
-            case 15: printStudentList("ALL_ATTENDEES_STUDENTS", studentsService.findAttendeesStudents());
+            case 15: printStudentList(progValues.getString("consoleUserCommunicator.all_attendees_students")
+                    , studentsService.findAttendeesStudents());
                 break;
-            case 16: printStudentList("ALL_ONLINE_STUDENTS", studentsService.findOnlineStudents());
+            case 16: printStudentList(progValues.getString("consoleUserCommunicator.all_online_students")
+                    , studentsService.findOnlineStudents());
                 break;
-            case 17: printStudentList("ALL_STIPENDS", studentsService.findStipends());
+            case 17: printStudentList(progValues.getString("consoleUserCommunicator.all_stipends")
+                    , studentsService.findStipends());
                 break;
-            case 18: printStudentList("ALL_WITH_PAYABLE_CONTRACT", studentsService.findStudentsWithPayableContract());
+            case 18: printStudentList(progValues.getString("consoleUserCommunicator.all_with_payable_contract")
+                    , studentsService.findStudentsWithPayableContract());
                 break;
-            case 19: printStudentList("ALL_MALE_STUDENTS", studentsService.findAllMaleStudents());
+            case 19: printStudentList(progValues.getString("consoleUserCommunicator.all_male_students")
+                    , studentsService.findAllMaleStudents());
                 break;
-            case 20: printStudentList("ALL_FEMALE_STUDENTS", studentsService.findAllFemaleStudents());
+            case 20: printStudentList(progValues.getString("consoleUserCommunicator.all_female_students")
+                    , studentsService.findAllFemaleStudents());
                 break;
             case 21: executeOption_getFindAllGroupsByLanguage();
                 break;
-            case 22: printGroupList("ALL_GROUPS_WITH_ONLINE_ACCESS", groupsService.findAllGroupsWithOnlineAccess(true));
+            case 22: printGroupList(progValues.getString("consoleUserCommunicator.all_groups_with_online_access")
+                    , groupsService.findAllGroupsWithOnlineAccess(true));
                 break;
-            case 23: printGroupList("ALL_FULL_GROUPS", groupsService.findFullGroups());
+            case 23: printGroupList(progValues.getString("consoleUserCommunicator.all_full_groups")
+                    , groupsService.findFullGroups());
                 break;
             case 24: executeOption_getAllGroupsWithSameName();
                 break;
-            default: writer.printLineWithHeaderAndSeparation("Error", "Command not found");
+            default: writer.printLineWithHeaderAndSeparation(progValues.getString("consoleUserCommunicator.error")
+                    , progValues.getString("consoleUserCommunicator.command_not_found"));
         }
 
     }
 
     private void executeOption_getStudentById() {
-        writer.printHeader("GET_STUDENT_BY_ID");
-        writer.printHeader("SYSTEM_REQUEST");
+        writer.printHeader(progValues.getString("consoleUserCommunicator.get_student_by_id"));
+        writer.printHeader(progValues.getString("consoleUserCommunicator.system_request"));
 
-        System.out.print("Student ID:");
-        String input = reader.readLine();
+        String input = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.student_id")
+                , progValues.getString("consoleUserCommunicator.student_id_regex"));
 
-        if (input.matches("\\d+")) {
+        if (!input.isEmpty()) {
 
-            int id = Integer.parseInt(input);
-            Student student = studentsService.getById(id);
+            Student student = studentsService.getById(Integer.parseInt(input));
 
             if (Objects.isNull(student)) {
-                writer.printLineWithSeparation("Student with id:" + input + " do not exist");
+                writer.printLineWithSeparation(progValues.getString("consoleUserCommunicator.student_with_id") + input
+                        + " " +  progValues.getString("consoleUserCommunicator.do_not_exist"));
             } else
-                printStudent("Student with id: " + input, student);
-        } else {
-            writer.printLineWithSeparation("Student with id: " + input + " do not exist");
+                printStudent(progValues.getString("consoleUserCommunicator.student_with_id") + input, student);
         }
     }
 
     private void executeOption_getGroupById() {
-        writer.printHeader("GET_GROUP_BY_ID");
-        writer.printHeader("SYSTEM_REQUEST");
+        writer.printHeader(progValues.getString("consoleUserCommunicator.get_group_by_id"));
+        writer.printHeader(progValues.getString("consoleUserCommunicator.system_request"));
 
-        System.out.print("Group ID: ");
-        String input = reader.readLine();
-        writer.printSeparator();
+        String input = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.group_id")
+                , progValues.getString("consoleUserCommunicator.group_id_regex"));
 
-        if (input.matches("\\d+")) {
-            int id = Integer.parseInt(input);
-            Group group = groupsService.getById(id);
+        if (!input.isEmpty()) {
+            Group group = groupsService.getById(Integer.parseInt(input));
 
             if (Objects.isNull(group)) {
-                writer.printLineWithSeparation("Group with id:" + input + " do not exist");
+                writer.printLineWithSeparation(progValues.getString("consoleUserCommunicator.group_with_id") + input
+                        + " " + progValues.getString("consoleUserCommunicator.do_not_exist"));
 
             } else
-                printGroup("Group with id: " + input, group);
-        } else {
-            writer.printLineWithSeparation("Group with id: " + input + " do not exist");
+                printGroup(progValues.getString("consoleUserCommunicator.group_with_id") + input, group);
         }
     }
 
     private void executeOption_addStudent(){
 
-        writer.printHeader("ADD_STUDENT");
-        writer.printHeader("SYSTEM_REQUEST");
+        writer.printHeader(progValues.getString("consoleUserCommunicator.add_student"));
+        writer.printHeader(progValues.getString("consoleUserCommunicator.system_request"));
         Student student = receiveStudentFromUserInput();
         printSeparatorForSystemRequest();
 
@@ -186,48 +181,88 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
             studentsService.add(student);
 
         else
-            System.out.println("Input of student data is interrupted. Student addition is denied");
+            System.out.println(progValues.getString("consoleUserCommunicator.student_input_interrupted") + " "
+                    + progValues.getString("consoleUserCommunicator.student_addition_denied"));
 
     }
 
     private Student receiveStudentFromUserInput(){
         Student student = new Student();
 
-        String id = receiveCheckedInputForRequest("Student ID: ", "\\d+");
+        String id = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.student_id")
+                , progValues.getString("consoleUserCommunicator.student_id_regex"));
         if(!id.isEmpty()){
+
             student.setId(Integer.parseInt(id));
-            String name = receiveCheckedInputForRequest("Name: ", "([a-zA-Z]|\\p{Blank}|'|´)+");
+            String name = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.student_name")
+                    , progValues.getString("consoleUserCommunicator.student_name_regex"));
+
             if(!name.isEmpty()){
+
                 student.setName(name);
-                String surname = receiveCheckedInputForRequest("Surname: ", "([a-zA-Z]|\\p{Blank}|'|´)+");
+                String surname = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.student_surname")
+                        , progValues.getString("consoleUserCommunicator.student_surname_regex"));
+
                 if(!surname.isEmpty()){
+
                     student.setSurname(surname);
-                    String gender = receiveCheckedInputForRequest("Gender (m or f): ", "m|f");
+                    String gender = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.gender") + "("
+                                    + progValues.getString("consoleUserCommunicator.gender_regex") + "): "
+                            , progValues.getString("consoleUserCommunicator.gender_regex"));
+
                     if(!gender.isEmpty()){
+
+                        List<String> genders = Stream.of(progValues.getString("consoleUserCommunicator.gender_regex").split("\\|")).collect(Collectors.toList());
+                        gender = progValues.getString("consoleUserCommunicator.gender" + (genders.indexOf(gender) + 1));
                         student.setGender(gender);
-                        String birthDate = receiveCheckedInputForRequest("Birth date (__.__.____): "
-                                , "((0?[1-9])|((1|2)[0-9])|(3[0-1]))\\.((0?[1-9])|1[0-2])" +
-                                        "\\.((19[5-9][0-9])|(20[0-1][0-9]))");
+                        String birthDate = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.birth_date") + "("
+                                        + progValues.getString("consoleUserCommunicator.birth_date_label") + "): ", progValues.getString("consoleUserCommunicator.birth_date_regex"));
+
                         if(!birthDate.isEmpty()){
+
                             student.setBirthDate(birthDate);
-                            String citizenship = receiveCheckedInputForRequest("Cititenship: ", "([a-zA-Z]|\\p{Blank}|\\p{Punct})+");
+                            String citizenship = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.citizenship"),
+                                    progValues.getString("consoleUserCommunicator.citizenship_regex"));
+
                             if(!citizenship.isEmpty()){
+
                                 student.setCitizenship(citizenship);
-                                String placeOfBirth = receiveCheckedInputForRequest("Place of Birth: ", "([a-zA-Z]|\\p{Blank}|\\p{Punct})+");
+                                String placeOfBirth = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.place_of_birth")
+                                        , progValues.getString("consoleUserCommunicator.place_of_birth_regex"));
+
                                 if(!placeOfBirth.isEmpty()){
+
                                     student.setPlaceOfBirth(placeOfBirth);
-                                    String typeOfContract = receiveCheckedInputForRequest("Type of Contract (stipend|payable): ", "stipend|payable");
+                                    String typeOfContract = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.type_of_contract") + "("
+                                                    + progValues.getString("consoleUserCommunicator.type_of_contract_regex") + "): "
+                                            , progValues.getString("consoleUserCommunicator.type_of_contract_regex"));
+
                                     if(!typeOfContract.isEmpty()){
+
+                                        List<String> contractTypes = Stream.of(progValues.getString("consoleUserCommunicator.type_of_contract_regex")
+                                                .split("\\|")).collect(Collectors.toList());
+                                        typeOfContract = progValues.getString("consoleUserCommunicator.type_of_contract" + (contractTypes.indexOf(typeOfContract) + 1));
                                         student.setTypeOfContract(typeOfContract);
-                                        String groupId = receiveCheckedInputForRequest("Group Id: ", "\\d+");
+                                        String groupId = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.group_id")
+                                                , progValues.getString("consoleUserCommunicator.group_id_regex"));
+
                                         if(!groupId.isEmpty()){
+
                                             student.setGroupId(Integer.parseInt(groupId));
-                                            String typeOfStudying = receiveCheckedInputForRequest("Type of studying (present|online): "
-                                                    , "present|online");
+                                            String typeOfStudying = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.type_of_studying") + "("
+                                                            + progValues.getString("consoleUserCommunicator.type_of_studying_regex") + "): "
+                                                    , progValues.getString("consoleUserCommunicator.type_of_studying_regex"));
+
                                             if(!typeOfStudying.isEmpty()){
+
+                                                List<String> studyingTypes = Stream.of(progValues.getString("consoleUserCommunicator.type_of_studying_regex").split("\\|")).collect(Collectors.toList());
+                                                typeOfStudying = progValues.getString("consoleUserCommunicator.type_of_studying" + (studyingTypes.indexOf(typeOfStudying) + 1));
                                                 student.setTypeOfStudying(typeOfStudying);
-                                                String contactInf = receiveCheckedInputForRequest("Contact information: ", ".+");
+                                                String contactInf = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.contact_inf")
+                                                        , progValues.getString("consoleUserCommunicator.contact_inf_regex"));
+
                                                 if(!contactInf.isEmpty()){
+
                                                     student.setContactInformation(contactInf);
                                                     return student;
                                                 }
@@ -249,8 +284,8 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
 
     private void executeOption_addGroup(){
 
-        writer.printHeader("ADD_GROUP");
-        writer.printHeader("SYSTEM_REQUEST");
+        writer.printHeader(progValues.getString("consoleUserCommunicator.add_group"));
+        writer.printHeader(progValues.getString("consoleUserCommunicator.system_request"));
         Group group = receiveGroupFromUserInput();
         printSeparatorForSystemRequest();
 
@@ -258,7 +293,8 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
              groupsService.add(group);
 
          else
-             System.out.println("Input of group data is interrupted. Group addition is denied");
+             System.out.println(progValues.getString("consoleUserCommunicator.group_input_interrupted")
+                     + progValues.getString("consoleUserCommunicator.group_addition_denied"));
 
 
     }
@@ -266,24 +302,59 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
     private Group receiveGroupFromUserInput(){
         Group group = new Group();
 
-        String id = receiveCheckedInputForRequest("Group Id: ", "\\d+");
+        String id = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.group_id")
+                , progValues.getString("consoleUserCommunicator.group_id_regex"));
         if(!id.isEmpty()){
+
             group.setId(Integer.parseInt(id));
-            String name = receiveCheckedInputForRequest("Group name (alg|ds|anl): ", "alg|ds|anl");
+            String name = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.group_name") + "("
+                            + progValues.getString("consoleUserCommunicator.group_name_regex") + "): "
+                    , progValues.getString("consoleUserCommunicator.group_name_regex"));
+
             if(!name.isEmpty()){
+
+                if(progValues.getString("consoleUserCommunicator.group_name_regex").contains("|")) {
+                    List<String> names = Stream.of(progValues.getString("consoleUserCommunicator.group_name_regex").split("\\|")).collect(Collectors.toList());
+                    name = progValues.getString("consoleUserCommunicator.group_name" + (names.indexOf(name) + 1));
+                }
                 group.setGroupName(name);
-                String onlineAccess = receiveCheckedInputForRequest("Online access: (true|false)", "true|false");
-                if(!onlineAccess.isEmpty()){
-                    group.isOnlineAccessible(onlineAccess);
-                    System.out.println("Responsible for group");
-                    String respName = receiveCheckedInputForRequest("   Name: ", "([a-zA-Z]|\\p{Blank}|'|´)+");
-                    String respSurname = receiveCheckedInputForRequest("    Surname: ", "([a-zA-Z]|\\p{Blank}|'|´)+");
-                    if(!respName.isEmpty() & !respSurname.isEmpty()){
-                        group.setResponsibleForGroup(new String[]{respName, respSurname});
-                        String contactInf = receiveCheckedInputForRequest("Contact information: ", ".+");
-                        if(!contactInf.isEmpty()){
-                            group.setContactInformation(contactInf);
-                            return group;
+                String language = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.language")
+                        , progValues.getString("consoleUserCommunicator.language_regex"));
+
+                if(!language.isEmpty()) {
+
+                    group.setLanguage(new Locale(language));
+                    String onlineAccess = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.online_access") + "("
+                                    + progValues.getString("consoleUserCommunicator.online_access_regex") + "): "
+                            , progValues.getString("consoleUserCommunicator.online_access_regex"));
+
+                    if (!onlineAccess.isEmpty()) {
+
+                        onlineAccess = progValues.getString("consoleUserCommunicator.online_access_regex").startsWith(onlineAccess) ? "true" : "false";
+                        group.isOnlineAccessible(onlineAccess);
+                        String maxAttendeesPresent = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.max_attendees")
+                                , progValues.getString("consoleUserCommunicator.max_attendees_regex"));
+
+                        if(!maxAttendeesPresent.isEmpty()) {
+
+                            group.setMaxAttendeesPresent(Integer.parseInt(maxAttendeesPresent));
+                            System.out.println(progValues.getString("consoleUserCommunicator.responsible_for_group"));
+                            String respName = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.resp_name")
+                                    , progValues.getString("consoleUserCommunicator.resp_name_regex"));
+                            String respSurname = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.resp_surname")
+                                    , progValues.getString("consoleUserCommunicator.resp_surname_regex"));
+
+                            if (!respName.isEmpty() & !respSurname.isEmpty()) {
+
+                                group.setResponsibleForGroup(new String[]{respName, respSurname});
+                                String contactInf = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.contact_information") + ": "
+                                        , progValues.getString("consoleUserCommunicator.contact_information_regex"));
+
+                                if (!contactInf.isEmpty()) {
+                                    group.setContactInformation(contactInf);
+                                    return group;
+                                }
+                            }
                         }
                     }
                 }
@@ -307,7 +378,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
                 return "";
             }
             else {
-                System.out.println("Forbidden input. To close request leave the field blank");
+                System.out.println(progValues.getString("consoleUserCommunicator.forbidden_input"));
                 repeatRequest = true;
             }
 
@@ -317,8 +388,8 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
     }
 
     private void executeOption_updateStudent(){
-        writer.printHeader("UPDATE_STUDENT");
-        writer.printHeader("SYSTEM_REQUEST");
+        writer.printHeader(progValues.getString("consoleUserCommunicator.update_student"));
+        writer.printHeader(progValues.getString("consoleUserCommunicator.system_request"));
         Student student = receiveStudentFromUserInput();
         printSeparatorForSystemRequest();
 
@@ -326,12 +397,13 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
             studentsService.update(student);
 
         else
-            System.out.println("Input of student data is interrupted. Student update is denied");
+            System.out.println(progValues.getString("consoleUserCommunicator.student_input_interrupted") + " "
+                    + progValues.getString("consoleUserCommunicator.student_update_denied"));
     }
 
     private void executeOption_updateGroup(){
-        writer.printHeader("UPDATE_GROUP");
-        writer.printHeader("SYSTEM_REQUEST");
+        writer.printHeader(progValues.getString("consoleUserCommunicator.update_group"));
+        writer.printHeader(progValues.getString("consoleUserCommunicator.system_request"));
         Group group = receiveGroupFromUserInput();
         printSeparatorForSystemRequest();
 
@@ -339,13 +411,15 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
             groupsService.update(group);
 
         else
-            System.out.println("Input of group data is interrupted. Group update is denied");
+            System.out.println(progValues.getString("consoleUserCommunicator.group_input_interrupted")
+                    + progValues.getString("consoleUserCommunicator.group_update_denied"));
     }
 
     private void executeOption_deleteStudent(){
-        writer.printHeader("DELETE_STUDENT");
-        writer.printHeader("SYSTEM_REQUEST");
-        String studentId = receiveCheckedInputForRequest("Student ID: ", "\\d+");
+        writer.printHeader(progValues.getString("consoleUserCommunicator.delete_student"));
+        writer.printHeader(progValues.getString("consoleUserCommunicator.system_request"));
+        String studentId = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.student_id")
+                , progValues.getString("consoleUserCommunicator.student_id_regex"));
         printSeparatorForSystemRequest();
 
         if(!studentId.isEmpty()){
@@ -353,13 +427,15 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
         }
 
         else
-            System.out.println("Input is interrupted. Nothing will be deleted");
+            System.out.println(progValues.getString("consoleUserCommunicator.input_interrupted")
+                    + progValues.getString("consoleUserCommunicator.nothing_deleted"));
     }
 
     private void executeOption_deleteGroup(){
-        writer.printHeader("DELETE_GROUP");
-        writer.printHeader("SYSTEM_REQUEST");
-        String groupId = receiveCheckedInputForRequest("Group ID: ", "\\d+");
+        writer.printHeader(progValues.getString("consoleUserCommunicator.delete_group"));
+        writer.printHeader(progValues.getString("consoleUserCommunicator.system_request"));
+        String groupId = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.group_id")
+                , progValues.getString("consoleUserCommunicator.group_id_regex"));
         printSeparatorForSystemRequest();
 
         if(!groupId.isEmpty()){
@@ -367,126 +443,181 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
         }
 
         else
-            System.out.println("Input is interrupted. Nothing will be deleted");
+            System.out.println(progValues.getString("consoleUserCommunicator.input_interrupted")
+                    + progValues.getString("consoleUserCommunicator.nothing_deleted"));
     }
 
     private void executeOption_studentExist(){
-        writer.printHeader("STUDENT_EXIST");
-        writer.printHeader("SYSTEM_REQUEST");
-        String studentId = receiveCheckedInputForRequest("Student ID: ", "\\d+");
+        writer.printHeader(progValues.getString("consoleUserCommunicator.student_exist"));
+        writer.printHeader(progValues.getString("consoleUserCommunicator.system_request"));
+        String studentId = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.student_id")
+                , progValues.getString("consoleUserCommunicator.student_id_regex"));
         printSeparatorForSystemRequest();
 
         if(!studentId.isEmpty()){
-            System.out.println(studentsService.studentExists(Integer.parseInt(studentId)) ? "TRUE" : "FALSE");
+            System.out.println(studentsService.studentExists(Integer.parseInt(studentId)) ? progValues.getString("consoleUserCommunicator.true")
+                    : progValues.getString("consoleUserCommunicator.false"));
         }
 
         else
-            System.out.println("Input is interrupted.");
+            System.out.println(progValues.getString("consoleUserCommunicator.input_interrupted"));
     }
 
     private void executeOption_getAllStudentsInGroup(){
-        writer.printHeader("GET_ALL_STUDENTS_IN_GROUP");
-        writer.printHeader("SYSTEM_REQUEST");
-        String groupId = receiveCheckedInputForRequest("Group ID: ", "\\d+");
+        writer.printHeader(progValues.getString("consoleUserCommunicator.get_all_students_in_group"));
+        writer.printHeader(progValues.getString("consoleUserCommunicator.system_request"));
+        String groupId = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.group_id")
+                , progValues.getString("consoleUserCommunicator.group_id_regex"));
         printSeparatorForSystemRequest();
 
         if(!groupId.isEmpty()){
             if(Objects.nonNull(groupsService.getById(Integer.parseInt(groupId))))
-                printStudentList("All students in group" + groupId
+                printStudentList(progValues.getString("consoleUserCommunicator.students") + groupId
                     , studentsService.getAllStudentsInGroup(Integer.parseInt(groupId)));
         }
 
         else
-            System.out.println("Input is interrupted.");
+            System.out.println(progValues.getString("consoleUserCommunicator.input_interrupted"));
     }
 
     private void executeOption_getAttendeesInGroup(){
-        writer.printHeader("GET_ATTENDEES_IN_GROUP");
-        writer.printHeader("SYSTEM_REQUEST");
-        String groupId = receiveCheckedInputForRequest("Group ID: ", "\\d+");
+        writer.printHeader(progValues.getString("consoleUserCommunicator.get_attendees_in_group"));
+        writer.printHeader(progValues.getString("consoleUserCommunicator.system_request"));
+        String groupId = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.group_id")
+                , progValues.getString("consoleUserCommunicator.group_id_regex"));
         printSeparatorForSystemRequest();
 
         if(!groupId.isEmpty()){
             if(Objects.nonNull(groupsService.getById(Integer.parseInt(groupId))))
-                printStudentList("Attendees in group" + groupId
+                printStudentList(progValues.getString("consoleUserCommunicator.attendees") + groupId
                         , studentsService.getAttendeesStudentsInGroup(Integer.parseInt(groupId)));
         }
 
         else
-            System.out.println("Input is interrupted.");
+            System.out.println(progValues.getString("consoleUserCommunicator.attendees"));
     }
 
     private void executeOption_getOnlineStudentsInGroup(){
-        writer.printHeader("GET_ONLINE_STUDENTS_IN_GROUP");
-        writer.printHeader("SYSTEM_REQUEST");
-        String groupId = receiveCheckedInputForRequest("Group ID: ", "\\d+");
+        writer.printHeader(progValues.getString("consoleUserCommunicator.get_online_students_in_group"));
+        writer.printHeader(progValues.getString("consoleUserCommunicator.system_request"));
+        String groupId = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.group_id")
+                , progValues.getString("consoleUserCommunicator.group_id_regex"));
         printSeparatorForSystemRequest();
 
         if(!groupId.isEmpty()){
             if(Objects.nonNull(groupsService.getById(Integer.parseInt(groupId))))
-                printStudentList("Online students in group: " + groupId
+                printStudentList(progValues.getString("consoleUserCommunicator.online_students") + groupId
                         , studentsService.getOnlineStudentsInGroup(Integer.parseInt(groupId)));
         }
 
         else
-            System.out.println("Input is interrupted.");
+            System.out.println(progValues.getString("consoleUserCommunicator.input_interrupted"));
     }
 
     private void executeOption_getFindAllGroupsByLanguage(){
-        writer.printHeader("FIND_ALL_GROUPS_BY_LANGUAGE");
-        writer.printHeader("SYSTEM_REQUEST");
-        String language = receiveCheckedInputForRequest("Language: ", "[a-zA-Z]+");
+        writer.printHeader(progValues.getString("consoleUserCommunicator.find_all_groups_by_language"));
+        writer.printHeader(progValues.getString("consoleUserCommunicator.system_request"));
+        String language = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.language")
+                , progValues.getString("consoleUserCommunicator.language_regex"));
         printSeparatorForSystemRequest();
 
         if(!language.isEmpty()){
-           printGroupList("All groups with language: " + language, groupsService.findAllGroupsByLanguage(new Locale(language)));
+           printGroupList(progValues.getString("consoleUserCommunicator.groups_with_language") + language
+                   , groupsService.findAllGroupsByLanguage(new Locale(language)));
         }
         else
-            System.out.println("Input is interrupted.");
+            System.out.println(progValues.getString("consoleUserCommunicator.input_interrupted"));
     }
 
     private void executeOption_getAllGroupsWithSameName(){
-        writer.printHeader("FIND_ALL_GROUPS_WITH_SAME_NAME");
-        writer.printHeader("SYSTEM_REQUEST");
-        String name = receiveCheckedInputForRequest("Group name (alg|anl|ds): ", "alg|anl|ds");
+        writer.printHeader(progValues.getString("consoleUserCommunicator.find_all_groups_with_same_name"));
+        writer.printHeader(progValues.getString("consoleUserCommunicator.system_request"));
+        String name = receiveCheckedInputForRequest(progValues.getString("consoleUserCommunicator.group_name")
+                , progValues.getString("consoleUserCommunicator.group_name_regex"));
         printSeparatorForSystemRequest();
 
         if(!name.isEmpty()) {
-            printGroupList("All groups with name: " + name, groupsService.findAllGroupsByName(GroupNames.valueOf(name.toUpperCase())));
+            printGroupList(progValues.getString("consoleUserCommunicator.groups_with_name") + name
+                    , groupsService.findAllGroupsByName(GroupNames.valueOf(name.toUpperCase())));
         }
         else
-            System.out.println("Input is interrupted");
+            System.out.println(progValues.getString("consoleUserCommunicator.input_interrupted"));
 
     }
 
     private void stopCommunication(){
-        writer.printHeader("END");
+        writer.printHeader(progValues.getString("consoleUserCommunicator.end"));
         stopCommunication = true;
     }
 
     private void printStudent(String message, Student student){
-        writer.printLineWithHeaderAndSeparation(message, parser.parseStudentToLine(student));
+        writer.printLineWithHeaderAndSeparation(message, translateStudent(student));
+    }
+
+    private String translateStudent(Student student){
+        String[] translatedStudent = parser.parseLineToArray(parser.parseStudentToLine(student));
+
+        List<String> defaultGenders = Stream.of(progValues.getString("consoleUserCommunicator.gender0").split("\\|"))
+                .collect(Collectors.toList());
+        List<String> genders = Stream.of(progValues.getString("consoleUserCommunicator.gender_regex").split("\\|"))
+                .collect(Collectors.toList());
+        int index = defaultGenders.indexOf(student.getGender().toString());
+        translatedStudent[3] = genders.get(index);
+
+        List<String> defaultContracts = Stream.of(progValues.getString("consoleUserCommunicator.type_of_contract0").split("\\|"))
+                .collect(Collectors.toList());
+        List<String> contracts = Stream.of(progValues.getString("consoleUserCommunicator.type_of_contract_regex").split("\\|"))
+                .collect(Collectors.toList());
+        index = defaultContracts.indexOf(student.getTypeOfContract().toString());
+        translatedStudent[7] = contracts.get(index);
+
+        List<String> defaultStudyings = Stream.of(progValues.getString("consoleUserCommunicator.type_of_studying0").split("\\|"))
+                .collect(Collectors.toList());
+        List<String> studyings = Stream.of(progValues.getString("consoleUserCommunicator.type_of_studying_regex").split("\\|"))
+                .collect(Collectors.toList());
+        index = defaultStudyings.indexOf(student.getTypeOfStudying().toString());
+        translatedStudent[9] = studyings.get(index);
+
+        return parser.parseArrayToLine(translatedStudent);
     }
 
     private void printGroup(String message, Group group){
-        writer.printLineWithHeaderAndSeparation(message, parser.parseGroupToLine(group));
+        writer.printLineWithHeaderAndSeparation(message, translateGroup(group));
+    }
+
+    private String translateGroup(Group group){
+        String[] translatedGroup = parser.parseLineToArray(parser.parseGroupToLine(group));
+
+        List<String> defaultNames = Stream.of(progValues.getString("consoleUserCommunicator.group_name0").split("\\|"))
+                .collect(Collectors.toList());
+        List<String> names = Stream.of(progValues.getString("consoleUserCommunicator.group_name_regex").split("\\|"))
+                .collect(Collectors.toList());
+        int index = defaultNames.indexOf(group.getGroupName().toString());
+        translatedGroup[1] = names.get(index);
+
+        List<String> accesses = Stream.of(progValues.getString("consoleUserCommunicator.online_access_regex").split("\\|"))
+                .collect(Collectors.toList());
+        index = group.isOnlineAccessible() ? 0 : 1;
+        translatedGroup[3] = accesses.get(index);
+
+        return parser.parseArrayToLine(translatedGroup);
     }
 
     private void printStudentList(String message, List<Student> students){
         if(Objects.nonNull(students))
             writer.printListOfLinesWithMessageAndSeparation(message
-                , students.stream().map(student -> parser.parseStudentToLine(student))
+                , students.stream().map(this::translateStudent)
                         .collect(Collectors.toList()));
     }
 
     private void printGroupList(String message, List<Group> groups){
         if(Objects.nonNull(groups))
             writer.printListOfLinesWithMessageAndSeparation(message
-                , groups.stream().map(group -> parser.parseGroupToLine(group))
+                , groups.stream().map(this::translateGroup)
                         .collect(Collectors.toList()));
     }
 
     private void printSeparatorForSystemRequest(){
-        writer.printSeparator(writer.getSeparatorLength() + "SYSTEM_REQUEST".length());
+        writer.printSeparator();
     }
 }

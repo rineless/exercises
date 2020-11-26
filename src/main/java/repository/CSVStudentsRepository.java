@@ -29,21 +29,19 @@ public class CSVStudentsRepository implements IStudentsRepository {
 
     public List<Student> getAll() {
 
-        List<Student> studentData = reader.receiveLinesAsList(PathFinder.findFromResources(studentDataPath)).stream().skip(1)
-                .map(line -> parser.parseLineToStudent(line)).collect(Collectors.toList());
-
-        return studentData.stream().collect(Collectors.toList());
+        return reader.receiveLinesAsList(PathFinder.findFromResources(studentDataPath)).stream().skip(1)
+                .map(parser::parseLineToStudent).collect(Collectors.toList());
     }
 
     public Student getById(int id) {
         Student student = null;
         Optional<Student> firstElement = this.getAll().stream()
                 .filter(s -> s.getId() == id).findFirst();
+
         if (firstElement.isPresent()) {
             student = firstElement.get();
-        } /*else {
-            System.out.println("Student not found"); //TODO think if it is needed
-        }*/
+        }
+
         return student;
     }
 

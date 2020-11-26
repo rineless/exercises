@@ -27,16 +27,16 @@ public class CSVGroupsRepository implements IGroupsRepository {
 
     public List<Group> getAll() {
         return reader.receiveLinesAsList(PathFinder.findFromResources(groupsDataPath))
-                .stream().skip(1).map(line -> parser.parseLineToGroup(line)).collect(Collectors.toList());
+                .stream().skip(1).map(parser::parseLineToGroup).collect(Collectors.toList());
     }
 
     public Group getById(int id) {
         Group group = null;
         Optional<Group> optional = getAll().stream().filter(groupFromList -> groupFromList.getId() == id).findFirst();
+
         if (optional.isPresent())
             group = optional.get();
-        else
-            System.out.println("Group not found");
+
         return group;
     }
 

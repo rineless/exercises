@@ -4,6 +4,7 @@ import util.parser.SeparatedValuesParser;
 
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class Group {
 
@@ -15,6 +16,8 @@ public class Group {
     private String[] responsibleForGroup;
     private String contactInformation;
 
+    private final ResourceBundle properties = ResourceBundle.getBundle("properties.valuesForProg", Locale.getDefault());
+
     public Group setId(int id) {
         this.id = id;
         return this;
@@ -22,11 +25,15 @@ public class Group {
 
     public Group setGroupName(String groupName) throws IllegalArgumentException{
         if(groupName != null) {
-            this.groupName = GroupNames.valueOf(groupName.toUpperCase());
-            return this;
+            if(groupName.toUpperCase().matches("DS|ALG|ANL")) {
+                this.groupName = GroupNames.valueOf(groupName.toUpperCase());
+                return this;
+            }
+
+            throw new IllegalArgumentException(properties.getString("group.incorrect_name"));
         }
 
-        throw new IllegalArgumentException("Null as group name is prohibited");
+        throw new IllegalArgumentException(properties.getString("group.null_name"));
     }
 
     public Group setGroupName(GroupNames groupName) throws IllegalArgumentException{
@@ -35,18 +42,16 @@ public class Group {
             return this;
         }
 
-        throw new IllegalArgumentException("Null as group name is prohibited");
+        throw new IllegalArgumentException(properties.getString("group.null_name"));
     }
 
     public Group setLanguage(String language) throws IllegalArgumentException{
         if(language!=null) {
-            if(!language.contentEquals("")) {
                 this.language = new Locale(language);
                 return this;
-            }
         }
 
-        throw new IllegalArgumentException("Empty language or null is prohibited");
+        throw new IllegalArgumentException(properties.getString("group.null_language"));
     }
 
     public Group setLanguage(Locale language) throws IllegalArgumentException{
@@ -55,22 +60,24 @@ public class Group {
             return this;
         }
 
-        throw new IllegalArgumentException("Null as language is prohibited");
+        throw new IllegalArgumentException(properties.getString("group.null_language"));
     }
 
     public Group isOnlineAccessible(String isOnlineAccessible) throws IllegalArgumentException{
         if(isOnlineAccessible != null) {
-            if (isOnlineAccessible.toLowerCase().contentEquals("true")) {
-                this.isOnlineAccessible = true;
+            if(isOnlineAccessible.toLowerCase().matches("true|false")) {
+                if (isOnlineAccessible.toLowerCase().contentEquals("true")) {
+                    this.isOnlineAccessible = true;
+                } else {
+                    this.isOnlineAccessible = false;
+                }
                 return this;
             }
-            else if (isOnlineAccessible.toLowerCase().contentEquals("false")){
-                this.isOnlineAccessible = false;
-                return this;
-            }
+
+            throw new IllegalArgumentException(properties.getString("group.incorrect_onlineAccess"));
         }
 
-        throw new IllegalArgumentException("Online access input is incorrect. Should be one of yes|YES|Yes|no|NO|No");
+        throw new IllegalArgumentException(properties.getString("group.null_onlineAccess"));
     }
 
     public Group isOnlineAccessible(boolean isOnlineAccessible){
@@ -85,14 +92,16 @@ public class Group {
 
     public Group setResponsibleForGroup(String responsibleForGroup) throws IllegalArgumentException{
         if(responsibleForGroup != null) {
-            if(!responsibleForGroup.contentEquals("")) {
+            if(responsibleForGroup.matches("(.+ .+)")) {
                 String[] array = new SeparatedValuesParser(" ").parseLineToArray(responsibleForGroup);
                 this.responsibleForGroup = Arrays.copyOf(array, array.length);
                 return this;
             }
+
+            throw new IllegalArgumentException(properties.getString("group.incorrect_responsible"));
         }
 
-        throw new IllegalArgumentException("Input cannot be resolved into responsible for group");
+        throw new IllegalArgumentException(properties.getString("group.null_responsible"));
     }
 
     public Group setResponsibleForGroup(String[] responsibleForGroup) throws IllegalArgumentException{
@@ -101,7 +110,7 @@ public class Group {
             return this;
         }
 
-        throw new IllegalArgumentException("Input cannot be resolved into responsible for group");
+        throw new IllegalArgumentException(properties.getString("group.null_responsible"));
     }
 
     public Group setContactInformation(String contactInformation) throws IllegalArgumentException{
@@ -110,7 +119,7 @@ public class Group {
             return this;
         }
 
-        throw new IllegalArgumentException("Null cannot be resolved into contact information");
+        throw new IllegalArgumentException(properties.getString("group.null_contactInf"));
     }
 
     public int getId() {

@@ -6,9 +6,12 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class FileWriter {
+    private final ResourceBundle properties = ResourceBundle.getBundle("properties.valuesForProg");
+
     public boolean appendLine(String line, Path path) {
         try {
             if (Objects.nonNull(line) && Objects.nonNull(path)) {
@@ -20,7 +23,7 @@ public class FileWriter {
             }
             return false;
         } catch (IOException e) {
-            System.out.println("File not found." + e.getMessage());
+            System.out.println(properties.getString("fileWriter.ile_not_found") + e.getMessage());
             return false;
         }
     }
@@ -37,7 +40,7 @@ public class FileWriter {
             }
             return false;
         } catch (IOException exception) {
-            System.out.println("Path not found");
+            System.out.println(properties.getString("fileWriter.path_not_found"));
             return false;
         }
     }
@@ -55,10 +58,10 @@ public class FileWriter {
             }
             return false;
         } catch (IOException e) {
-            System.out.println("File not found");
+            System.out.println(properties.getString("fileWriter.file_not_found"));
             return false;
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Line number is incorrect");
+            System.out.println(properties.getString("fileWriter.line_number_incorrect"));
             return false;
         }
     }

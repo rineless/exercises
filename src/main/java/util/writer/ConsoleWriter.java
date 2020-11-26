@@ -49,12 +49,22 @@ public class ConsoleWriter {
     }
 
     public void printHeader(String header){
-        System.out.println(receiveHalfOfSeparator() + header + receiveHalfOfSeparator());
+        StringBuilder strBuilder = new StringBuilder();
+        if(header.length() < separatorLength){
+            strBuilder = new StringBuilder();
+            strBuilder.append(calculateSeparator((separatorLength - header.length())/2));
+            strBuilder.append(header);
+            strBuilder.append(calculateSeparator(separatorLength - strBuilder.length()));
+        }else
+            strBuilder.append(header);
+
+
+        System.out.println(strBuilder);
     }
 
     public void printSeparator(){
         System.out.println(separator);
-    };
+    }
 
     public void printSeparator(int length){
         if(length < 0)
@@ -69,7 +79,7 @@ public class ConsoleWriter {
 
         printHeader(header);
         printLine(line);
-        printSeparator(separatorLength + header.length());
+        printSeparator(separatorLength);
     }
 
     public void printLineWithSeparation(String line){
@@ -84,18 +94,13 @@ public class ConsoleWriter {
 
         printHeader(header);
         printListOfLines(lines);
-        printSeparator(separatorLength+header.length());
+        printSeparator(separatorLength);
     }
 
     public void printListOfLinesWithSeparation(List<String> lines){
         printSeparator();
         printListOfLines(lines);
         printSeparator();
-    }
-
-
-    private String receiveHalfOfSeparator(){
-        return separator.substring(0, separator.length()/2);
     }
 
     private String calculateSeparator(int length){

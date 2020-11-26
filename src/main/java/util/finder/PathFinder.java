@@ -6,25 +6,22 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.FileSystem;
-import java.nio.file.FileSystemAlreadyExistsException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-
-import static java.nio.file.FileSystems.getFileSystem;
+import java.util.*;
 
 public class PathFinder {
     private static FileSystem fileSystemForResourcesFolder;
+    private static final ResourceBundle properties = ResourceBundle.getBundle("properties.valuesForProg"
+            , Locale.getDefault());
 
     public static void findByName(String name, File rootDirectory, List<String> paths)
             throws IllegalArgumentException {
         if (name == null | rootDirectory == null | paths == null) {
-            throw new IllegalArgumentException("Null cannot be resolved into name or rootDirectory or paths");
+            throw new IllegalArgumentException(properties.getString("pathFinder.null_path_dir_root"));
         }
         if (!rootDirectory.isDirectory()) {
-            throw new IllegalArgumentException(" Given rootDirectory is not a directory");
+            throw new IllegalArgumentException(properties.getString("pathFinder.not_dir"));
         }
 
         for (File file : rootDirectory.listFiles()) {
@@ -51,12 +48,13 @@ public class PathFinder {
                 } else
                     return Path.of(url.toURI());
             } else {
-                System.out.println("File not found. Return empty path");
+                System.out.println(properties.getString("pathFinder.file_not_found")
+                        + properties.getString("pathFinder.return_empty_path"));
                 return Path.of("");
             }
         } catch (URISyntaxException | IOException exp) {
             System.out.println(exp.getMessage());
-            System.out.println("Return empty path");
+            System.out.println(properties.getString("pathFinder.return_empty_path"));
             return Path.of("");
         }
     }
