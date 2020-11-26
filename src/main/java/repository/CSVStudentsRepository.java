@@ -9,7 +9,6 @@ import util.validation.StudentValidation;
 import util.writer.FileWriter;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -20,10 +19,10 @@ public class CSVStudentsRepository implements IStudentsRepository {
     private final ILineParser parser;
     private final String studentDataPath = "data/StudentData.csv";
 
-    public CSVStudentsRepository(FileReader reader, FileWriter writer) {
+    public CSVStudentsRepository(FileReader reader, FileWriter writer, ILineParser parser) {
         this.reader = reader;
         this.writer = writer;
-        parser = new CSVParser();
+        this.parser = parser;
 
     }
 
