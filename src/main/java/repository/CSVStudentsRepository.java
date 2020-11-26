@@ -67,7 +67,7 @@ public class CSVStudentsRepository implements IStudentsRepository {
     }
 
     public void delete(Student student) {
-        if (Objects.nonNull(student)) {
+        if (StudentValidation.isValid(student)) {
             writer.deleteLine(parser.parseStudentToLine(student), PathFinder.findFromResources(studentDataPath));
         }
     }
