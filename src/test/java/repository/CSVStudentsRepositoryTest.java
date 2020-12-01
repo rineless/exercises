@@ -53,6 +53,10 @@ public class CSVStudentsRepositoryTest {
                 .parseLineToStudent(StudentGroupSource.existingStudentID3))
                 .thenReturn(StudentGroupSource.existingStudentID3());
 
+        lenient().when(mockParser.parseLineToStudent(Mockito.argThat(
+                line -> !line.matches("(\\d+),(.*),(.*),(MALE|FEMALE),(\\d+.\\d+.\\d+),(.*),(.*)" +
+                        ",(PAYABLE|STIPEND),(\\d+),(PRESENT|ONLINE),(.*)"))))
+                .thenThrow(new IllegalArgumentException("Student form incorrect"));
     }
 
     @AfterEach
