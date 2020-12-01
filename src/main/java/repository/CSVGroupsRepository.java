@@ -2,7 +2,6 @@ package repository;
 
 import model.group.Group;
 import util.finder.PathFinder;
-import util.parser.CSVParser;
 import util.parser.ILineParser;
 import util.reader.FileReader;
 import util.validation.GroupValidation;
@@ -65,7 +64,7 @@ public class CSVGroupsRepository implements IGroupsRepository {
 
 
     public void delete(Group group) {
-        if (Objects.nonNull(group)) {
+        if (GroupValidation.isValid(group)) {
             writer.deleteLine(parser.parseGroupToLine(group), PathFinder.findFromResources(groupsDataPath));
         }
     }
