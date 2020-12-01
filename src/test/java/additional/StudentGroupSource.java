@@ -1,11 +1,14 @@
 package additional;
 
+import model.group.Group;
+import model.group.GroupNames;
 import model.student.Gender;
 import model.student.Student;
 import model.student.TypeOfContract;
 import model.student.TypeOfStudying;
 
 import java.time.LocalDate;
+import java.util.Locale;
 
 
 public class StudentGroupSource {
@@ -14,6 +17,13 @@ public class StudentGroupSource {
     public static final String existingStudentID3 = "3,Alice,Cook,FEMALE,14.4.1999,Ungarn,Paks,PAYABLE,1,ONLINE,alicook@gmail.com";
     public static final String notExistingStudent = "4,Peter,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com";
     public static final String updatedStudentID2 = "2,Bob,Tailor,MALE,25.6.1999,German,Bremen,PAYABLE,2,PRESENT,petter99tailor@gmail.com";
+
+
+    public static final String existingGroupID1 = "1,DS,germany,true,30,Adam Becker,adam.becker@myuni.de";
+    public static final String existingGroupID2 = "2,ALG,english,true,20,Shon Braun,shon.braun@myuni.de";
+    public static final String existingGroupID3 = "3,ANL,english,false,15,Karol Maier,karol.maier@myuni.de";
+    public static final String notExistingGroup = "4,ALG,english,true,20,Shon Braun,shon.braun@myuni.de";
+    public static final String updatedGroupID2 = "2,ALG,german,true,20,Shon Braun,shon.braun@myuni.de";
 
     public static Student existingStudentID1(){
         return new Student().setId(1).setName("Anna").setSurname("Allen").setGender(Gender.FEMALE)
@@ -50,6 +60,50 @@ public class StudentGroupSource {
 
     public static Student notValidStudentID4(){
         return notValidStudentID2().setId(4);
+    }
+
+
+    public static Group existingGroupID1(){
+        return new Group().setId(1).setGroupName(GroupNames.DS).setLanguage(new Locale("germany"))
+                .isOnlineAccessible(true).setMaxAttendeesPresent(30)
+                .setResponsibleForGroup(new String[]{"Adam","Becker"}).setContactInformation("adam.becker@myuni.de");
+    }
+
+    public static Group existingGroupID2(){
+        return new Group().setId(2).setGroupName(GroupNames.ALG).setLanguage(new Locale("english"))
+                .isOnlineAccessible(true).setMaxAttendeesPresent(20)
+                .setResponsibleForGroup(new String[]{"Shon","Braun"}).setContactInformation("shon.braun@myuni.de");
+    }
+
+    public static Group existingGroupID3(){
+        return new Group().setId(3).setGroupName(GroupNames.ANL).setLanguage(new Locale("english"))
+                .setMaxAttendeesPresent(15)
+                .setResponsibleForGroup(new String[]{"Karol","Maier"}).setContactInformation("karol.maier@myuni.de");
+
+    }
+
+    public static Group notExistingGroup(){
+        return new Group().setId(4).setGroupName(GroupNames.ALG).setLanguage(new Locale("english"))
+                .isOnlineAccessible(true).setMaxAttendeesPresent(20)
+                .setResponsibleForGroup(new String[]{"Shon","Braun"}).setContactInformation("shon.braun@myuni.de");
+    }
+
+    public static Group notValidGroupID2(){
+        return new Group().setId(2).setLanguage(new Locale("english"))
+                .isOnlineAccessible(true).setMaxAttendeesPresent(20)
+                .setResponsibleForGroup(new String[]{"Shon","Braun"}).setContactInformation("shon.braun@myuni.de");
+    }
+
+    public static Group notValidGroupID4(){
+        return new Group().setId(4).setLanguage(new Locale("english"))
+                .isOnlineAccessible(true).setMaxAttendeesPresent(20)
+                .setResponsibleForGroup(new String[]{"Shon","Braun"}).setContactInformation("shon.braun@myuni.de");
+    }
+
+    public static Group updatedGroupID2(){
+        return new Group().setId(2).setGroupName(GroupNames.ALG).setLanguage(new Locale("german"))
+                .isOnlineAccessible(true).setMaxAttendeesPresent(20)
+                .setResponsibleForGroup(new String[]{"Shon","Braun"}).setContactInformation("shon.braun@myuni.de");
     }
 
 }
