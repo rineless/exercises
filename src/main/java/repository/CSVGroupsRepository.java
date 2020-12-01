@@ -19,10 +19,10 @@ public class CSVGroupsRepository implements IGroupsRepository {
     private final ILineParser parser;
     private final String groupsDataPath = "data/StudentGroupData.csv";
 
-    public CSVGroupsRepository() {
-        reader = new FileReader();
-        writer = new FileWriter();
-        parser = new CSVParser();
+    public CSVGroupsRepository(FileReader reader, FileWriter writer, ILineParser parser) {
+        this.reader = reader;
+        this.writer = writer;
+        this.parser = parser;
     }
 
     public List<Group> getAll() {

@@ -24,7 +24,7 @@ public class GroupsService implements IGroupsService{
 
     public GroupsService() {
         studentsRepository = new CSVStudentsRepository(new FileReader(), new FileWriter(), new CSVParser());
-        groupsRepository = new CSVGroupsRepository();
+        groupsRepository = new CSVGroupsRepository(new FileReader(), new FileWriter(), new CSVParser());
     }
 
     public List<Group> getAll() {

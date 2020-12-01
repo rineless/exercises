@@ -29,7 +29,7 @@ public class StudentsService implements IStudentsService{
 
     public StudentsService(){
         studentsRepository = new CSVStudentsRepository(new FileReader(), new FileWriter(), new CSVParser());
-        groupsRepository = new CSVGroupsRepository();
+        groupsRepository = new CSVGroupsRepository(new FileReader(), new FileWriter(), new CSVParser());
     }
 
     public List<Student> getAll(){
