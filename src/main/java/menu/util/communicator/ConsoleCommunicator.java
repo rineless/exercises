@@ -11,16 +11,14 @@ public class ConsoleCommunicator implements ICommunicator {
     private final ConsoleWriter writer;
     private final Locale locale;
 
-    private ResourceBundle systemCommentsProp;
-    private ResourceBundle systemHeadersProp;
+    private ResourceBundle properties;
 
     public ConsoleCommunicator(Locale locale){
         reader = new ConsoleReader();
         writer = new ConsoleWriter("-", 100);
         this.locale = locale;
 
-        systemCommentsProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemComments", locale);
-        systemHeadersProp = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemHeaders", locale);
+        properties = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemComments", locale);
     }
 
     public Locale receiveLocale() {
@@ -29,7 +27,7 @@ public class ConsoleCommunicator implements ICommunicator {
 
     public void startRequest(String request){
         writer.printHeader(request);
-        writer.printHeader(systemHeadersProp.getString("system_request"));
+        writer.printHeader(properties.getString("system_request"));
     }
 
     public String receiveCheckedInputForRequest(String request, String regex) {
@@ -46,7 +44,7 @@ public class ConsoleCommunicator implements ICommunicator {
                 return "";
             }
             else {
-                System.out.println(systemCommentsProp.getString("forbidden_input"));
+                System.out.println(properties.getString("forbidden_input"));
                 repeatRequest = true;
             }
 
