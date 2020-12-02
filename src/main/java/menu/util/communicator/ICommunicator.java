@@ -11,4 +11,5 @@ public interface ICommunicator {
     void endRequest();
     void interruptRequest(String message);
     void requestAddition(String message);
+    void close();
 }

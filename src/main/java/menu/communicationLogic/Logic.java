@@ -2,14 +2,11 @@ package menu.communicationLogic;
 
 import menu.util.communicator.ConsoleCommunicator;
 import menu.util.communicator.ICommunicator;
-import service.GroupsService;
-import service.StudentsService;
-import util.parser.CSVParser;
-import util.reader.ConsoleReader;
-import util.writer.ConsoleWriter;
+import menu.util.options.Options;
+import menu.util.options.OptionsExecutor;
 
-import java.io.BufferedReader;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class Logic {
@@ -20,16 +17,10 @@ public class Logic {
     private boolean stopCommunication = false;
 
     public Logic() {
-        /*reader = new ConsoleReader();
-        writer = new ConsoleWriter("-", 100);
-        studentsService = new StudentsService();
-        groupsService = new GroupsService();
-        parser = new CSVParser();*/
         communicator = new ConsoleCommunicator();
 
     }
 
-    @Override
     public void applyUserCommunicationLogic() {
         String language = communicator.receiveCheckedInputForRequest("Choose language: (en|de) : ", "en|de");
         if(!language.isEmpty()){
@@ -37,14 +28,13 @@ public class Logic {
             properties = ResourceBundle.getBundle("properties.consoleUserCommunicator.group", new Locale(language));
 
         }
-        System.out.println(systemCommentsProp.getString("choose_option"));
+        communicator.startRequest(properties.getString("choose_option"));
         printOptions();
 
 
         while(!stopCommunication){
-            writer.printHeader(systemHeadersProp.getString("system_request"));
-            String option = receiveCheckedInputForRequest(systemCommentsProp.getString("option_number") + ": "
-                    , systemCommentsProp.getString("option_number_regex"));
+            String option = communicator.receiveCheckedInputForRequest(properties.getString("option_number") + ": "
+                    , properties.getString("option_number_regex"));
 
             if(!option.isEmpty())
                 executeOption(Integer.parseInt(option));
@@ -52,72 +42,84 @@ public class Logic {
                 stopCommunication();
 
         }
-        reader.close();
+        communicator.close();
 
+    }
+
+    private void stopCommunication(){
+        communicator.endRequest(properties.getString("end"));
+        stopCommunication = true;
     }
 
     public void printOptions(){
         StringBuilder strBuf = new StringBuilder();
         for(int i = 1 ; i < 25 ; ++i){
-            strBuf.append(systemCommentsProp.getString("op" + i));
+            strBuf.append(properties.getString("op" + i));
             strBuf.append("\n");
         }
-        strBuf.append(systemCommentsProp.getString("op0"));
-        writer.printLineWithHeaderAndSeparation(systemHeadersProp.getString("options"), strBuf.toString());
+        strBuf.append(properties.getString("op0"));
+        communicator.endRequest(properties.getString("options"), strBuf.toString());
     }
 
     private void executeOption(int operationNumber){
+        Options option;
+
         switch (operationNumber) {
-            case 1: printStudentList(systemHeadersProp.getString("all_students"), studentsService.getAll());
+            case 1: option = Options.GET_ALL_STUDENTS;
                 break;
-            case 2: printGroupList(systemHeadersProp.getString("all_groups"), groupsService.getAll());
+            case 2: option = Options.GET_ALL_GROUPS;
                 break;
-            case 3: executeOption_getStudentById();
+            case 3: option = Options.GET_STUDENT_BY_ID;
                 break;
-            case 4: executeOption_getGroupById();
+            case 4: option = Options.GET_GROUP_BY_ID;
                 break;
-            case 5: executeOption_addStudent();
+            case 5: option = Options.ADD_STUDENT;
                 break;
-            case 6: executeOption_addGroup();
+            case 6: option = Options.ADD_GROUP;
                 break;
-            case 7: executeOption_updateStudent();
+            case 7: option = Options.UPDATE_STUDENT;
                 break;
-            case 8: executeOption_updateGroup();
+            case 8: option = Options.UPDATE_GROUP;
                 break;
-            case 9: executeOption_deleteStudent();
+            case 9: option = Options.DELETE_STUDENT;
                 break;
-            case 10: executeOption_deleteGroup();
+            case 10: option = Options.DELETE_GROUP;
                 break;
-            case 11: executeOption_studentExist();
+            case 11: option = Options.STUDENT_EXIST;
                 break;
-            case 12: executeOption_getAllStudentsInGroup();
+            case 12: option = Options.GET_ALL_STUDENTS_IN_GROUP;
                 break;
-            case 13: executeOption_getAttendeesInGroup();
+            case 13: option = Options.GET_ATTENDEES_IN_GROUP;
                 break;
-            case 14: executeOption_getOnlineStudentsInGroup();
+            case 14: option = Options.GET_ONLINE_STUDENTS_IN_GROUP;
                 break;
-            case 15: printStudentList(systemHeadersProp.getString("all_attendees_students"), studentsService.findAttendeesStudents());
+            case 15: option = Options.GET_ALL_ATTENDEES_STUDENTS;
                 break;
-            case 16: printStudentList(systemHeadersProp.getString("all_online_students"), studentsService.findOnlineStudents());
+            case 16: option = Options.GET_ALL_ONLINE_STUDENTS;
                 break;
-            case 17: printStudentList(systemHeadersProp.getString("all_stipends"), studentsService.findStipends());
+            case 17: option = Options.GET_ALL_STIPENDS;
                 break;
-            case 18: printStudentList(systemHeadersProp.getString("all_with_payable_contract"), studentsService.findStudentsWithPayableContract());
+            case 18: option = Options.GET_ALL_STUDENTS_WITH_PAYABLE_CONTRACT;
                 break;
-            case 19: printStudentList(systemHeadersProp.getString("all_male_students"), studentsService.findAllMaleStudents());
+            case 19: option = Options.GET_ALL_MALE_STUDENTS;
                 break;
-            case 20: printStudentList(systemHeadersProp.getString("all_female_students"), studentsService.findAllFemaleStudents());
+            case 20: option = Options.GET_ALL_FEMALE_STUDENTS;
                 break;
-            case 21: executeOption_getFindAllGroupsByLanguage();
+            case 21: option = Options.GET_ALL_GROUPS_BY_LANGUAGE;
                 break;
-            case 22: printGroupList(systemHeadersProp.getString("all_groups_with_online_access"), groupsService.findAllGroupsWithOnlineAccess(true));
+            case 22: option = Options.GET_GROUPS_WITH_ONLINE_ACCESS;
                 break;
-            case 23: printGroupList(systemHeadersProp.getString("all_full_groups"), groupsService.findFullGroups());
+            case 23: option = Options.GET_FULL_GROUPS;
                 break;
-            case 24: executeOption_getAllGroupsWithSameName();
+            case 24: option = Options.GET_ALL_GROUPS_WITH_SAME_NAME;
                 break;
-            default: writer.printLineWithHeaderAndSeparation(systemHeadersProp.getString("error")
-                    , systemCommentsProp.getString("command_not_found"));
+            default: option = null;
+
+            if(Objects.nonNull(option))
+                OptionsExecutor.execute(option);
+            else
+                communicator.endRequest(properties.getString("error")
+                        , properties.getString("command_not_found"));
         }
 
     }

@@ -75,4 +75,8 @@ public class ConsoleCommunicator implements ICommunicator {
     public void requestAddition(String message){
         System.out.println(message);
     }
+
+    public void close(){
+        reader.close();
+    }
 }
