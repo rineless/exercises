@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 public class OptionsExecutor {
     static private ICommunicator communicator = new ConsoleCommunicator();
 
-    static private ResourceBundle properties= ResourceBundle.getBundle("", Locale.getDefault());//TODO
+    static private ResourceBundle properties= ResourceBundle.getBundle("properties.valuesForProg", Locale.getDefault());
     static private StudentsService studentsService = new StudentsService();
     static private GroupsService groupsService = new GroupsService();
     static private CSVParser parser = new CSVParser();

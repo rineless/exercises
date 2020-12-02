@@ -11,7 +11,7 @@ import java.util.ResourceBundle;
 
 public class Logic {
     //TODO properties
-    private ResourceBundle properties = ResourceBundle.getBundle("", Locale.getDefault());
+    private ResourceBundle properties = ResourceBundle.getBundle("properties.valuesForProg", Locale.getDefault());
 
     private ICommunicator communicator;
     private boolean stopCommunication = false;

@@ -20,7 +20,7 @@ public class ConsoleCommunicator implements ICommunicator {
         reader = new ConsoleReader();
         writer = new ConsoleWriter("-", 100);
 
-        properties = ResourceBundle.getBundle("properties.consoleUserCommunicator.system.systemComments", Locale.getDefault());
+        properties = ResourceBundle.getBundle("properties.valuesForProg", Locale.getDefault());
     }
 
     public void startRequest(String request){
