@@ -2,14 +2,12 @@ package repository;
 
 import model.student.Student;
 import util.finder.PathFinder;
-import util.parser.CSVParser;
 import util.parser.ILineParser;
 import util.reader.FileReader;
 import util.validation.StudentValidation;
 import util.writer.FileWriter;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -20,10 +18,10 @@ public class CSVStudentsRepository implements IStudentsRepository {
     private final ILineParser parser;
     private final String studentDataPath = "data/StudentData.csv";
 
-    public CSVStudentsRepository() {
-        reader = new FileReader();
-        writer = new FileWriter();
-        parser = new CSVParser();
+    public CSVStudentsRepository(FileReader reader, FileWriter writer, ILineParser parser) {
+        this.reader = reader;
+        this.writer = writer;
+        this.parser = parser;
 
     }
 
@@ -67,7 +65,7 @@ public class CSVStudentsRepository implements IStudentsRepository {
     }
 
     public void delete(Student student) {
-        if (Objects.nonNull(student)) {
+        if (StudentValidation.isValid(student)) {
             writer.deleteLine(parser.parseStudentToLine(student), PathFinder.findFromResources(studentDataPath));
         }
     }

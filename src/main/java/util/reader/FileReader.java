@@ -1,5 +1,8 @@
 package util.reader;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.awt.desktop.UserSessionEvent;
 import java.io.IOException;
 import java.nio.file.*;
@@ -7,6 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class FileReader extends Reader {
+    private final Logger logger = LogManager.getLogger(FileReader.class);
     private final ResourceBundle properties = ResourceBundle.getBundle("properties.valuesForProg");
 
     public List<String> receiveLinesAsList(Path path) {
@@ -22,8 +26,8 @@ public class FileReader extends Reader {
             return new ArrayList<>();
         } catch (IOException | IllegalArgumentException exp) {
             if(exp instanceof IllegalArgumentException)
-                System.out.println(exp.getMessage());
-            System.out.println(properties.getString("fileReader.path_incorrect")
+                logger.error(exp.getMessage());
+            logger.warn(properties.getString("fileReader.path_incorrect")
                     + properties.getString("fileReader.create_empty"));
             return new ArrayList<>();
         }
@@ -31,7 +35,7 @@ public class FileReader extends Reader {
 
     public List<String> receiveLinesAsList(String path) {
         if (Objects.nonNull(path)){
-            System.out.println(properties.getString("fileReader.null_path") + properties.getString("fileReader.create_empty"));
+            logger.warn(properties.getString("fileReader.null_path") + properties.getString("fileReader.create_empty"));
             return new ArrayList<>();
         }
 

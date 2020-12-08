@@ -2,7 +2,6 @@ package repository;
 
 import model.group.Group;
 import util.finder.PathFinder;
-import util.parser.CSVParser;
 import util.parser.ILineParser;
 import util.reader.FileReader;
 import util.validation.GroupValidation;
@@ -19,10 +18,10 @@ public class CSVGroupsRepository implements IGroupsRepository {
     private final ILineParser parser;
     private final String groupsDataPath = "data/StudentGroupData.csv";
 
-    public CSVGroupsRepository() {
-        reader = new FileReader();
-        writer = new FileWriter();
-        parser = new CSVParser();
+    public CSVGroupsRepository(FileReader reader, FileWriter writer, ILineParser parser) {
+        this.reader = reader;
+        this.writer = writer;
+        this.parser = parser;
     }
 
     public List<Group> getAll() {
@@ -65,7 +64,7 @@ public class CSVGroupsRepository implements IGroupsRepository {
 
 
     public void delete(Group group) {
-        if (Objects.nonNull(group)) {
+        if (GroupValidation.isValid(group)) {
             writer.deleteLine(parser.parseGroupToLine(group), PathFinder.findFromResources(groupsDataPath));
         }
     }

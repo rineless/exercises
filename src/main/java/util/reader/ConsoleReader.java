@@ -1,5 +1,9 @@
 package util.reader;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import util.finder.PathFinder;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,6 +11,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class ConsoleReader {
+    private final Logger logger = LogManager.getLogger(ConsoleReader.class);
     private BufferedReader reader;
 
     private final ResourceBundle properties = ResourceBundle.getBundle("properties.valuesForProg"
@@ -20,7 +25,7 @@ public class ConsoleReader {
         try {
             return reader.readLine();
         } catch (IOException e) {
-            System.out.println(properties.getString("consoleReader.cannot_read_line")
+            logger.warn(properties.getString("consoleReader.cannot_read_line")
                     + properties.getString("consoleReader.return_empty_line"));
             return "";
         }
@@ -30,7 +35,7 @@ public class ConsoleReader {
         try {
             reader.close();
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
         }
     }
 

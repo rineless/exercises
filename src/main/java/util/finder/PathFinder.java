@@ -1,5 +1,9 @@
 package util.finder;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import service.StudentsService;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -11,6 +15,8 @@ import java.nio.file.Path;
 import java.util.*;
 
 public class PathFinder {
+    private final static Logger logger = LogManager.getLogger(PathFinder.class);
+
     private static FileSystem fileSystemForResourcesFolder;
     private static final ResourceBundle properties = ResourceBundle.getBundle("properties.valuesForProg"
             , Locale.getDefault());
@@ -48,13 +54,13 @@ public class PathFinder {
                 } else
                     return Path.of(url.toURI());
             } else {
-                System.out.println(properties.getString("pathFinder.file_not_found")
+                logger.warn(properties.getString("pathFinder.file_not_found")
                         + properties.getString("pathFinder.return_empty_path"));
                 return Path.of("");
             }
         } catch (URISyntaxException | IOException exp) {
-            System.out.println(exp.getMessage());
-            System.out.println(properties.getString("pathFinder.return_empty_path"));
+            logger.error(exp.getMessage());
+            logger.warn(properties.getString("pathFinder.return_empty_path"));
             return Path.of("");
         }
     }
