@@ -1,5 +1,9 @@
 package util.writer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import util.reader.FileReader;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,6 +14,7 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class FileWriter {
+    private final Logger logger = LogManager.getLogger(FileWriter.class);
     private final ResourceBundle properties = ResourceBundle.getBundle("properties.valuesForProg");
 
     public boolean appendLine(String line, Path path) {
@@ -23,7 +28,7 @@ public class FileWriter {
             }
             return false;
         } catch (IOException e) {
-            System.out.println(properties.getString("fileWriter.ile_not_found") + e.getMessage());
+            logger.error(properties.getString("fileWriter.ile_not_found") + e.getMessage());
             return false;
         }
     }
@@ -40,7 +45,7 @@ public class FileWriter {
             }
             return false;
         } catch (IOException exception) {
-            System.out.println(properties.getString("fileWriter.path_not_found"));
+            logger.error(properties.getString("fileWriter.path_not_found"));
             return false;
         }
     }
@@ -58,10 +63,10 @@ public class FileWriter {
             }
             return false;
         } catch (IOException e) {
-            System.out.println(properties.getString("fileWriter.file_not_found"));
+            logger.error(properties.getString("fileWriter.file_not_found"));
             return false;
         } catch (IndexOutOfBoundsException e) {
-            System.out.println(properties.getString("fileWriter.line_number_incorrect"));
+            logger.error(properties.getString("fileWriter.line_number_incorrect"));
             return false;
         }
     }

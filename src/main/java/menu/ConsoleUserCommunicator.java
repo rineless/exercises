@@ -3,6 +3,8 @@ package menu;
 import model.group.Group;
 import model.group.GroupNames;
 import model.student.Student;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import service.GroupsService;
 import service.StudentsService;
 import util.parser.CSVParser;
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ConsoleUserCommunicator implements IUserCommunicator{
+    private final Logger logger = LogManager.getLogger(ConsoleUserCommunicator.class);
+
     private final ConsoleReader reader;
     private final ConsoleWriter writer;
     private final StudentsService studentsService;
@@ -181,7 +185,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
             studentsService.add(student);
 
         else
-            System.out.println(progValues.getString("consoleUserCommunicator.student_input_interrupted") + " "
+            logger.info(progValues.getString("consoleUserCommunicator.student_input_interrupted") + " "
                     + progValues.getString("consoleUserCommunicator.student_addition_denied"));
 
     }
@@ -293,7 +297,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
              groupsService.add(group);
 
          else
-             System.out.println(progValues.getString("consoleUserCommunicator.group_input_interrupted")
+             logger.info(progValues.getString("consoleUserCommunicator.group_input_interrupted")
                      + progValues.getString("consoleUserCommunicator.group_addition_denied"));
 
 
@@ -378,7 +382,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
                 return "";
             }
             else {
-                System.out.println(progValues.getString("consoleUserCommunicator.forbidden_input"));
+                logger.info(progValues.getString("consoleUserCommunicator.forbidden_input"));
                 repeatRequest = true;
             }
 
@@ -397,7 +401,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
             studentsService.update(student);
 
         else
-            System.out.println(progValues.getString("consoleUserCommunicator.student_input_interrupted") + " "
+            logger.info(progValues.getString("consoleUserCommunicator.student_input_interrupted") + " "
                     + progValues.getString("consoleUserCommunicator.student_update_denied"));
     }
 
@@ -411,7 +415,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
             groupsService.update(group);
 
         else
-            System.out.println(progValues.getString("consoleUserCommunicator.group_input_interrupted")
+            logger.info(progValues.getString("consoleUserCommunicator.group_input_interrupted")
                     + progValues.getString("consoleUserCommunicator.group_update_denied"));
     }
 
@@ -427,7 +431,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
         }
 
         else
-            System.out.println(progValues.getString("consoleUserCommunicator.input_interrupted")
+            logger.info(progValues.getString("consoleUserCommunicator.input_interrupted")
                     + progValues.getString("consoleUserCommunicator.nothing_deleted"));
     }
 
@@ -443,7 +447,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
         }
 
         else
-            System.out.println(progValues.getString("consoleUserCommunicator.input_interrupted")
+            logger.info(progValues.getString("consoleUserCommunicator.input_interrupted")
                     + progValues.getString("consoleUserCommunicator.nothing_deleted"));
     }
 
@@ -460,7 +464,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
         }
 
         else
-            System.out.println(progValues.getString("consoleUserCommunicator.input_interrupted"));
+            logger.info(progValues.getString("consoleUserCommunicator.input_interrupted"));
     }
 
     private void executeOption_getAllStudentsInGroup(){
@@ -477,7 +481,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
         }
 
         else
-            System.out.println(progValues.getString("consoleUserCommunicator.input_interrupted"));
+            logger.info(progValues.getString("consoleUserCommunicator.input_interrupted"));
     }
 
     private void executeOption_getAttendeesInGroup(){
@@ -494,7 +498,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
         }
 
         else
-            System.out.println(progValues.getString("consoleUserCommunicator.attendees"));
+            logger.info(progValues.getString("consoleUserCommunicator.attendees"));
     }
 
     private void executeOption_getOnlineStudentsInGroup(){
@@ -511,7 +515,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
         }
 
         else
-            System.out.println(progValues.getString("consoleUserCommunicator.input_interrupted"));
+            logger.info(progValues.getString("consoleUserCommunicator.input_interrupted"));
     }
 
     private void executeOption_getFindAllGroupsByLanguage(){
@@ -526,7 +530,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
                    , groupsService.findAllGroupsByLanguage(new Locale(language)));
         }
         else
-            System.out.println(progValues.getString("consoleUserCommunicator.input_interrupted"));
+            logger.info(progValues.getString("consoleUserCommunicator.input_interrupted"));
     }
 
     private void executeOption_getAllGroupsWithSameName(){
@@ -541,7 +545,7 @@ public class ConsoleUserCommunicator implements IUserCommunicator{
                     , groupsService.findAllGroupsByName(GroupNames.valueOf(name.toUpperCase())));
         }
         else
-            System.out.println(progValues.getString("consoleUserCommunicator.input_interrupted"));
+            logger.info(progValues.getString("consoleUserCommunicator.input_interrupted"));
 
     }
 

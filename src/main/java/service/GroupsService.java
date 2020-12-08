@@ -3,6 +3,8 @@ package service;
 import model.group.Group;
 import model.group.GroupNames;
 import model.student.Student;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import repository.CSVGroupsRepository;
 import repository.CSVStudentsRepository;
 import repository.IGroupsRepository;
@@ -16,6 +18,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class GroupsService implements IGroupsService{
+    private final Logger logger = LogManager.getLogger(GroupsService.class);
+
     private final IStudentsRepository studentsRepository;
     private final IGroupsRepository groupsRepository;
 
@@ -40,10 +44,10 @@ public class GroupsService implements IGroupsService{
             if (Objects.isNull(getById(group.getId())))
                 groupsRepository.add(group);
             else
-                System.out.println(properties.getString("groupsService.already_exist"));
+                logger.warn(properties.getString("groupsService.already_exist"));
         }
         else
-            System.out.println(properties.getString("groupsService.not_valid"));
+            logger.warn(properties.getString("groupsService.not_valid"));
     }
 
     public void update(Group group){
@@ -55,11 +59,11 @@ public class GroupsService implements IGroupsService{
             if(Objects.nonNull(groupsRepository.getById(group.getId())))
                 groupsRepository.delete(group);
             else
-                System.out.println(properties.getString("groupsService.dont_exist")
+                logger.warn(properties.getString("groupsService.dont_exist")
                         + properties.getString("groupsService.cannot_delete"));
         }
         else
-            System.out.println(properties.getString("groupsService.dont_exist")
+            logger.warn(properties.getString("groupsService.dont_exist")
                     + properties.getString("groupsService.cannot_delete"));
     }
 

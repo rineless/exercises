@@ -1,5 +1,7 @@
 package model.group;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import util.parser.SeparatedValuesParser;
 
 import java.util.Arrays;
